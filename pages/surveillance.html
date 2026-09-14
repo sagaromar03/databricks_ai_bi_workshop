@@ -1,0 +1,82 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The surveillance story</title><link rel="stylesheet" href="shared.css">
+<style>
+ .stage{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px 18px 10px;overflow:auto}
+ #stage svg{display:block;min-width:760px;width:100%;height:auto;font-family:'Segoe UI',Helvetica,Arial,sans-serif}
+ .ctl{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+ .ctl button{font-family:inherit;font-size:13px;padding:8px 14px;border:1px solid var(--border);background:#fff;border-radius:8px;cursor:pointer;color:var(--grey)}
+ .ctl button.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+ .dot-mkt{fill:#9aa1c4}.dot-manta{fill:#D85A30;stroke:#7d2f14;stroke-width:.6}
+ .mline{fill:none;stroke:#0d0e27;stroke-width:2.4}
+ .spikeband{fill:#BA7517;opacity:.10}
+ .hidden{display:none}
+</style></head>
+<body>
+<header class="top"><a href="../index.html">← Workshop repository</a>
+<h1>The surveillance story</h1>
+<p>The reference price (fact_market_price) is the yardstick: compare each trade's price against the market at the same hour and hub. Toggle the layers to see why B.Rock at Manta Resources gets caught.</p></header>
+<div class="wrap">
+<div class="ctl">
+ <button data-l="market" class="active">Market price line</button>
+ <button data-l="others" class="active">Everyone else</button>
+ <button data-l="manta" class="active">Manta (below-market sells)</button>
+ <button data-l="spike" class="active">Conflict-spike window</button>
+</div>
+<div class="stage" id="stage"></div>
+<div class="note"><b>Genie question:</b> "Which trader consistently sold furthest below the market price, and did it worsen during spike windows?" → B.Rock Van Guard (Manta Resources), the built-in "panic the market" seller. That contrast is the demo's payoff.</div>
+</div>
+<footer>Energy Trading workshop pack · the surveillance story</footer>
+<script src="../assets/logos.js"></script>
+<script>
+const NS='http://www.w3.org/2000/svg';
+function el(n,a){const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);return e;}
+const W=780,H=430, m={l:54,r:20,t:24,b:40};
+const gx=m.l, gy=m.t, gw=W-m.l-m.r, gh=H-m.t-m.b;
+const svg=el('svg',{viewBox:`0 0 ${W} ${H}`});
+// market price wavy line
+function mkt(i){ // i in 0..40
+ let base=gh*0.46 + gh*0.17*Math.sin(i/4.2);
+ if(i>=22&&i<=30) base-=gh*0.16;
+ return gy+base;
+}
+const pts=[]; for(let i=0;i<=40;i++){pts.push([gx+i*gw/40, mkt(i)]);}
+// spike band
+const bandX=gx+22*gw/40, bandW=8*gw/40;
+const band=el('rect',{x:bandX,y:gy,width:bandW,height:gh,class:'spikeband','data-layer':'spike'});svg.appendChild(band);
+const bandT=el('text',{x:bandX+bandW/2,y:gy+16,'text-anchor':'middle',fill:'#854F0B','font-size':11,'font-weight':700,'data-layer':'spike'});bandT.textContent='conflict spike';svg.appendChild(bandT);
+// axes
+svg.appendChild(el('line',{x1:gx,y1:gy+gh,x2:gx+gw,y2:gy+gh,stroke:'#5F5E5A','stroke-width':1}));
+svg.appendChild(el('line',{x1:gx,y1:gy,x2:gx,y2:gy+gh,stroke:'#5F5E5A','stroke-width':1}));
+const xl=el('text',{x:gx+gw/2,y:H-6,'text-anchor':'middle',fill:'#5F5E5A','font-size':11});xl.textContent='time →';svg.appendChild(xl);
+const yl=el('text',{x:16,y:gy+gh/2,'text-anchor':'middle',fill:'#5F5E5A','font-size':11,transform:`rotate(-90 16 ${gy+gh/2})`});yl.textContent='price';svg.appendChild(yl);
+// seeded pseudo-random
+let seed=7; function rnd(){seed=(seed*1103515245+12345)&0x7fffffff;return seed/0x7fffffff;}
+// others near line
+const gOthers=el('g',{'data-layer':'others'});
+for(let k=0;k<58;k++){const x=gx+rnd()*gw;const idx=Math.round((x-gx)/gw*40);const my=pts[Math.max(0,Math.min(40,idx))][1];const y=my+(rnd()*28-14);gOthers.appendChild(el('circle',{cx:x,cy:y,r:2.6,class:'dot-mkt',opacity:.6}));}
+svg.appendChild(gOthers);
+// market line
+const gLine=el('g',{'data-layer':'market'});
+gLine.appendChild(el('polyline',{points:pts.map(p=>p[0].toFixed(0)+','+p[1].toFixed(0)).join(' '),class:'mline'}));
+const ml=el('text',{x:gx+gw-4,y:pts[40][1]-10,'text-anchor':'end',fill:'#0d0e27','font-size':11,'font-weight':700});ml.textContent='market price';gLine.appendChild(ml);
+svg.appendChild(gLine);
+// manta below-market
+const gManta=el('g',{'data-layer':'manta'});
+for(let k=0;k<22;k++){const x=gx+rnd()*(gw*0.92)+gw*0.03;const idx=Math.round((x-gx)/gw*40);const my=pts[Math.max(0,Math.min(40,idx))][1];let drop=gh*0.20;if(x>=bandX&&x<=bandX+bandW)drop=gh*0.32;const y=my+drop+(rnd()*16-8);gManta.appendChild(el('circle',{cx:x,cy:Math.min(y,gy+gh-6),r:4.2,class:'dot-manta'}));}
+svg.appendChild(gManta);
+// legend
+const lg=el('g',{});
+lg.appendChild(el('circle',{cx:gx+16,cy:gy+14,r:4.2,class:'dot-manta','data-layer':'manta'}));
+const l1=el('text',{x:gx+26,y:gy+18,fill:'#993C1D','font-size':11,'font-weight':700,'data-layer':'manta'});l1.textContent='Manta sells 35–60% below market';lg.appendChild(l1);
+lg.appendChild(el('circle',{cx:gx+16,cy:gy+32,r:2.6,class:'dot-mkt','data-layer':'others'}));
+const l2=el('text',{x:gx+26,y:gy+36,fill:'#5F5E5A','font-size':11,'data-layer':'others'});l2.textContent='everyone else, near market';lg.appendChild(l2);
+svg.appendChild(lg);
+document.getElementById('stage').appendChild(svg);
+// toggles
+document.querySelectorAll('.ctl button').forEach(btn=>btn.addEventListener('click',()=>{
+ btn.classList.toggle('active');
+ const layer=btn.dataset.l, show=btn.classList.contains('active');
+ svg.querySelectorAll('[data-layer="'+layer+'"]').forEach(elm=>elm.classList.toggle('hidden',!show));
+}));
+</script>
+</body></html>

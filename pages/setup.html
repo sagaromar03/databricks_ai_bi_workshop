@@ -1,0 +1,62 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Set up a free Databricks workspace</title><link rel="stylesheet" href="shared.css">
+<style>
+ .steps{counter-reset:s;margin:0;padding:0;list-style:none}
+ .steps li{position:relative;background:#fff;border:1px solid var(--border);border-radius:10px;
+   padding:16px 18px 16px 60px;margin-bottom:12px;border-left:5px solid var(--blue)}
+ .steps li::before{counter-increment:s;content:counter(s);position:absolute;left:16px;top:16px;
+   width:28px;height:28px;border-radius:50%;background:var(--navy);color:#fff;font-weight:700;
+   font-size:14px;display:flex;align-items:center;justify-content:center}
+ .steps h3{margin:0 0 5px;font-size:15px;color:var(--navy)}
+ .steps p{margin:0;font-size:13px;color:var(--ink)}
+ .steps code{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-size:12px}
+ .cta{display:inline-block;background:#FF3621;color:#fff;text-decoration:none;font-weight:600;
+   font-size:14px;padding:10px 18px;border-radius:8px;margin:2px 0}
+ .cta:hover{background:#e02e1a}
+ .fact{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:6px 0 20px}
+ @media(max-width:760px){.fact{grid-template-columns:1fr}}
+ .fact .c{background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px;border-top:5px solid var(--teal)}
+ .fact .c b{display:block;color:var(--navy);font-size:14px;margin-bottom:3px}
+ .fact .c span{font-size:12px;color:var(--grey)}
+ h2.sec{font-size:14px;text-transform:uppercase;letter-spacing:.04em;color:var(--grey);margin:26px 0 12px}
+</style></head>
+<body>
+<header class="top"><a href="../index.html">← Workshop repository</a>
+<h1>Set up a free Databricks workspace</h1>
+<p>Get a no-cost, free-forever Databricks Free Edition workspace so you can run the notebook and build the tables. No credit card, no cloud account.</p></header>
+<div class="wrap">
+
+<div class="fact">
+  <div class="c"><b>Free forever</b><span>Free Edition replaced Community Edition (retired Jan 2026). No time limit, with daily usage limits.</span></div>
+  <div class="c"><b>No card, no cloud</b><span>You don't need a credit card or an AWS/Azure/GCP account to sign up.</span></div>
+  <div class="c"><b>Serverless & ready</b><span>Comes with serverless compute, Unity Catalog and default storage — start immediately.</span></div>
+</div>
+
+<a class="cta" href="https://www.databricks.com/learn/free-edition" target="_blank" rel="noopener">Open the Free Edition sign-up page ↗</a>
+
+<h2 class="sec">Part A · Create your workspace</h2>
+<ol class="steps">
+  <li><h3>Go to the Free Edition page</h3><p>Visit <code>databricks.com/learn/free-edition</code> and click <b>Sign up for Free Edition</b>. (Direct sign-up: <code>signup.databricks.com/?provider=DB_FREE_TIER</code>.)</p></li>
+  <li><h3>Enter your details</h3><p>Provide name, email and organization/school. A personal email is fine — you don't need a business address.</p></li>
+  <li><h3>Choose a sign-up method</h3><p>Continue with Google/Microsoft or with email + password. Databricks then provisions a workspace for you automatically.</p></li>
+  <li><h3>Verify your email</h3><p>Open the verification email from Databricks and click the link (set a password if you chose the email method).</p></li>
+  <li><h3>Launch your workspace</h3><p>Log in — you land in the Data Intelligence Platform workspace. Serverless compute is already available, so there's no cluster to configure.</p></li>
+</ol>
+
+<h2 class="sec">Part B · Load the notebook and build the tables</h2>
+<ol class="steps">
+  <li><h3>Download the notebook</h3><p>From this repo, <a href="../notebook/energy_trading_full_solution.ipynb" download>download <code>energy_trading_full_solution.ipynb</code></a> from the <code>notebook/</code> folder.</p></li>
+  <li><h3>Import it</h3><p>In Databricks, open <b>Workspace</b> in the sidebar → your home folder → <b>⋯ / Import</b> → drop the <code>.ipynb</code> file.</p></li>
+  <li><h3>Attach serverless compute</h3><p>Open the notebook and, top-right, attach to <b>Serverless</b>. On Free Edition that's the only option — nothing to size.</p></li>
+  <li><h3>Set the widgets</h3><p>Run the first cell to create the widgets, then set <code>catalog</code> to a catalog you can write to (e.g. <code>workspace</code>) and leave <code>schema</code> as <code>energy_trading</code>. Optionally pin <code>date_end</code> to a fixed date for reproducible data.</p></li>
+  <li><h3>Run all</h3><p>Use <b>Run all</b>. The notebook generates the synthetic data and writes 10 tables into <code>&lt;catalog&gt;.energy_trading</code> (plus the finance schema if you run Part 5). First run takes a few minutes.</p></li>
+  <li><h3>Confirm the tables</h3><p>In <b>Catalog</b>, expand your catalog → <code>energy_trading</code> and check the 10 tables exist. Then explore them with the <a href="er.html">interactive ER diagram</a> and the <a href="genie.html">Genie question bank</a>.</p></li>
+</ol>
+
+<div class="note"><b>Good to know:</b> Free Edition is serverless-only and quota-limited, so very large regenerations may hit daily limits — the default settings in the notebook are well within range. If a run pauses, wait and retry, or reduce the date range. Free Edition also includes Genie, so you can point a Genie space at <code>energy_trading</code> straight after the tables build.</div>
+
+</div>
+<footer>Energy Trading workshop pack · free Databricks setup guide</footer>
+<script src="../assets/logos.js"></script>
+<script src="../assets/download.js"></script>
+</body></html>
