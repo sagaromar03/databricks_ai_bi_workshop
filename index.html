@@ -23,6 +23,21 @@ a.card p{margin:0;font-size:13px;color:var(--grey)}
 .static a img{width:100%;display:block;border-bottom:1px solid var(--border);background:#fff}
 .static a .lab{padding:12px 14px;font-size:13px;font-weight:600;color:var(--navy)}
 .static a .lab span{display:block;font-weight:400;color:var(--grey);font-size:12px;margin-top:2px}
+.modal{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal[hidden]{display:none}
+.modal-backdrop{position:absolute;inset:0;background:rgba(13,14,39,.55)}
+.modal-box{position:relative;background:#fff;border-radius:14px;padding:26px;max-width:540px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.32)}
+.modal-box h3{margin:0 0 4px;font-size:19px;color:var(--navy)}
+.modal-box>p{margin:0 0 18px;font-size:13px;color:var(--grey)}
+.modal-x{position:absolute;top:10px;right:14px;border:0;background:transparent;font-size:24px;line-height:1;color:var(--grey);cursor:pointer;padding:4px}
+.modal-x:hover{color:var(--ink)}
+.qr-row{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media(max-width:520px){.qr-row{grid-template-columns:1fr}}
+.qr-card{background:#fff;border:1px solid var(--border);border-radius:12px;border-top:5px solid var(--navy);padding:18px;text-align:center}
+.qr-card:nth-child(2){border-top-color:var(--teal)}
+.qr-card img{width:150px;height:150px;display:block;margin:0 auto 12px;border:1px solid var(--border);border-radius:8px;background:#fff;object-fit:contain}
+.qr-card .qr-lab{font-size:14px;font-weight:600;color:var(--navy)}
+.qr-card .qr-lab span{display:block;font-weight:400;color:var(--grey);font-size:12px;margin-top:3px}
 .note{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:16px 18px;font-size:13px;color:var(--grey);margin-top:24px}
 .note b{color:var(--ink)}
 footer{border-top:1px solid var(--border);padding:20px 32px;font-size:12px;color:var(--grey);text-align:center}
@@ -63,6 +78,7 @@ ul.mini{margin:8px 0 0;padding-left:18px;font-size:13px;color:var(--grey)}
 <a class="card coral" href="pages/setup.html"><div class="k">Setup</div><h3>Free Databricks workspace →</h3><p>Step-by-step: create a free-forever Free Edition workspace, import the notebook, and build the tables.</p></a>
 <a class="card purple" href="notebook/energy_trading_full_solution.ipynb" download><div class="k">Notebook</div><h3>Download the notebook →</h3><p>The .ipynb that generates the synthetic data and creates all 10 energy_trading tables.</p></a>
 <a class="card teal" href="assets/sketch_to_dashboard.jpg" download="sketch_to_dashboard.jpg"><div class="k">Sketch</div><h3>Sketch to Dashboard →</h3><p>The hand-drawn dashboard layout sketch — download the reference image.</p></a>
+<a class="card blue" href="#app" id="appCard"><div class="k">Mobile</div><h3>Download the Databricks app →</h3><p>Scan a QR with your phone to open the App Store or Google Play.</p></a>
 </div>
 
 <div class="sec">Static reference — download, print, or slide</div>
@@ -85,6 +101,31 @@ ul.mini{margin:8px 0 0;padding-left:18px;font-size:13px;color:var(--grey)}
 
 </div>
 <footer>Energy Trading workshop pack · self-contained · works offline · sample figures shaped from the source notebook</footer>
+
+<div class="modal" id="appModal" hidden>
+<div class="modal-backdrop" data-close></div>
+<div class="modal-box" role="dialog" aria-modal="true" aria-label="Download the Databricks app">
+<button class="modal-x" data-close aria-label="Close">×</button>
+<h3>Download the Databricks app</h3>
+<p>Scan a code with your phone camera to open the store.</p>
+<div class="qr-row">
+<div class="qr-card"><img src="assets/qr_ios.png" alt="App Store QR code for the Databricks app"><div class="qr-lab">iOS · App Store <span>Point your iPhone camera at the code</span></div></div>
+<div class="qr-card"><img src="assets/qr_android.png" alt="Google Play QR code for the Databricks app"><div class="qr-lab">Android · Google Play <span>Point your Android camera at the code</span></div></div>
+</div>
+</div>
+</div>
+
 <script src="assets/logos.js"></script>
 <script src="assets/download.js"></script>
+<script>
+(function(){
+  var modal=document.getElementById('appModal');
+  var card=document.getElementById('appCard');
+  function open(e){e.preventDefault();modal.hidden=false;}
+  function close(){modal.hidden=true;}
+  card.addEventListener('click',open);
+  modal.addEventListener('click',function(e){if(e.target.hasAttribute('data-close'))close();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!modal.hidden)close();});
+})();
+</script>
 </body></html>
