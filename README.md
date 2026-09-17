@@ -19,7 +19,6 @@ dataset. Open **`index.html`** in any browser to start — everything links from
 2. Common join paths
 3. KPI map — grouped by business question
 4. Whose data is this? (market-wide, not one company)
-5. The surveillance story
 
 **Printable** — `EnergyTrading_Workshop_Pack.pdf` (title page + all five diagrams).
 
@@ -35,7 +34,7 @@ index.html                      landing page (start here)
 README.md
 EnergyTrading_Workshop_Pack.pdf printable pack
 pages/   model.html  dashboard.html  genie.html  shared.css
-diagrams/  01..05  (.png and .svg)
+diagrams/  01..04  (.png and .svg)
 ```
 
 No build step, no server, no internet needed . Chart.js is bundled locally in `pages/vendor/`, so no internet is required at all.
