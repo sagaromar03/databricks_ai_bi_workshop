@@ -1,0 +1,114 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sketch to dashboard</title><link rel="stylesheet" href="shared.css">
+<style>
+ .steps{counter-reset:s;margin:0;padding:0;list-style:none}
+ .steps li{position:relative;background:#fff;border:1px solid var(--border);border-radius:10px;
+   padding:16px 18px 16px 60px;margin-bottom:12px;border-left:5px solid var(--blue)}
+ .steps li::before{counter-increment:s;content:counter(s);position:absolute;left:16px;top:16px;
+   width:28px;height:28px;border-radius:50%;background:var(--navy);color:#fff;font-weight:700;
+   font-size:14px;display:flex;align-items:center;justify-content:center}
+ .steps h3{margin:0 0 5px;font-size:15px;color:var(--navy)}
+ .steps p{margin:0;font-size:13px;color:var(--ink)}
+ .steps code{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-size:12px}
+ .cta{display:inline-block;background:#FF3621;color:#fff;text-decoration:none;font-weight:600;
+   font-size:14px;padding:10px 18px;border-radius:8px;margin:8px 0 2px}
+ .cta:hover{background:#e02e1a}
+ h2.sec{font-size:14px;text-transform:uppercase;letter-spacing:.04em;color:var(--grey);margin:26px 0 12px}
+ .steps .clicks{margin:8px 0 0;padding-left:18px;font-size:12.5px;color:var(--grey)}
+ .steps .clicks li{background:none;border:0;border-radius:0;padding:2px 0;margin:0;list-style:disc}
+ .steps .clicks li::before{content:none}
+ .steps .clicks b{color:var(--navy)}
+ .shot{margin:14px 0 2px;max-width:620px}
+ .shot img,.shot video{width:100%;display:block;border:1px solid var(--border);border-radius:8px;background:#fff}
+ .shot figcaption{font-size:12px;color:var(--grey);margin-top:6px}
+ .shot.missing img,.shot.missing video{display:none}
+ .shot.missing{border:1.5px dashed #bcbad0;border-radius:8px;background:var(--panel);padding:22px 18px}
+ .shot.missing::before{content:"▶  Screen recording";display:block;font-weight:700;color:var(--navy);
+   font-size:13px;letter-spacing:.02em;margin-bottom:4px}
+ .shot.missing figcaption{margin-top:0}
+ .sketch-thumb{max-width:340px;margin:10px 0 2px}
+ .sketch-thumb img{width:100%;display:block;border:1px solid var(--border);border-radius:8px}
+ .stepnav{display:flex;justify-content:space-between;gap:12px;margin-top:24px;flex-wrap:wrap}
+ .stepnav a{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);
+   border-radius:10px;padding:12px 16px;text-decoration:none;color:var(--navy);font-weight:600;font-size:13px}
+ .stepnav a:hover{border-color:var(--navy)}
+ .stepnav a.prev{border-left:5px solid var(--coral)}
+ .stepnav a span{display:block;font-weight:400;color:var(--grey);font-size:11px}
+</style></head>
+<body>
+<header class="top"><a href="../index.html">← Workshop repository</a>
+<h1>Sketch to dashboard</h1>
+<p>Have a rough layout in mind? Sketch it on paper, hand the photo to AI/BI Genie, and let it build the dashboard for you — no dragging widgets around.</p></header>
+<div class="wrap">
+
+<div class="note"><b>Before you start:</b> you need a dashboard with the <code>energy_trading</code> dataset already added (see <a href="create_dashboard.html">Step 3 · Create a dashboard</a>) and a running SQL warehouse.</div>
+
+<h2 class="sec">From sketch to dashboard</h2>
+<ol class="steps">
+
+  <li><h3>Download the sketch</h3>
+    <p>Grab the hand-drawn layout sketch and save it to your computer — you'll hand this image to Genie.</p>
+    <div class="sketch-thumb"><img src="../assets/sketch_to_dashboard.jpeg" alt="Hand-drawn dashboard layout sketch"></div>
+    <a class="cta" href="../assets/sketch_to_dashboard.jpeg" download="sketch_to_dashboard.jpeg">Download the sketch (.jpeg) ↓</a>
+    <p style="margin-top:8px">Or use your own — any photo of a dashboard layout works.</p>
+  </li>
+
+  <li><h3>Open Edit dashboard</h3>
+    <p>Open the dashboard in edit mode so you can add to it.</p>
+    <ul class="clicks">
+      <li>Open your dashboard and click <b>Edit draft</b> / <b>Edit dashboard</b> at the top.</li>
+    </ul>
+    <figure class="shot"><video src="../assets/gifs/sketch_edit.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Open the dashboard ▸ Edit dashboard</figcaption></figure>
+  </li>
+
+  <li><h3>Add a new page</h3>
+    <p>Give the sketch its own blank page so it doesn't disturb your existing one.</p>
+    <ul class="clicks">
+      <li>Next to the page tabs, click <b>+</b> to add a new page.</li>
+      <li>(Optional) rename it, e.g. <code>From sketch</code>.</li>
+    </ul>
+    <figure class="shot"><video src="../assets/gifs/sketch_newpage.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Page tabs ▸ + ▸ new page</figcaption></figure>
+  </li>
+
+  <li><h3>Attach the sketch in Genie</h3>
+    <p>Hand the image to Genie and let it read the layout and build the widgets.</p>
+    <ul class="clicks">
+      <li>Open the <b>Assistant / Genie</b> panel and click the <b>attach</b> (📎) button.</li>
+      <li>Pick the <code>sketch_to_dashboard.jpeg</code> from your <b>Downloads</b>.</li>
+      <li>Add a short prompt if you like (e.g. <code>build this dashboard from the sketch</code>) and press <b>Enter</b>.</li>
+      <li>Wait while Genie reads the sketch and lays out the widgets — the dashboard builds itself.</li>
+    </ul>
+    <figure class="shot"><video src="../assets/gifs/sketch_genie.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Genie ▸ attach sketch from Downloads ▸ Enter ▸ dashboard built</figcaption></figure>
+  </li>
+
+</ol>
+
+<div class="note"><b>Tip:</b> the clearer the sketch — labelled boxes, rough grid, a title — the closer Genie gets. You can always follow up with more prompts to tweak what it built.</div>
+
+<div class="stepnav">
+  <a class="prev" href="create_dashboard.html">← Step 3 · Create a dashboard<span>Build it by asking Genie</span></a>
+  <a href="genie.html">Genie question bank →<span>Ask questions of the data</span></a>
+</div>
+
+</div>
+<footer>Energy Trading workshop pack · sketch to dashboard</footer>
+<script src="../assets/logos.js"></script>
+<script src="../assets/download.js"></script>
+<script>
+// Until real media is dropped in assets/gifs/, show a labelled placeholder box.
+document.querySelectorAll('.shot img').forEach(function(img){
+  function fail(){img.closest('.shot').classList.add('missing');}
+  img.addEventListener('error',fail);
+  if(img.complete && img.naturalWidth===0) fail();
+});
+document.querySelectorAll('.shot video').forEach(function(v){
+  v.addEventListener('error',function(){v.closest('.shot').classList.add('missing');});
+});
+// Hide the sketch thumbnail if the image isn't present (e.g. local preview before it's committed).
+document.querySelectorAll('.sketch-thumb img').forEach(function(img){
+  function hide(){var w=img.closest('.sketch-thumb'); if(w) w.style.display='none';}
+  img.addEventListener('error',hide);
+  if(img.complete && img.naturalWidth===0) hide();
+});
+</script>
+</body></html>
