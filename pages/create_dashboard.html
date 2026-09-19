@@ -1,0 +1,157 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Create an AI/BI dashboard</title><link rel="stylesheet" href="shared.css">
+<style>
+ .steps{counter-reset:s;margin:0;padding:0;list-style:none}
+ .steps li{position:relative;background:#fff;border:1px solid var(--border);border-radius:10px;
+   padding:16px 18px 16px 60px;margin-bottom:12px;border-left:5px solid var(--blue)}
+ .steps li::before{counter-increment:s;content:counter(s);position:absolute;left:16px;top:16px;
+   width:28px;height:28px;border-radius:50%;background:var(--navy);color:#fff;font-weight:700;
+   font-size:14px;display:flex;align-items:center;justify-content:center}
+ .steps h3{margin:0 0 5px;font-size:15px;color:var(--navy)}
+ .steps p{margin:0;font-size:13px;color:var(--ink)}
+ .steps code{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-size:12px}
+ .cta{display:inline-block;background:#FF3621;color:#fff;text-decoration:none;font-weight:600;
+   font-size:14px;padding:10px 18px;border-radius:8px;margin:2px 0}
+ .cta:hover{background:#e02e1a}
+ h2.sec{font-size:14px;text-transform:uppercase;letter-spacing:.04em;color:var(--grey);margin:26px 0 12px}
+ .steps .clicks{margin:8px 0 0;padding-left:18px;font-size:12.5px;color:var(--grey)}
+ .steps .clicks li{background:none;border:0;border-radius:0;padding:2px 0;margin:0;list-style:disc}
+ .steps .clicks li::before{content:none}
+ .steps .clicks b{color:var(--navy)}
+ .shot{margin:14px 0 2px;max-width:620px}
+ .shot img,.shot video{width:100%;display:block;border:1px solid var(--border);border-radius:8px;background:#fff}
+ .shot figcaption{font-size:12px;color:var(--grey);margin-top:6px}
+ .shot.missing img,.shot.missing video{display:none}
+ .shot.missing{border:1.5px dashed #bcbad0;border-radius:8px;background:var(--panel);padding:22px 18px}
+ .shot.missing::before{content:"▶  Screen recording";display:block;font-weight:700;color:var(--navy);
+   font-size:13px;letter-spacing:.02em;margin-bottom:4px}
+ .shot.missing figcaption{margin-top:0}
+ .stepnav{display:flex;justify-content:space-between;gap:12px;margin-top:24px;flex-wrap:wrap}
+ .stepnav a{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);
+   border-radius:10px;padding:12px 16px;text-decoration:none;color:var(--navy);font-weight:600;font-size:13px}
+ .stepnav a:hover{border-color:var(--navy)}
+ .stepnav a.prev{border-left:5px solid var(--coral)}
+ .stepnav a span{display:block;font-weight:400;color:var(--grey);font-size:11px}
+ .prompts{margin:12px 0 2px;display:flex;flex-direction:column;gap:10px;max-width:640px}
+ .prompt{position:relative;background:var(--panel);border:1px solid var(--border);border-left:4px solid var(--purple);
+   border-radius:8px;padding:13px 92px 13px 14px}
+ .prompt .ptext{margin:0;font-size:13px;color:var(--ink);line-height:1.5}
+ .prompt .copy{position:absolute;top:10px;right:10px;border:1px solid var(--border);background:#fff;color:var(--navy);
+   font-weight:600;font-size:12px;padding:6px 13px;border-radius:6px;cursor:pointer;transition:background .12s,color .12s}
+ .prompt .copy:hover{border-color:var(--navy)}
+ .prompt .copy.copied{background:var(--teal);color:#fff;border-color:var(--teal)}
+</style></head>
+<body>
+<header class="top"><a href="../index.html">← Workshop repository</a>
+<h1>Create an AI/BI dashboard</h1>
+<p>With the <code>energy_trading</code> tables built, turn them into an interactive AI/BI dashboard in Databricks — add a dataset, then just <b>ask AI/BI Genie</b> to generate the chart, KPI and filter in plain language, and publish it to share.</p></header>
+<div class="wrap">
+
+<div class="note"><b>Before you start:</b> you need the <code>energy_trading</code> tables in your catalog (see <a href="setup_notebook.html">Step 2 · Import the notebook</a>) and a running SQL warehouse — on Free Edition the <b>Serverless Starter Warehouse</b> is available by default.</div>
+
+<h2 class="sec">Build the dashboard</h2>
+<ol class="steps">
+
+  <li><h3>Create a new dashboard</h3>
+    <p>Start a blank AI/BI dashboard to build on.</p>
+    <ul class="clicks">
+      <li>In the left sidebar, click <b>New</b> → <b>Dashboard</b> (or open <b>Dashboards</b> and click <b>Create dashboard</b>).</li>
+      <li>Give it a name, e.g. <code>Energy Trading — Activity</code>.</li>
+    </ul>
+    <figure class="shot"><video src="../assets/gifs/dash_new.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>New ▸ Dashboard ▸ name it</figcaption></figure>
+  </li>
+
+  <li><h3>Add a dataset</h3>
+    <p>A dataset is the data your widgets read from. Add one straight from Unity Catalog — no SQL needed.</p>
+    <ul class="clicks">
+      <li>Open the <b>Data</b> tab at the top of the dashboard, then click <b>Add data</b>.</li>
+      <li>In <b>Add data from Unity Catalog</b>, browse to <code>energy</code> ▸ <code>energy_trading</code> and pick the <code>energy_trading_metrics</code> metric view (or any table), then click <b>Add</b>.</li>
+      <li>It appears in the <b>Data Model</b> with its measures and fields ready to use. (Prefer SQL? Use <b>Add SQL dataset</b> instead.)</li>
+    </ul>
+    <figure class="shot"><video src="../assets/gifs/dash_dataset.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Data tab ▸ Add data ▸ energy_trading_metrics ▸ Add</figcaption></figure>
+  </li>
+
+  <li><h3>Ask Genie for a counter</h3>
+    <p>Build the widgets by describing them in plain language — no manual field-picking. Start with a headline number.</p>
+    <ul class="clicks">
+      <li>Open the <b>Assistant / Genie</b> panel on the dashboard.</li>
+      <li>Type a request — e.g. <code>add a counter for total number of trades</code> — and press <b>Enter</b>.</li>
+      <li>Genie generates the counter; <b>add it to the canvas</b>.</li>
+    </ul>
+    <figure class="shot"><video src="../assets/gifs/dash_counter.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Genie ▸ "add a counter for total number of trades" ▸ Enter ▸ KPI</figcaption></figure>
+  </li>
+
+  <li><h3>Ask Genie for a chart</h3>
+    <p>Add a visualization the same way — just describe it.</p>
+    <ul class="clicks">
+      <li>In Genie, type <code>add a bar graph for total trades by commodity and color it by direction</code> and press <b>Enter</b>.</li>
+      <li>Add the generated <b>chart</b> to the canvas and position it next to the counter.</li>
+    </ul>
+    <figure class="shot"><video src="../assets/gifs/dash_chart.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Genie ▸ "bar graph of trades by commodity, colored by direction" ▸ Enter ▸ chart</figcaption></figure>
+  </li>
+
+  <li><h3>Try a few power prompts</h3>
+    <p>Genie can shape the whole page, not just one widget at a time. Copy any of these and paste it into the Genie box:</p>
+    <div class="prompts">
+      <div class="prompt"><p class="ptext">Make all the existing and future widgets with curve 12. And configure decimal places to exact 2.</p><button class="copy" type="button">Copy</button></div>
+      <div class="prompt"><p class="ptext">Add a text box at the top with 7*2 grid make heading as Executive Summary. And generate description for this page, not more than 15 words.</p><button class="copy" type="button">Copy</button></div>
+      <div class="prompt"><p class="ptext">add counter for total number of unique traders, counter for unique counter parties, add counter for total revenue</p><button class="copy" type="button">Copy</button></div>
+    </div>
+  </li>
+
+  <li><h3>Ask Genie for a filter</h3>
+    <p>Let viewers slice the whole dashboard — ask Genie to add the control.</p>
+    <ul class="clicks">
+      <li>In Genie, type <code>add a filter for country and trade date at the top</code> (or any field) and press <b>Enter</b>.</li>
+      <li>Add the filter to the canvas; the chart and counter update as you change it.</li>
+    </ul>
+    <figure class="shot"><video src="../assets/gifs/dash_filter.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Genie ▸ "add a filter for country and trade date" ▸ Enter ▸ filters</figcaption></figure>
+  </li>
+
+  <li><h3>Publish</h3>
+    <p>Share the finished dashboard.</p>
+    <ul class="clicks">
+      <li>Click <b>Publish</b> at the top-right.</li>
+      <li>Choose who can view it, then open the published link to see the live dashboard.</li>
+    </ul>
+    <figure class="shot"><video src="../assets/gifs/dash_publish.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Publish ▸ set access ▸ open the live dashboard</figcaption></figure>
+  </li>
+
+</ol>
+
+<div class="note"><b>Tip:</b> keep the first dataset broad (one query with the columns you need) and build several widgets on top of it — it's faster than a query per widget, and the filter then drives them all at once.</div>
+
+<div class="stepnav">
+  <a class="prev" href="setup_notebook.html">← Step 2 · Import the notebook<span>Build the energy_trading tables</span></a>
+  <a href="genie.html">Genie question bank →<span>Ask questions of the data</span></a>
+</div>
+
+</div>
+<footer>Energy Trading workshop pack · create an AI/BI dashboard</footer>
+<script src="../assets/logos.js"></script>
+<script src="../assets/download.js"></script>
+<script>
+// Until real media is dropped in assets/gifs/, show a labelled placeholder box.
+document.querySelectorAll('.shot img').forEach(function(img){
+  function fail(){img.closest('.shot').classList.add('missing');}
+  img.addEventListener('error',fail);
+  if(img.complete && img.naturalWidth===0) fail();
+});
+document.querySelectorAll('.shot video').forEach(function(v){
+  v.addEventListener('error',function(){v.closest('.shot').classList.add('missing');});
+});
+// One-click copy for the example prompts.
+document.querySelectorAll('.prompt .copy').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var text=btn.closest('.prompt').querySelector('.ptext').textContent.trim();
+    function done(){var o=btn.textContent;btn.textContent='Copied!';btn.classList.add('copied');
+      setTimeout(function(){btn.textContent=o;btn.classList.remove('copied');},1500);}
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(done).catch(fallback);
+    } else { fallback(); }
+    function fallback(){var ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
+      document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done();}catch(e){}document.body.removeChild(ta);}
+  });
+});
+</script>
+</body></html>

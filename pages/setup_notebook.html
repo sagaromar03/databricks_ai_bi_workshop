@@ -1,0 +1,126 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Step 2 · Import the notebook and build the tables</title><link rel="stylesheet" href="shared.css">
+<style>
+ .steps{counter-reset:s;margin:0;padding:0;list-style:none}
+ .steps li{position:relative;background:#fff;border:1px solid var(--border);border-radius:10px;
+   padding:16px 18px 16px 60px;margin-bottom:12px;border-left:5px solid var(--blue)}
+ .steps li::before{counter-increment:s;content:counter(s);position:absolute;left:16px;top:16px;
+   width:28px;height:28px;border-radius:50%;background:var(--navy);color:#fff;font-weight:700;
+   font-size:14px;display:flex;align-items:center;justify-content:center}
+ .steps h3{margin:0 0 5px;font-size:15px;color:var(--navy)}
+ .steps p{margin:0;font-size:13px;color:var(--ink)}
+ .steps code{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-size:12px}
+ .cta{display:inline-block;background:#FF3621;color:#fff;text-decoration:none;font-weight:600;
+   font-size:14px;padding:10px 18px;border-radius:8px;margin:2px 0}
+ .cta:hover{background:#e02e1a}
+ h2.sec{font-size:14px;text-transform:uppercase;letter-spacing:.04em;color:var(--grey);margin:26px 0 12px}
+ .stepnav{display:flex;justify-content:space-between;gap:12px;margin-top:24px;flex-wrap:wrap}
+ .stepnav a{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);
+   border-radius:10px;padding:12px 16px;text-decoration:none;color:var(--navy);font-weight:600;font-size:13px}
+ .stepnav a:hover{border-color:var(--navy)}
+ .stepnav a.prev{border-left:5px solid var(--coral)}
+ .stepnav a span{display:block;font-weight:400;color:var(--grey);font-size:11px}
+ .steps .clicks{margin:8px 0 0;padding-left:18px;font-size:12.5px;color:var(--grey)}
+ .steps .clicks li{background:none;border:0;border-radius:0;padding:2px 0;margin:0;list-style:disc}
+ .steps .clicks li::before{content:none}
+ .steps .clicks b{color:var(--navy)}
+ .shot{margin:14px 0 2px;max-width:620px}
+ .shot img,.shot video{width:100%;display:block;border:1px solid var(--border);border-radius:8px;background:#fff}
+ .shot figcaption{font-size:12px;color:var(--grey);margin-top:6px}
+ .shot.missing img,.shot.missing video{display:none}
+ .shot.missing{border:1.5px dashed #bcbad0;border-radius:8px;background:var(--panel);padding:22px 18px}
+ .shot.missing::before{content:"▶  Screen recording";display:block;font-weight:700;color:var(--navy);
+   font-size:13px;letter-spacing:.02em;margin-bottom:4px}
+ .shot.missing figcaption{margin-top:0}
+</style></head>
+<body>
+<header class="top"><a href="../index.html">← Workshop repository</a>
+<h1>Step 2 · Import the notebook and build the tables</h1>
+<p>With your free workspace ready, load the notebook, run it on serverless compute, and build all 10 <code>energy_trading</code> tables.</p></header>
+<div class="wrap">
+
+<a class="cta" href="../notebook/energy_trading_workshop.py" download>Download the notebook (.py) ↓</a>
+
+<h2 class="sec">Load the notebook and build the tables</h2>
+<ol class="steps">
+
+  <li><h3>Download the notebook</h3>
+    <p>From this repo, <a href="../notebook/energy_trading_workshop.py" download>download <code>energy_trading_workshop.py</code></a> from the <code>notebook/</code> folder and save it somewhere you can find it. It's a Databricks Python source file (<code>.py</code>) — import it directly, no need to open or convert it locally.</p>
+  </li>
+
+  <li><h3>Import it into your workspace</h3>
+    <p>Bring the notebook file into Databricks. It lands as an editable notebook in your home folder.</p>
+    <ul class="clicks">
+      <li>In the left sidebar, click <b>Workspace</b>, then open your <b>Home</b> folder (or any folder you own).</li>
+      <li>Click the <b>⋯</b> kebab menu at the top-right of the folder (or right-click the folder) → <b>Import</b>.</li>
+      <li>Keep source set to <b>File</b>, then drag the <code>.py</code> in or <b>Browse</b> to it, and click <b>Import</b>.</li>
+      <li>The notebook opens automatically once the import finishes.</li>
+    </ul>
+    <figure class="shot"><video src="../assets/gifs/import_notebook.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Workspace ▸ Home ▸ ⋯ ▸ Import ▸ drop the file ▸ Import</figcaption></figure>
+  </li>
+
+  <li><h3>Attach serverless compute</h3>
+    <p>The notebook needs compute to run. On Free Edition, serverless is the only option — there's nothing to size or start.</p>
+    <ul class="clicks">
+      <li>With the notebook open, look at the <b>compute selector</b> in the top-right toolbar.</li>
+      <li>Click it and choose <b>Serverless</b>. It spins up on its own the first time you run a cell.</li>
+    </ul>
+    <figure class="shot"><video src="../assets/gifs/attach_compute.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Top-right compute selector ▸ Serverless</figcaption></figure>
+  </li>
+
+  <li><h3>Create and set the widgets</h3>
+    <p>The notebook is parameterised with widgets so you can point it at a catalog you can write to.</p>
+    <ul class="clicks">
+      <li><b>Run the first cell</b> — it creates the widgets, which appear as a bar across the top of the notebook.</li>
+      <li>Set <code>catalog</code> to a catalog you can write to (on Free Edition, <code>workspace</code> works).</li>
+      <li>Leave <code>schema</code> as <code>energy_trading</code>.</li>
+      <li>Optional: pin <code>date_end</code> to a fixed date so the synthetic data is reproducible.</li>
+    </ul>
+    <figure class="shot"><video src="../assets/gifs/set_widgets.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Run cell 1 ▸ set <code>catalog</code> and <code>schema</code> in the widget bar</figcaption></figure>
+  </li>
+
+  <li><h3>Run all cells</h3>
+    <p>This is the step that actually builds the data. It generates the synthetic trades and writes the tables.</p>
+    <ul class="clicks">
+      <li>Click <b>Run all</b> at the top of the notebook.</li>
+      <li>The notebook writes 10 tables into <code>&lt;catalog&gt;.energy_trading</code> (plus the finance schema if you run Part 5).</li>
+      <li>The <b>first run takes a few minutes</b> while serverless warms up — later runs are faster.</li>
+    </ul>
+    <figure class="shot"><video src="../assets/gifs/run_all.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Top toolbar ▸ Run all ▸ wait for every cell to finish</figcaption></figure>
+  </li>
+
+  <li><h3>Confirm the tables</h3>
+    <p>Check the build succeeded before moving on to explore the data.</p>
+    <ul class="clicks">
+      <li>Open <b>Catalog</b> in the sidebar and expand your catalog → <code>energy_trading</code>.</li>
+      <li>Confirm the tables are present — the <b>10 core tables</b>, plus a few helper views.</li>
+      <li>Then explore them with the <a href="er.html">interactive ER diagram</a> and the <a href="genie.html">Genie question bank</a>.</li>
+    </ul>
+    <figure class="shot"><video src="../assets/gifs/confirm_tables.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Catalog ▸ your catalog ▸ energy_trading ▸ the tables</figcaption></figure>
+  </li>
+
+</ol>
+
+<div class="note"><b>Good to know:</b> Free Edition is serverless-only and quota-limited, so very large regenerations may hit daily limits — the default settings in the notebook are well within range. If a run pauses, wait and retry, or reduce the date range. Free Edition also includes Genie, so you can point a Genie space at <code>energy_trading</code> straight after the tables build.</div>
+
+<div class="stepnav">
+  <a class="prev" href="setup_workspace.html">← Step 1 · Create a workspace<span>Spin up a free Free Edition workspace</span></a>
+  <a href="genie.html">Genie question bank →<span>Ask your first questions</span></a>
+</div>
+
+</div>
+<footer>Energy Trading workshop pack · free Databricks setup guide</footer>
+<script src="../assets/logos.js"></script>
+<script src="../assets/download.js"></script>
+<script>
+// Until real media is dropped in assets/gifs/, show a labelled placeholder box.
+document.querySelectorAll('.shot img').forEach(function(img){
+  function fail(){img.closest('.shot').classList.add('missing');}
+  img.addEventListener('error',fail);
+  if(img.complete && img.naturalWidth===0) fail();
+});
+document.querySelectorAll('.shot video').forEach(function(v){
+  v.addEventListener('error',function(){v.closest('.shot').classList.add('missing');});
+});
+</script>
+</body></html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Common Join Paths</title><link rel="stylesheet" href="shared.css">
+<style>
+ .stage{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px;overflow:auto}
+ #stage svg{display:block;min-width:820px;width:100%;height:auto;font-family:'Segoe UI',Helvetica,Arial,sans-serif}
+ .tbl rect{transition:opacity .12s}
+ .tbl text.n{font-size:14px;font-weight:700}
+ .tbl text.r{font-size:11px}
+ .rel{stroke:#a7add6;stroke-width:1.6;fill:none;transition:stroke .12s,stroke-width .12s,opacity .12s}
+ .rel-hit{stroke:transparent;stroke-width:14;fill:none;cursor:pointer}
+ .dot{fill:#a7add6;transition:fill .12s,opacity .12s}
+ svg.focus .rel,svg.focus .dot{opacity:.12}
+ svg.focus .tbl{opacity:.34}
+ svg.focus .rel.on{opacity:1;stroke:#D85A30;stroke-width:3}
+ svg.focus .dot.on{opacity:1;fill:#D85A30}
+ svg.focus .tbl.on{opacity:1}
+ .legend{margin-top:14px;font-size:12px;color:var(--grey);display:flex;gap:20px;flex-wrap:wrap}
+ .legend span{display:inline-flex;align-items:center;gap:6px}
+ .sw{width:22px;border-top:3px solid #D85A30}
+</style></head>
+<body>
+<header class="top"><a href="../index.html">← Workshop repository</a>
+<h1>Common join paths</h1>
+<p>How the energy_trading tables connect for analysis. Every line runs many → one: many trades point to one trader, one hour, one instrument.</p></header>
+<div class="wrap">
+<div class="stage" id="stage"></div>
+<div class="legend">
+ <span><span class="sw"></span> relationship (hover to trace)</span>
+ <span>■ dimension (blue) · fact (coral) · derived (dashed)</span>
+</div>
+<div class="note"><b>Tip:</b> to reach country / continent, join fact_trade → dim_delivery_point → dim_geography (two hops, the "snowflake").</div>
+</div>
+<footer>Energy Trading workshop pack · common join paths</footer>
+<script src="../assets/logos.js"></script>
+<script>
+const NS='http://www.w3.org/2000/svg';
+function el(n,a){const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);return e;}
+// nodes: id,label,role,x,y,type
+const N={
+ fact_trade:{l:'fact_trade',r:'1 row per trade · ~1.0M',x:330,y:150,t:'fact',w:180,h:64},
+ dim_trader:{l:'dim_trader',r:'who',x:40,y:40,t:'dim'},
+ dim_counterparty:{l:'dim_counterparty',r:'with whom',x:40,y:150,t:'dim'},
+ dim_instrument:{l:'dim_instrument',r:'what',x:40,y:260,t:'dim'},
+ dim_time:{l:'dim_time',r:'when',x:620,y:40,t:'dim'},
+ dim_market:{l:'dim_market',r:'how',x:620,y:150,t:'dim'},
+ dim_delivery_point:{l:'dim_delivery_point',r:'where',x:620,y:260,t:'dim'},
+ dim_geography:{l:'dim_geography',r:'country / continent',x:620,y:360,t:'dim'},
+ fact_position:{l:'fact_position',r:'net long / short',x:250,y:370,t:'fact',w:150},
+ fact_market_price:{l:'fact_market_price',r:'the referee',x:430,y:370,t:'fact',w:150},
+};
+for(const k in N){const n=N[k]; n.w=n.w||170; n.h=n.h||52;}
+// relationships to fact_trade (many->one)
+const R=[
+ ['dim_trader','fact_trade'],['dim_counterparty','fact_trade'],['dim_instrument','fact_trade'],
+ ['dim_time','fact_trade'],['dim_market','fact_trade'],['dim_delivery_point','fact_trade'],
+ ['dim_delivery_point','dim_geography'], // snowflake (dp is child? geography parent)
+];
+const DERIVED=[['fact_trade','fact_position'],['fact_trade','fact_market_price']];
+const W=810,H=445;
+const svg=el('svg',{viewBox:`0 0 ${W} ${H}`});
+const gR=el('g',{}); svg.appendChild(gR);
+const gB=el('g',{}); svg.appendChild(gB);
+function center(n){return {x:n.x+n.w/2,y:n.y+n.h/2};}
+function edgePoint(a,b){ // point on a's border toward b
+ const ca=center(a),cb=center(b);
+ const dx=cb.x-ca.x,dy=cb.y-ca.y;
+ const hw=a.w/2,hh=a.h/2;
+ const sx=dx?hw/Math.abs(dx):Infinity, sy=dy?hh/Math.abs(dy):Infinity;
+ const s=Math.min(sx,sy);
+ return {x:ca.x+dx*s, y:ca.y+dy*s};
+}
+const rels=[];
+function drawRel(childId,parentId,derived,idx){
+ const c=N[childId],p=N[parentId];
+ const a=edgePoint(c,p), z=edgePoint(p,c);
+ const line=el('polyline',{points:`${a.x},${a.y} ${z.x},${z.y}`,class:'rel'});
+ if(derived){line.setAttribute('stroke','#D85A30');line.setAttribute('stroke-dasharray','5 4');}
+ const hit=el('polyline',{points:`${a.x},${a.y} ${z.x},${z.y}`,class:'rel-hit'});
+ const dot=el('rect',{x:z.x-3,y:z.y-3,width:6,height:6,rx:1,class:'dot'});
+ gR.appendChild(line);gR.appendChild(dot);gR.appendChild(hit);
+ const o={idx,line,dot,child:childId,parent:parentId};
+ rels.push(o);
+ hit.addEventListener('mouseenter',()=>focus(o));
+ hit.addEventListener('mouseleave',blur);
+}
+let i=0; R.forEach(r=>drawRel(r[0],r[1],false,i++)); DERIVED.forEach(r=>drawRel(r[0],r[1],true,i++));
+const boxes={};
+for(const k in N){const n=N[k];
+ const g=el('g',{class:'tbl'});
+ const stroke=n.t==='fact'?'#D85A30':'#4a42a6';
+ const fill=n.t==='fact'?'#fbf1ec':'#eef0fb';
+ g.appendChild(el('rect',{x:n.x,y:n.y,width:n.w,height:n.h,rx:9,fill:fill,stroke:stroke,'stroke-width':1.4}));
+ const nm=el('text',{x:n.x+14,y:n.y+ (n.r?23:30),class:'n',fill:n.t==='fact'?'#993C1D':'#0d0e27'});nm.textContent=n.l;g.appendChild(nm);
+ if(n.r){const rr=el('text',{x:n.x+14,y:n.y+41,class:'r',fill:'#5F5E5A'});rr.textContent=n.r;g.appendChild(rr);}
+ gB.appendChild(g);boxes[k]=g;
+ g.addEventListener('mouseenter',()=>focusNode(k));
+ g.addEventListener('mouseleave',blur);
+}
+document.getElementById('stage').appendChild(svg);
+function focus(o){svg.classList.add('focus');rels.forEach(r=>{const on=r===o;r.line.classList.toggle('on',on);r.dot.classList.toggle('on',on);});
+ for(const k in boxes)boxes[k].classList.toggle('on',k===o.child||k===o.parent);}
+function focusNode(id){svg.classList.add('focus');rels.forEach(r=>{const on=r.child===id||r.parent===id;r.line.classList.toggle('on',on);r.dot.classList.toggle('on',on);});
+ const rel=new Set([id]);rels.forEach(r=>{if(r.child===id||r.parent===id){rel.add(r.child);rel.add(r.parent);}});
+ for(const k in boxes)boxes[k].classList.toggle('on',rel.has(k));}
+function blur(){svg.classList.remove('focus');rels.forEach(r=>{r.line.classList.remove('on');r.dot.classList.remove('on');});for(const k in boxes)boxes[k].classList.remove('on');}
+</script>
+</body></html>

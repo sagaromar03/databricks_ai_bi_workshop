@@ -1,0 +1,68 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Genie Question Bank</title><link rel="stylesheet" href="shared.css">
+<style>
+.q{background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:12px;border-left:5px solid var(--blue)}
+.q .qt{font-size:15px;font-weight:600;color:var(--navy);margin-bottom:6px;display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.q .meta{font-size:12px;color:var(--grey);margin-bottom:8px}
+.q .shows{font-size:13px;color:var(--ink)}
+.q .copy{border:1px solid var(--border);background:var(--panel);border-radius:6px;font-size:11px;padding:5px 10px;cursor:pointer;color:var(--grey);white-space:nowrap;font-family:inherit}
+.q .copy:hover{border-color:var(--blue);color:var(--blue)}
+.lvl{font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;border:1px solid;text-transform:uppercase;letter-spacing:.03em}
+.lvl.warm{color:var(--teal);border-color:var(--teal)}
+.lvl.core{color:var(--blue);border-color:var(--blue)}
+.lvl.star{color:var(--purple);border-color:var(--purple)}
+.q.warm{border-left-color:var(--teal)}.q.core{border-left-color:var(--blue)}.q.star{border-left-color:var(--purple)}
+.filterbar{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+.filterbar button{font-family:inherit;font-size:13px;padding:7px 14px;border:1px solid var(--border);background:#fff;border-radius:20px;cursor:pointer;color:var(--grey)}
+.filterbar button.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+</style></head>
+<body>
+<header class="top"><a href="../index.html">← Workshop repository</a>
+<h1>Genie question bank</h1>
+<p>Ready-to-paste questions for the energy_trading Genie space, ordered as a demo arc: warm-up → core → the surveillance finish.</p></header>
+<div class="wrap">
+<div class="filterbar">
+<button data-l="all" class="active">All</button>
+<button data-l="warm">Warm-up</button>
+<button data-l="core">Core</button>
+<button data-l="star">Surveillance ★</button>
+</div>
+<div id="list"></div>
+<div class="note"><b>Tips for a clean run:</b> before the session, add column comments so Genie prefers volume-weighted price and excludes cancelled trades. State a single currency when asking money questions — the raw data mixes EUR/GBP/USD. Frame everything as market-wide ("across the market"), since this is exchange-style data covering every participant.</div>
+</div>
+<footer>Energy Trading workshop pack · Genie question bank · click any question to copy</footer>
+<script>
+const Q=[
+ ['warm','How many trades are in the dataset, and how many unique traders and counterparties?','Activity KPIs · warms Genie up on counts','Confirms scale: ~1.0M trades, 122 traders, 32 counterparties.'],
+ ['warm','Show total trade volume by commodity.','Volume by dimension','A clean bar chart; Power and Natural Gas dominate.'],
+ ['warm','Plot the number of trades per month over the last two years.','Trend over time','Reveals the built-in winter seasonality (Dec–Feb peaks).'],
+ ['warm','Which delivery points have the most trades?','Grouping by location','Introduces hubs/zones (TTF, NBP, NO1, DE-LU).'],
+ ['core','What is the volume-weighted average price for TTF gas by quarter?','VWAP, the price KPI that matters','Shows Genie handling a weighted measure, not a naive average.'],
+ ['core','Compare buy vs sell volume by company type.','Direction KPI + market structure','Producers skew sell, utilities skew buy — the designed behaviour.'],
+ ['core','Which companies sell the most LNG?','Ranking across participants','Equinor and Kong Corporation lead — only answerable with market-wide data.'],
+ ['core','Show month-over-month growth in total sell-side value.','Trend / growth measure','Exercises a window measure from the metric view.'],
+ ['core','How did gas and oil prices move during 2025?','Event detection','The Iran-conflict spike windows appear as visible jumps.'],
+ ['star','Which trader consistently sold below the prevailing market price?','Price-vs-market surveillance','B.Rock Van Guard (Manta Resources) surfaces — the payoff.'],
+ ['star','For that trader, how far below market were their sells, on average?','Quantifying the anomaly','35–60% below; worse inside the spike windows by design.'],
+ ['star','Did this off-market selling get worse during the price-spike periods?','Combining anomaly + event windows','Yes — the "panic the market" scenario is time-correlated.'],
+ ['star','Which counterparties traded most with that trader?','Following the thread','Turns a single finding into an investigation narrative.'],
+];
+const list=document.getElementById('list');
+function draw(f){
+ list.innerHTML=Q.filter(q=>f==='all'||q[0]===f).map(([lvl,qt,meta,shows])=>{
+  const name={warm:'Warm-up',core:'Core',star:'Surveillance'}[lvl];
+  return `<div class="q ${lvl}"><div class="qt"><span>${qt}</span>
+   <button class="copy" onclick="cp(this,\`${qt.replace(/`/g,'')}\`)">Copy</button></div>
+   <div class="meta"><span class="lvl ${lvl}">${name}</span> &nbsp; ${meta}</div>
+   <div class="shows"><b>Shows:</b> ${shows}</div></div>`;
+ }).join('');
+}
+function cp(btn,t){navigator.clipboard&&navigator.clipboard.writeText(t);const o=btn.textContent;btn.textContent='Copied ✓';setTimeout(()=>btn.textContent=o,1200);}
+document.querySelectorAll('.filterbar button').forEach(b=>b.onclick=()=>{
+ document.querySelectorAll('.filterbar button').forEach(x=>x.classList.remove('active'));
+ b.classList.add('active');draw(b.dataset.l);
+});
+draw('all');
+</script>
+<script src="../assets/logos.js"></script>
+</body></html>
