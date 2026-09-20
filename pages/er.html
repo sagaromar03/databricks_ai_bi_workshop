@@ -54,9 +54,10 @@ const T={
  dim_trader:{label:'dim_trader',type:'dim',x:40,y:20,meta:'122 rows',cols:[['PK','trader_key'],['','company, desk'],['','company_type'],['','seniority']]},
  dim_counterparty:{label:'dim_counterparty',type:'dim',x:40,y:180,meta:'32 rows',cols:[['PK','counterparty_key'],['','counterparty_name'],['','country_code'],['','credit_rating, is_exchange']]},
  dim_market:{label:'dim_market',type:'dim',x:40,y:340,meta:'10 rows',cols:[['PK','market_key'],['','market_code'],['','typical_tenor_days'],['','is_otc, is_physical']]},
- dim_instrument:{label:'dim_instrument',type:'dim',x:840,y:20,meta:'24 rows',cols:[['PK','instrument_key'],['','commodity'],['','unit, currency'],['','is_physical']]},
+ dim_instrument:{label:'dim_instrument',type:'dim',x:840,y:20,meta:'24 rows',cols:[['PK','instrument_key'],['','commodity'],['','unit'],['FK','currency'],['','is_physical']]},
  dim_delivery_point:{label:'dim_delivery_point',type:'dim',x:840,y:200,meta:'32 rows',cols:[['PK','delivery_point_key'],['','zone_code'],['FK','geography_key'],['','commodity_class']]},
  dim_geography:{label:'dim_geography',type:'dim',x:840,y:370,meta:'16 rows',cols:[['PK','geography_key'],['','country_code'],['','continent'],['','local_currency']]},
+ dim_fx_rate:{label:'dim_fx_rate',type:'dim',x:840,y:505,meta:'3 rows · to EUR',cols:[['PK','currency_code'],['','rate_to_eur']]},
  fact_trade:{label:'fact_trade',type:'fact',x:440,y:200,meta:'1,001,900 · 1 per trade',cols:[['','trade_id'],['FK','time_key'],['FK','trader_key'],['FK','counterparty_key'],['FK','instrument_key'],['FK','delivery_point_key'],['FK','market_key'],['','direction, volume, price'],['','status']]},
  fact_position:{label:'fact_position',type:'fact',x:240,y:470,meta:'996,343 · daily net',cols:[['FK','time_key'],['FK','trader_key'],['FK','instrument_key'],['FK','delivery_point_key'],['','net/gross volume'],['','position_type']]},
  fact_market_price:{label:'fact_market_price',type:'fact',x:640,y:490,meta:'744,192 · hour×point',cols:[['FK','time_key'],['FK','delivery_point_key'],['','price, volume_traded']]},
@@ -76,6 +77,7 @@ const R=[
  ['fact_market_price','time_key','dim_time','time_key'],
  ['fact_market_price','delivery_point_key','dim_delivery_point','delivery_point_key'],
  ['dim_delivery_point','geography_key','dim_geography','geography_key'],
+ ['dim_instrument','currency','dim_fx_rate','currency_code'],
 ];
 const NS='http://www.w3.org/2000/svg';
 function el(n,a){const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);return e;}

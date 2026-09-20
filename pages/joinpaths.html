@@ -28,7 +28,7 @@
  <span><span class="sw"></span> relationship (hover to trace)</span>
  <span>■ dimension (blue) · fact (coral) · derived (dashed)</span>
 </div>
-<div class="note"><b>Tip:</b> to reach country / continent, join fact_trade → dim_delivery_point → dim_geography (two hops, the "snowflake").</div>
+<div class="note"><b>Tip:</b> to reach country / continent, join fact_trade → dim_delivery_point → dim_geography (two hops, the "snowflake"). To convert money to EUR, join fact_trade → dim_instrument → dim_fx_rate on <code>currency</code>.</div>
 </div>
 <footer>Energy Trading workshop pack · common join paths <a class="contact-link" href="contact.html">✉ Contact us</a></footer>
 <script src="../assets/logos.js"></script>
@@ -45,6 +45,7 @@ const N={
  dim_market:{l:'dim_market',r:'how',x:620,y:150,t:'dim'},
  dim_delivery_point:{l:'dim_delivery_point',r:'where',x:620,y:260,t:'dim'},
  dim_geography:{l:'dim_geography',r:'country / continent',x:620,y:360,t:'dim'},
+ dim_fx_rate:{l:'dim_fx_rate',r:'currency → EUR',x:40,y:360,t:'dim'},
  fact_position:{l:'fact_position',r:'net long / short',x:250,y:370,t:'fact',w:150},
  fact_market_price:{l:'fact_market_price',r:'the referee',x:430,y:370,t:'fact',w:150},
 };
@@ -54,6 +55,7 @@ const R=[
  ['dim_trader','fact_trade'],['dim_counterparty','fact_trade'],['dim_instrument','fact_trade'],
  ['dim_time','fact_trade'],['dim_market','fact_trade'],['dim_delivery_point','fact_trade'],
  ['dim_delivery_point','dim_geography'], // snowflake (dp is child? geography parent)
+ ['dim_instrument','dim_fx_rate'], // snowflake: instrument.currency -> fx_rate.currency_code
 ];
 const DERIVED=[['fact_trade','fact_position'],['fact_trade','fact_market_price']];
 const W=810,H=445;

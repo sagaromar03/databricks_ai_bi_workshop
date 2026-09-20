@@ -37,6 +37,7 @@ const TABLES=[
  ['dim_delivery_point','dim','one zone / hub / terminal','32','delivery_point_key (PK)','zone_code, zone_name, geography_key (FK), commodity_class'],
  ['dim_geography','dim','one country','16','geography_key (PK)','country_code, country_name, continent, local_currency, timezone'],
  ['dim_market','dim','one market type / tenor','10','market_key (PK)','market_code, market_name, typical_tenor_days, is_physical, is_otc'],
+ ['dim_fx_rate','dim','one currency','3','currency_code (PK)','rate_to_eur'],
  ['fact_trade','fact','one trade execution','1,001,900','trade_id (unique)','time_key, trader_key, counterparty_key, instrument_key, delivery_point_key, market_key, direction, volume, price, notional_value, delivery_start, delivery_end, status'],
  ['fact_position','fact','day × trader × instrument × delivery point','996,343','composite grain','time_key, trader_key, instrument_key, delivery_point_key, net_volume, gross_volume, buy_volume, sell_volume, trade_count, avg_price, total_notional, position_type'],
  ['fact_market_price','fact','hour × delivery point','744,192','composite grain','time_key, delivery_point_key, price, volume_traded'],
@@ -55,6 +56,7 @@ const RELS=[
  ['fact_market_price.time_key','dim_time.time_key','M:1','fk_market_price_time'],
  ['fact_market_price.delivery_point_key','dim_delivery_point.delivery_point_key','M:1','fk_market_price_delivery_point'],
  ['dim_delivery_point.geography_key','dim_geography.geography_key','M:1','fk_delivery_point_geography'],
+ ['dim_instrument.currency','dim_fx_rate.currency_code','M:1','fk_instrument_fx_rate'],
 ];
 let tab='tables';
 function draw(){
