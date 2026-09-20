@@ -8,10 +8,10 @@
   function dbMark(onDark){
     var txt = onDark ? '#ffffff' : '#1B3139';
     // width trimmed to fit content (glyph + word), no trailing space
-    return '<svg class="brand-svg" height="20" width="118" viewBox="0 0 118 20" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Databricks">'
-      + '<g fill="none" stroke="#FF3621" stroke-width="1.6" stroke-linejoin="round">'
-      + '<path d="M2 6 L9.5 2.1 L17 6 L9.5 9.9 Z"/><path d="M2 10.2 L9.5 14.1 L17 10.2"/><path d="M2 14.4 L9.5 18.3 L17 14.4"/></g>'
-      + '<text x="23" y="14.5" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13.5" font-weight="700" fill="'+txt+'">Databricks</text></svg>';
+    return '<svg class="brand-svg" height="20" width="95" viewBox="0 0 95 20" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Databricks">'
+      + '<svg x="0" y="1" width="18" height="18" viewBox="0 0 24 24">'
+      + '<path fill="#FF3621" d="M.95 14.184L12 20.403l9.919-5.55v2.21L12 22.662l-10.484-5.96-.565.308v.77L12 24l11.05-6.218v-4.317l-.515-.309L12 19.118l-9.867-5.653v-2.21L12 16.805l11.05-6.218V6.32l-.515-.308L12 11.974 2.647 6.681 12 1.388l7.76 4.368.668-.411v-.566L12 0 .95 6.27v.72L12 13.207l9.919-5.55v2.26L12 15.52 1.516 9.56l-.565.308Z"/></svg>'
+      + '<text x="24" y="14.5" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13.5" font-weight="700" fill="'+txt+'">Databricks</text></svg>';
   }
   function knMark(onDark){
     var txt = onDark ? '#ffffff' : '#0a0a0a';

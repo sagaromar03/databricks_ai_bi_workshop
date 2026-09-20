@@ -1,5 +1,5 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Genie Question Bank</title><link rel="stylesheet" href="shared.css">
+<title>Genie Question Bank</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231B3139'/%3E%3Cg transform='translate(4 4)'%3E%3Cpath fill='%23FF3621' d='M.95 14.184L12 20.403l9.919-5.55v2.21L12 22.662l-10.484-5.96-.565.308v.77L12 24l11.05-6.218v-4.317l-.515-.309L12 19.118l-9.867-5.653v-2.21L12 16.805l11.05-6.218V6.32l-.515-.308L12 11.974 2.647 6.681 12 1.388l7.76 4.368.668-.411v-.566L12 0 .95 6.27v.72L12 13.207l9.919-5.55v2.26L12 15.52 1.516 9.56l-.565.308Z'/%3E%3C/g%3E%3C/svg%3E"><link rel="stylesheet" href="shared.css">
 <style>
 .q{background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:12px;border-left:5px solid var(--blue)}
 .q .qt{font-size:15px;font-weight:600;color:var(--navy);margin-bottom:6px;display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
@@ -30,7 +30,7 @@
 <div id="list"></div>
 <div class="note"><b>Tips for a clean run:</b> before the session, add column comments so Genie prefers volume-weighted price and excludes cancelled trades. State a single currency when asking money questions — the raw data mixes EUR/GBP/USD. Frame everything as market-wide ("across the market"), since this is exchange-style data covering every participant.</div>
 </div>
-<footer>Energy Trading workshop pack · Genie question bank · click any question to copy <a class="contact-link" href="contact.html">✉ Contact us</a></footer>
+<footer>Energy Trading workshop pack · Genie question bank · click any question to copy <a class="contact-link" href="../index.html#appCard">📱 Databricks app</a> <a class="contact-link" href="contact.html">✉ Contact us</a></footer>
 <script>
 const Q=[
  ['warm','How many trades are in the dataset, and how many unique traders and counterparties?','Activity KPIs · warms Genie up on counts','Confirms scale: ~1.0M trades, 122 traders, 32 counterparties.'],
@@ -64,5 +64,5 @@ document.querySelectorAll('.filterbar button').forEach(b=>b.onclick=()=>{
 });
 draw('all');
 </script>
-<script src="../assets/logos.js"></script>
+<script src="../assets/logos.js?v=3"></script>
 </body></html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Create a Genie agent</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231B3139'/%3E%3Cg transform='translate(4 4)'%3E%3Cpath fill='%23FF3621' d='M.95 14.184L12 20.403l9.919-5.55v2.21L12 22.662l-10.484-5.96-.565.308v.77L12 24l11.05-6.218v-4.317l-.515-.309L12 19.118l-9.867-5.653v-2.21L12 16.805l11.05-6.218V6.32l-.515-.308L12 11.974 2.647 6.681 12 1.388l7.76 4.368.668-.411v-.566L12 0 .95 6.27v.72L12 13.207l9.919-5.55v2.26L12 15.52 1.516 9.56l-.565.308Z'/%3E%3C/g%3E%3C/svg%3E"><link rel="stylesheet" href="shared.css">
+<style>
+ .steps{counter-reset:s;margin:0;padding:0;list-style:none}
+ .steps li{position:relative;background:#fff;border:1px solid var(--border);border-radius:10px;
+   padding:16px 18px 16px 60px;margin-bottom:12px;border-left:5px solid var(--blue)}
+ .steps li::before{counter-increment:s;content:counter(s);position:absolute;left:16px;top:16px;
+   width:28px;height:28px;border-radius:50%;background:var(--navy);color:#fff;font-weight:700;
+   font-size:14px;display:flex;align-items:center;justify-content:center}
+ .steps h3{margin:0 0 5px;font-size:15px;color:var(--navy)}
+ .steps p{margin:0;font-size:13px;color:var(--ink)}
+ .steps code{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-size:12px}
+ h2.sec{font-size:14px;text-transform:uppercase;letter-spacing:.04em;color:var(--grey);margin:26px 0 12px}
+ .steps .clicks{margin:8px 0 0;padding-left:18px;font-size:12.5px;color:var(--grey)}
+ .steps .clicks li{background:none;border:0;border-radius:0;padding:2px 0;margin:0;list-style:disc}
+ .steps .clicks li::before{content:none}
+ .steps .clicks b{color:var(--navy)}
+ .shot{margin:14px 0 2px;max-width:620px}
+ .shot img,.shot video{width:100%;display:block;border:1px solid var(--border);border-radius:8px;background:#fff}
+ .shot figcaption{font-size:12px;color:var(--grey);margin-top:6px}
+ .shot.missing img,.shot.missing video{display:none}
+ .shot.missing{border:1.5px dashed #bcbad0;border-radius:8px;background:var(--panel);padding:22px 18px}
+ .shot.missing::before{content:"▶  Screen recording";display:block;font-weight:700;color:var(--navy);
+   font-size:13px;letter-spacing:.02em;margin-bottom:4px}
+ .shot.missing figcaption{margin-top:0}
+ .stepnav{display:flex;justify-content:space-between;gap:12px;margin-top:24px;flex-wrap:wrap}
+ .stepnav a{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);
+   border-radius:10px;padding:12px 16px;text-decoration:none;color:var(--navy);font-weight:600;font-size:13px}
+ .stepnav a:hover{border-color:var(--navy)}
+ .stepnav a.prev{border-left:5px solid var(--coral)}
+ .stepnav a span{display:block;font-weight:400;color:var(--grey);font-size:11px}
+</style></head>
+<body>
+<header class="top"><a href="../index.html">← Workshop repository</a>
+<h1>Create a Genie agent</h1>
+<p>Point an AI/BI Genie space at the <code>energy_trading</code> tables so anyone can ask questions in plain English and get charts and answers back — no SQL required.</p></header>
+<div class="wrap">
+
+<div class="note"><b>Before you start:</b> you need the <code>energy_trading</code> tables in your catalog (see <a href="setup_notebook.html">Step 2 · Import the notebook</a>) and a running SQL warehouse. Free Edition includes Genie.</div>
+
+<h2 class="sec">Set up the Genie space</h2>
+<ol class="steps">
+
+  <li><h3>Open Genie and create a space</h3>
+    <p>Start a new Genie space to hold the agent and its data.</p>
+    <ul class="clicks">
+      <li>In the left sidebar, open <b>Genie</b> (under SQL / AI-BI), then click <b>New</b> → <b>Genie space</b>.</li>
+      <li>Give it a name, e.g. <code>Energy Trading — Genie</code>.</li>
+    </ul>
+    <figure class="shot"><video src="../assets/gifs/genie_new.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Genie ▸ New ▸ Genie space ▸ name it</figcaption></figure>
+  </li>
+
+  <li><h3>Connect the energy_trading data</h3>
+    <p>Tell Genie which tables it can answer questions about.</p>
+    <ul class="clicks">
+      <li>Under <b>Data</b>, add tables from your catalog → <code>energy_trading</code> — include <code>fact_trade</code> and the dimensions (and <code>energy_trading_metrics</code> if you built it).</li>
+      <li>Pick a running <b>SQL warehouse</b> for Genie to run its queries on.</li>
+    </ul>
+    <figure class="shot"><video src="../assets/gifs/genie_data.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Data ▸ add energy_trading tables ▸ pick a warehouse</figcaption></figure>
+  </li>
+
+  <li><h3>Add instructions &amp; sample questions</h3>
+    <p>A few notes and examples make Genie far more accurate.</p>
+    <ul class="clicks">
+      <li>In <b>Instructions</b>, add the key framing: this is a market-wide trade tape; money mixes EUR/GBP/USD (join <code>dim_fx_rate</code> to convert); exclude <code>CANCELLED</code> trades.</li>
+      <li>Add a few <b>sample questions</b> — copy from the <a href="genie.html">Genie question bank</a>.</li>
+    </ul>
+    <figure class="shot"><video src="../assets/gifs/genie_instructions.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Instructions ▸ framing + sample questions</figcaption></figure>
+  </li>
+
+  <li><h3>Ask your first question</h3>
+    <p>Try it out, then share the space with your team.</p>
+    <ul class="clicks">
+      <li>Type a question — e.g. <code>Which trader consistently sold below the market price?</code> — and press <b>Enter</b>.</li>
+      <li>Check the answer and the SQL Genie wrote, then <b>Share</b> the space.</li>
+    </ul>
+    <figure class="shot"><video src="../assets/gifs/genie_ask.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Ask a question ▸ review answer + SQL ▸ Share</figcaption></figure>
+  </li>
+
+</ol>
+
+<div class="note"><b>Tip:</b> the clearer your instructions and sample questions, the better Genie does. Start with the ready-made prompts in the <a href="genie.html">Genie question bank</a>.</div>
+
+<div class="stepnav">
+  <a class="prev" href="sketch_to_dashboard.html">← Step 4 · Sketch to Dashboard<span>Build a dashboard from a sketch</span></a>
+  <a href="genie.html">Genie question bank →<span>Ready-to-paste questions</span></a>
+</div>
+
+</div>
+<footer>Energy Trading workshop pack · create a Genie agent <a class="contact-link" href="../index.html#appCard">📱 Databricks app</a> <a class="contact-link" href="contact.html">✉ Contact us</a></footer>
+<script src="../assets/logos.js?v=3"></script>
+<script src="../assets/download.js"></script>
+<script>
+document.querySelectorAll('.shot img').forEach(function(img){
+  function fail(){img.closest('.shot').classList.add('missing');}
+  img.addEventListener('error',fail);
+  if(img.complete && img.naturalWidth===0) fail();
+});
+document.querySelectorAll('.shot video').forEach(function(v){
+  v.addEventListener('error',function(){v.closest('.shot').classList.add('missing');});
+});
+</script>
+</body></html>
