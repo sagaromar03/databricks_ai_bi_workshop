@@ -23,6 +23,19 @@
  .shot.missing::before{content:"▶  Screen recording";display:block;font-weight:700;color:var(--navy);
    font-size:13px;letter-spacing:.02em;margin-bottom:4px}
  .shot.missing figcaption{margin-top:0}
+ .copybox{background:var(--panel);border:1px solid var(--border);border-left:4px solid var(--blue);border-radius:8px;padding:0;margin:12px 0 4px;max-width:680px;overflow:hidden}
+ .cbhead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;border-bottom:1px solid var(--border);background:#fff}
+ .copybox.collapsed .cbhead{border-bottom:0}
+ .copybox.collapsed .ctext{display:none}
+ .cbtoggle{display:inline-flex;align-items:center;gap:8px;border:0;background:transparent;cursor:pointer;padding:0;font:inherit;flex:1;text-align:left}
+ .cbtoggle .chev{color:var(--grey);font-size:11px;transition:transform .15s}
+ .copybox:not(.collapsed) .cbtoggle .chev{transform:rotate(180deg)}
+ .cblabel{font-size:11px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.04em}
+ .copybox .copy{border:1px solid var(--border);background:#fff;color:var(--navy);font-weight:600;font-size:12px;padding:5px 13px;border-radius:6px;cursor:pointer;transition:background .12s,color .12s}
+ .copybox .copy:hover{border-color:var(--navy)}
+ .copybox .copy.copied{background:var(--teal);color:#fff;border-color:var(--teal)}
+ .copybox .ctext{margin:0;padding:13px 14px;font-size:12px;color:var(--ink);line-height:1.5;white-space:pre-wrap;font-family:'Segoe UI',Helvetica,Arial,sans-serif}
+ .copybox .ctext code{background:#fff;border:1px solid var(--border);border-radius:4px;padding:0 3px;font-size:11px}
  .stepnav{display:flex;justify-content:space-between;gap:12px;margin-top:24px;flex-wrap:wrap}
  .stepnav a{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);
    border-radius:10px;padding:12px 16px;text-decoration:none;color:var(--navy);font-weight:600;font-size:13px}
@@ -61,19 +74,54 @@
   </li>
 
   <li><h3>Sharpen it <span style="font-weight:400;color:var(--grey)">(optional)</span></h3>
-    <p>Genie picks sensible defaults, but a few instructions and examples make it noticeably more accurate.</p>
+    <p>Genie picks sensible defaults, but a few instructions make it noticeably more accurate. Open the <b>Configure</b> panel → <b>Instructions</b> and paste the block below (trim any line that references a table you didn't select).</p>
+    <div class="copybox collapsed">
+      <div class="cbhead"><button class="cbtoggle" type="button"><span class="cblabel">Genie instructions</span><span class="chev">▾</span></button><button class="copy" type="button">Copy</button></div>
+      <p class="ctext">This agent answers questions about a market-wide energy trading dataset (energy_trading) — a tape of trades across power, gas, oil and carbon, as an exchange or regulator would see it, not a single firm's book.
+
+Measures & source of truth
+- Prefer the `energy_trading_metrics` metric view for standard measures (VWAP, volumes, notional, etc.). Its definitions are correct and consistent — use it instead of hand-rolling aggregations when a matching measure exists.
+
+Money & currencies
+- Values mix EUR, GBP and USD. To compare or total money in one currency, convert to EUR using `dim_fx_rate` (join on `currency_code`, multiply by `rate_to_eur`).
+- Never sum notional/value across currencies without converting first. Default money answers to EUR.
+
+Business rules
+- Exclude trades with `status = 'CANCELLED'` unless the user explicitly asks about cancellations — they inflate volumes and counts.
+- "Market-wide" = every participant. Do not assume one company; trader/company/desk live in `dim_trader`.
+- Some delivery points have no country and show up as "Unknown" — keep them, but call it out when it matters.
+
+Model & joins
+- Geography is snowflaked: to get country/continent, go delivery point → `dim_geography` (via `geography_key`).
+- Currency lives on `dim_instrument.currency`; join to `dim_fx_rate.currency_code` for EUR.
+
+Vocabulary
+- VWAP = volume-weighted average price.
+- "below/above market" = a trade's price vs the market reference price for the same delivery point and time.
+- direction = BUY/SELL; notional = price × volume in the trade's currency.</p>
+    </div>
     <ul class="clicks">
-      <li>Open <b>Instructions</b> / settings and add the key framing: this is a market-wide trade tape; money mixes EUR/GBP/USD (join <code>dim_fx_rate</code> to convert); exclude <code>CANCELLED</code> trades.</li>
-      <li>Add a few <b>sample questions</b> — copy from the <a href="genie.html">Genie question bank</a>.</li>
+      <li>Then add a few <b>sample questions</b> — copy from the <a href="genie.html">Genie question bank</a>.</li>
     </ul>
-    <figure class="shot"><video src="../assets/gifs/genie_instructions.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Instructions ▸ framing + sample questions</figcaption></figure>
+    <figure class="shot"><video src="../assets/gifs/genie_instructions.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Configure ▸ Instructions ▸ paste the block ▸ Save</figcaption></figure>
+  </li>
+
+  <li><h3>Revisit your chat history</h3>
+    <p>Every conversation is saved — reopen a past chat to see its questions, answers and SQL again.</p>
+    <ul class="clicks">
+      <li>Click the <b>history</b> (clock) icon at the top-right, next to <b>Configure</b>.</li>
+      <li>Pick any past chat to reopen it exactly where you left off.</li>
+    </ul>
+    <figure class="shot"><video src="../assets/gifs/genie_history.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>History (clock) ▸ open a past chat</figcaption></figure>
   </li>
 
   <li><h3>Share it</h3>
     <p>Let your team ask their own questions of the data.</p>
     <ul class="clicks">
-      <li>Click <b>Share</b>, choose who can access the agent, and send them the link.</li>
+      <li>Click <b>Share</b>, add the people or groups who should have access, and set their permission.</li>
+      <li>Or use <b>Copy link</b> to send it directly.</li>
     </ul>
+    <figure class="shot"><video src="../assets/gifs/genie_share.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Share ▸ add people ▸ set access</figcaption></figure>
   </li>
 
 </ol>
@@ -97,6 +145,22 @@ document.querySelectorAll('.shot img').forEach(function(img){
 });
 document.querySelectorAll('.shot video').forEach(function(v){
   v.addEventListener('error',function(){v.closest('.shot').classList.add('missing');});
+});
+// Expand / collapse the Genie instructions block.
+document.querySelectorAll('.copybox .cbtoggle').forEach(function(t){
+  t.addEventListener('click',function(){t.closest('.copybox').classList.toggle('collapsed');});
+});
+// One-click copy for the Genie instructions block (works whether expanded or not).
+document.querySelectorAll('.copybox .copy').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var text=btn.closest('.copybox').querySelector('.ctext').textContent.trim();
+    function done(){var o=btn.textContent;btn.textContent='Copied!';btn.classList.add('copied');
+      setTimeout(function(){btn.textContent=o;btn.classList.remove('copied');},1500);}
+    function fallback(){var ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
+      document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done();}catch(e){}document.body.removeChild(ta);}
+    if(navigator.clipboard && navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done).catch(fallback);}
+    else{fallback();}
+  });
 });
 </script>
 </body></html>
