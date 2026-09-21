@@ -38,43 +38,42 @@
 
 <div class="note"><b>Before you start:</b> you need the <code>energy_trading</code> tables in your catalog (see <a href="setup_notebook.html">Step 2 · Import the notebook</a>) and a running SQL warehouse. Free Edition includes Genie.</div>
 
-<h2 class="sec">Set up the Genie space</h2>
+<h2 class="sec">Create the Genie agent</h2>
 <ol class="steps">
 
-  <li><h3>Open Genie and create a space</h3>
-    <p>Start a new Genie space to hold the agent and its data.</p>
+  <li><h3>Create a new Genie agent &amp; pick your data</h3>
+    <p>The only thing Genie asks for up front is the data — it auto-configures almost everything else.</p>
     <ul class="clicks">
-      <li>In the left sidebar, open <b>Genie</b> (under SQL / AI-BI), then click <b>New</b> → <b>Genie space</b>.</li>
-      <li>Give it a name, e.g. <code>Energy Trading — Genie</code>.</li>
+      <li>In the left sidebar, open <b>Genie</b> and click <b>New</b>.</li>
+      <li>When prompted, select your <code>energy_trading</code> datasets — <code>fact_trade</code> and the dimensions (and <code>energy_trading_metrics</code> if you built it).</li>
+      <li>Open <b>Configuration</b> to see what Genie set up for you — instructions, sample questions and settings are already filled in.</li>
     </ul>
-    <figure class="shot"><video src="../assets/gifs/genie_new.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Genie ▸ New ▸ Genie space ▸ name it</figcaption></figure>
+    <figure class="shot"><video src="../assets/gifs/genie_new.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>New ▸ select datasets ▸ open Configuration to see the auto-setup</figcaption></figure>
   </li>
 
-  <li><h3>Connect the energy_trading data</h3>
-    <p>Tell Genie which tables it can answer questions about.</p>
+  <li><h3>Ask your first question</h3>
+    <p>Type a question in plain English and see the answer, the chart, and the SQL Genie wrote.</p>
     <ul class="clicks">
-      <li>Under <b>Data</b>, add tables from your catalog → <code>energy_trading</code> — include <code>fact_trade</code> and the dimensions (and <code>energy_trading_metrics</code> if you built it).</li>
-      <li>Pick a running <b>SQL warehouse</b> for Genie to run its queries on.</li>
+      <li>Type a question — e.g. <code>Which trader consistently sold below the market price?</code> — and press <b>Enter</b>.</li>
+      <li>Review the answer and expand the <b>SQL</b> to see how Genie got there.</li>
     </ul>
-    <figure class="shot"><video src="../assets/gifs/genie_data.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Data ▸ add energy_trading tables ▸ pick a warehouse</figcaption></figure>
+    <figure class="shot"><video src="../assets/gifs/genie_ask.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Ask a question ▸ review answer + SQL</figcaption></figure>
   </li>
 
-  <li><h3>Add instructions &amp; sample questions</h3>
-    <p>A few notes and examples make Genie far more accurate.</p>
+  <li><h3>Sharpen it <span style="font-weight:400;color:var(--grey)">(optional)</span></h3>
+    <p>Genie picks sensible defaults, but a few instructions and examples make it noticeably more accurate.</p>
     <ul class="clicks">
-      <li>In <b>Instructions</b>, add the key framing: this is a market-wide trade tape; money mixes EUR/GBP/USD (join <code>dim_fx_rate</code> to convert); exclude <code>CANCELLED</code> trades.</li>
+      <li>Open <b>Instructions</b> / settings and add the key framing: this is a market-wide trade tape; money mixes EUR/GBP/USD (join <code>dim_fx_rate</code> to convert); exclude <code>CANCELLED</code> trades.</li>
       <li>Add a few <b>sample questions</b> — copy from the <a href="genie.html">Genie question bank</a>.</li>
     </ul>
     <figure class="shot"><video src="../assets/gifs/genie_instructions.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Instructions ▸ framing + sample questions</figcaption></figure>
   </li>
 
-  <li><h3>Ask your first question</h3>
-    <p>Try it out, then share the space with your team.</p>
+  <li><h3>Share it</h3>
+    <p>Let your team ask their own questions of the data.</p>
     <ul class="clicks">
-      <li>Type a question — e.g. <code>Which trader consistently sold below the market price?</code> — and press <b>Enter</b>.</li>
-      <li>Check the answer and the SQL Genie wrote, then <b>Share</b> the space.</li>
+      <li>Click <b>Share</b>, choose who can access the agent, and send them the link.</li>
     </ul>
-    <figure class="shot"><video src="../assets/gifs/genie_ask.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Ask a question ▸ review answer + SQL ▸ Share</figcaption></figure>
   </li>
 
 </ol>
