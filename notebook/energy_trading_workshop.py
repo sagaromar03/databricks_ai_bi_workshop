@@ -52,7 +52,7 @@ dbutils.widgets.text("date_end", "2026-09-30", "Date End (YYYY-MM-DD, blank = to
 # Clear the widget to use today's date instead.
 DATE_END = dbutils.widgets.get("date_end").strip() or _date.today().isoformat()
 
-#spark.sql(f"CREATE CATALOG IF NOT EXISTS {CATALOG}")
+spark.sql(f"CREATE CATALOG IF NOT EXISTS {CATALOG}")
 spark.sql(f"CREATE SCHEMA IF NOT EXISTS {CATALOG}.{SCHEMA}")
 spark.sql(f"USE CATALOG {CATALOG}")
 spark.sql(f"USE SCHEMA {SCHEMA}")
