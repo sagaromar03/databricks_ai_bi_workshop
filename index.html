@@ -1,144 +1,75 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Energy Trading — Workshop Pack</title>
+<title>Energy Trading — Workshop</title>
+<meta name="description" content="A hands-on Databricks AI/BI workshop on the energy_trading dataset.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231B3139'/%3E%3Cg transform='translate(4 4)'%3E%3Cpath fill='%23FF3621' d='M.95 14.184L12 20.403l9.919-5.55v2.21L12 22.662l-10.484-5.96-.565.308v.77L12 24l11.05-6.218v-4.317l-.515-.309L12 19.118l-9.867-5.653v-2.21L12 16.805l11.05-6.218V6.32l-.515-.308L12 11.974 2.647 6.681 12 1.388l7.76 4.368.668-.411v-.566L12 0 .95 6.27v.72L12 13.207l9.919-5.55v2.26L12 15.52 1.516 9.56l-.565.308Z'/%3E%3C/g%3E%3C/svg%3E">
 <style>
 :root{--navy:#1B3139;--blue:#FF3621;--teal:#1B3139;--purple:#FF5F46;--coral:#FF3621;--grey:#5B6670;--border:#E4DFD5;--ink:#1B3139;--panel:#F1EDE6;--bg:#F7F4EF}
-*{box-sizing:border-box}body{margin:0;font-family:'Segoe UI',Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55}
-.hero{background:var(--navy);color:#fff;padding:44px 32px}
-.hero .in{max-width:1080px;margin:0 auto}
-.hero h1{margin:0 0 8px;font-size:30px;font-weight:600}
-.hero p{margin:0;font-size:15px;color:#C3CDD1;max-width:720px}
-.wrap{max-width:1080px;margin:0 auto;padding:30px 32px 60px}
-.sec{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--grey);margin:28px 0 12px}
-.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-@media(max-width:820px){.cards{grid-template-columns:1fr}}
-a.card{display:block;background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;text-decoration:none;color:var(--ink);border-top:5px solid var(--blue);transition:transform .12s,box-shadow .12s}
-a.card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(11,79,108,.12)}
-a.card.teal{border-top-color:var(--teal)}a.card.purple{border-top-color:var(--purple)}a.card.coral{border-top-color:var(--coral)}
-a.card.dbx{position:relative;padding-right:44px}
-a.card.dbx::after{content:"";position:absolute;top:18px;right:16px;width:22px;height:22px;opacity:.92;
- background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23FF3621' d='M.95 14.184L12 20.403l9.919-5.55v2.21L12 22.662l-10.484-5.96-.565.308v.77L12 24l11.05-6.218v-4.317l-.515-.309L12 19.118l-9.867-5.653v-2.21L12 16.805l11.05-6.218V6.32l-.515-.308L12 11.974 2.647 6.681 12 1.388l7.76 4.368.668-.411v-.566L12 0 .95 6.27v.72L12 13.207l9.919-5.55v2.26L12 15.52 1.516 9.56l-.565.308Z'/%3E%3C/svg%3E") no-repeat center/contain}
-a.card .k{font-size:11px;font-weight:600;color:var(--grey);text-transform:uppercase;letter-spacing:.04em}
-a.card h3{margin:6px 0 6px;font-size:17px;color:var(--navy)}
-a.card p{margin:0;font-size:13px;color:var(--grey)}
-.static{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
-@media(max-width:820px){.static{grid-template-columns:1fr}}
-.static a{display:block;background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;text-decoration:none;color:var(--ink)}
-.static a img{width:100%;display:block;border-bottom:1px solid var(--border);background:#fff}
-.static a .lab{padding:12px 14px;font-size:13px;font-weight:600;color:var(--navy)}
-.static a .lab span{display:block;font-weight:400;color:var(--grey);font-size:12px;margin-top:2px}
-.modal{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:20px}
-.modal[hidden]{display:none}
-.modal-backdrop{position:absolute;inset:0;background:rgba(13,14,39,.55)}
-.modal-box{position:relative;background:#fff;border-radius:14px;padding:26px;max-width:540px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.32)}
-.modal-box h3{margin:0 0 4px;font-size:19px;color:var(--navy)}
-.modal-box>p{margin:0 0 18px;font-size:13px;color:var(--grey)}
-.modal-x{position:absolute;top:10px;right:14px;border:0;background:transparent;font-size:24px;line-height:1;color:var(--grey);cursor:pointer;padding:4px}
-.modal-x:hover{color:var(--ink)}
-.qr-row{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
-@media(max-width:520px){.qr-row{grid-template-columns:1fr}}
-.qr-card{background:#fff;border:1px solid var(--border);border-radius:12px;border-top:5px solid var(--navy);padding:18px;text-align:center}
-.qr-card:nth-child(2){border-top-color:var(--teal)}
-.qr-card img{width:150px;height:150px;display:block;margin:0 auto 12px;border:1px solid var(--border);border-radius:8px;background:#fff;object-fit:contain}
-.qr-card .qr-lab{font-size:14px;font-weight:600;color:var(--navy)}
-.qr-card .qr-lab span{display:block;font-weight:400;color:var(--grey);font-size:12px;margin-top:3px}
-.note{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:16px 18px;font-size:13px;color:var(--grey);margin-top:24px}
-.note b{color:var(--ink)}
-footer{border-top:1px solid var(--border);padding:20px 32px;font-size:12px;color:var(--grey);text-align:center}
-ul.mini{margin:8px 0 0;padding-left:18px;font-size:13px;color:var(--grey)}
-.hero{position:relative}
-.hero.has-brand .in{padding-right:210px}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;font-family:'Segoe UI',Helvetica,Arial,sans-serif;color:#fff;background:var(--navy);line-height:1.55;
+  -webkit-font-smoothing:antialiased}
+/* Soft radial glow behind the splash */
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:96px 24px 40px;overflow:hidden;
+  background:radial-gradient(1200px 620px at 50% -8%,#26454f 0%,var(--navy) 62%)}
+.hero::after{content:"";position:absolute;left:50%;bottom:-160px;width:520px;height:320px;transform:translateX(-50%);
+  background:radial-gradient(closest-side,rgba(255,54,33,.16),transparent 70%);pointer-events:none}
+
+.splash{position:relative;z-index:2;max-width:600px}
+.eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  color:#fff;background:rgba(255,54,33,.16);border:1px solid rgba(255,54,33,.4);
+  padding:6px 14px;border-radius:999px;margin-bottom:26px}
+.splash h1{font-size:clamp(30px,6.4vw,48px);font-weight:600;margin:0 0 16px;line-height:1.1;letter-spacing:-.01em}
+.splash h1 .accent{color:var(--coral)}
+.splash .sub{font-size:16px;color:#C3CDD1;margin:0 auto 34px;max-width:470px}
+
+.cta{display:inline-flex;align-items:center;gap:10px;background:var(--coral);color:#fff;font-size:17px;font-weight:600;
+  padding:16px 34px;border-radius:999px;text-decoration:none;
+  box-shadow:0 12px 34px rgba(255,54,33,.38);transition:transform .14s,box-shadow .14s}
+.cta:hover{transform:translateY(-2px);box-shadow:0 18px 44px rgba(255,54,33,.5)}
+.cta .arrow{transition:transform .14s}
+.cta:hover .arrow{transform:translateX(4px)}
+
+.chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:36px}
+.chips span{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:#C3CDD1;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:8px 14px}
+.chips span b{color:#fff;font-weight:600}
+
+.meta{margin-top:30px;font-size:12.5px;color:#8FA0A6}
+
+/* Brand bar (logos.js injects markup; we style + place it centered up top) */
 .brandbar{display:inline-flex;align-items:center;gap:10px}
-.hero.has-brand .brandbar.corner{position:absolute;top:44px;right:32px}
-.brandbar.in-footer{display:flex;justify-content:center;gap:10px;margin-bottom:10px}
+.hero .brandbar.corner{position:absolute;top:34px;left:50%;transform:translateX(-50%);z-index:3}
 .brand-slot{display:inline-flex;align-items:center;line-height:0;text-decoration:none;transition:opacity .12s}
 .brand-slot:hover{opacity:.78}
-.brand-img{display:block;height:22px;width:auto;max-width:150px;object-fit:contain}
-.brandbar.in-footer .brand-img{height:17px}
+.brand-img{display:block;height:20px;width:auto;max-width:150px;object-fit:contain}
 .brand-fallback{display:inline-flex;align-items:center}
-.brand-svg{display:block;height:20px;width:auto;flex:none}
-.brandbar.in-footer .brand-svg{height:15px}
-.brand-x{color:rgba(255,255,255,.55);font-size:13px;font-weight:300;margin:0 2px}
-.brandbar.in-footer .brand-x{color:var(--grey)}
-@media(max-width:900px){.hero.has-brand .brandbar.corner{position:static;margin-top:14px}.hero.has-brand .in{padding-right:0}}
+.brand-svg{display:block;height:19px;width:auto;flex:none}
+.brand-x{color:rgba(255,255,255,.5);font-size:13px;font-weight:300;margin:0 2px}
+
+footer{position:relative;z-index:2;padding:0 24px 30px;text-align:center;font-size:12px;color:#7d8f95}
+footer .brandbar.in-footer{display:none} /* one brandbar (top) is enough on the splash */
+
+@media(max-width:560px){
+  .hero{padding-top:88px}
+  .chips{gap:8px}
+}
 </style></head>
 <body>
-<div class="hero"><div class="in">
-<h1>Energy Trading — workshop pack</h1>
-<p>Everything you need to explore the <code>energy_trading</code> dataset offline: the data model, the KPIs, and a ready-to-use Genie question bank. Interactive pages open in any browser; static diagrams print or drop into slides. All sample figures are shaped from the notebook — nothing here connects to Databricks.</p>
-</div></div>
-<div class="wrap">
-
-<div class="sec">Interactive — open in a browser</div>
-<div class="cards">
-<a class="card teal" href="pages/er.html"><div class="k">Data model</div><h3>Interactive ER diagram →</h3><p>The star schema with straight connectors. Hover any line or table to highlight that relationship.</p></a>
-<a class="card teal" href="pages/model.html"><div class="k">Data model</div><h3>Model explorer →</h3><p>Search all 11 tables, their columns, grain and the 14 relationships. Switch between cards and lists.</p></a>
-<a class="card" href="pages/dashboard.html"><div class="k">KPIs & story</div><h3>Activity dashboard →</h3><p>Filter by commodity, season and direction; watch KPIs, charts and the top-companies ranking update.</p></a>
-<a class="card purple" href="pages/genie.html"><div class="k">Genie</div><h3>Question bank →</h3><p>Questions in a demo arc, from warm-up to the toughest finish. Click any to copy.</p></a>
+<div class="hero">
+  <div class="splash">
+    <span class="eyebrow">Databricks AI/BI · hands-on</span>
+    <h1>Energy&nbsp;Trading<br><span class="accent">Workshop</span></h1>
+    <p class="sub">Build a real trading dataset, explore it, and let AI/BI Genie answer questions in plain English — all in a free Databricks workspace.</p>
+    <a class="cta" href="home.html">Start the workshop <span class="arrow">→</span></a>
+    <div class="chips">
+      <span>📊 <b>Data model</b> &amp; KPIs</span>
+      <span>✨ <b>Genie</b> question bank</span>
+      <span>🚀 <b>6-step</b> setup</span>
+    </div>
+    <p class="meta">Free Databricks Edition · no credit card · works in any browser</p>
+  </div>
 </div>
-
-<div class="sec">Get started — build the tables</div>
-<div class="cards">
-<a class="card coral dbx" href="pages/setup_workspace.html"><div class="k">Setup · Step 1</div><h3>Create workspace →</h3><p>Spin up a free-forever Databricks Free Edition workspace — no credit card, no cloud account.</p></a>
-<a class="card coral dbx" href="pages/setup_notebook.html"><div class="k">Setup · Step 2</div><h3>Import the notebook →</h3><p>Load the .py into your workspace, run it, and build all 10 energy_trading tables.</p></a>
-<a class="card coral dbx" href="pages/create_dashboard.html"><div class="k">Setup · Step 3</div><h3>Create a dashboard →</h3><p>Add a dataset, then ask AI/BI Genie to generate the charts, KPI and filter — then publish.</p></a>
-<a class="card coral dbx" href="pages/sketch_to_dashboard.html"><div class="k">Setup · Step 4</div><h3>Sketch to Dashboard →</h3><p>Draw a layout, hand the photo to Genie, and let it build the dashboard from your sketch.</p></a>
-<a class="card coral dbx" href="pages/create_genie.html"><div class="k">Setup · Step 5</div><h3>Create a Genie agent →</h3><p>Point an AI/BI Genie space at the tables so anyone can ask questions in plain English.</p></a>
-<a class="card coral dbx" href="pages/create_domain.html"><div class="k">Setup · Step 6</div><h3>Create a domain &amp; pages →</h3><p>Group the tables in a Discover domain and write Pages that make Genie's answers sharper.</p></a>
-<a class="card purple" href="notebook/energy_trading_workshop.py" download><div class="k">Notebook</div><h3>Download the notebook (.py) →</h3><p>The .py source that generates the synthetic data and creates all 10 energy_trading tables.</p></a>
-<a class="card blue" href="#appCard" id="appCard"><div class="k">Mobile</div><h3>Download the Databricks app →</h3><p>Scan a QR with your phone to open the App Store or Google Play.</p></a>
-</div>
-
-<div class="sec">Static reference — download, print, or slide</div>
-<div class="static">
-<a href="pages/joinpaths.html"><img src="diagrams/02_join_paths.svg?v=2" alt="Join paths"><div class="lab">Common join paths (interactive) <span>Hover any line to trace a relationship</span></div></a>
-<a href="diagrams/03_kpi_map.png"><img src="diagrams/03_kpi_map.png" alt="KPI map"><div class="lab">KPI map <span>Every KPI grouped by the question it answers (PNG · SVG)</span></div></a>
-<a href="pages/market.html"><img src="diagrams/04_market_structure.svg?v=2" alt="Market structure"><div class="lab">Whose data is this? (interactive) <span>Hover a company to see its market link</span></div></a>
-</div>
-
-<div class="note">
-<b>How to use this pack</b>
-<ul class="mini">
-<li><b>Before the workshop:</b> skim the ER diagram and KPI map so the vocabulary is familiar.</li>
-<li><b>During:</b> keep the model explorer open in one tab, the Genie bank in another.</li>
-<li><b>Key framing:</b> this is a market-wide trade tape (every participant), the kind of view an exchange or regulator has — not one firm's books.</li>
-<li><b>Watch-outs:</b> money totals mix EUR/GBP/USD; cancelled trades inflate volumes unless excluded; the price table has no instrument key.</li>
-</ul>
-</div>
-
-</div>
-<footer>Energy Trading workshop pack · self-contained · works offline · sample figures shaped from the source notebook <a href="#appCard" style="display:inline-block;margin-left:10px;padding:4px 12px;border:1px solid var(--teal);border-radius:999px;color:var(--teal);font-weight:700;text-decoration:none;font-size:12px">📱 Databricks app</a> <a href="pages/contact.html" style="display:inline-block;margin-left:10px;padding:4px 12px;border:1px solid var(--teal);border-radius:999px;color:var(--teal);font-weight:700;text-decoration:none;font-size:12px">✉ Contact us</a></footer>
-
-<div class="modal" id="appModal" hidden>
-<div class="modal-backdrop" data-close></div>
-<div class="modal-box" role="dialog" aria-modal="true" aria-label="Download the Databricks app">
-<button class="modal-x" data-close aria-label="Close">×</button>
-<h3>Download the Databricks app</h3>
-<p>Scan a code with your phone camera to open the store.</p>
-<div class="qr-row">
-<div class="qr-card"><img src="assets/qr_ios.png?v=2" alt="App Store QR code for the Databricks app"><div class="qr-lab">iOS · App Store <span>Point your iPhone camera at the code</span></div></div>
-<div class="qr-card"><img src="assets/qr_android.png?v=2" alt="Google Play QR code for the Databricks app"><div class="qr-lab">Android · Google Play <span>Point your Android camera at the code</span></div></div>
-</div>
-</div>
-</div>
-
+<footer>Energy Trading workshop pack · built by Knowit</footer>
 <script src="assets/logos.js?v=6"></script>
-<script src="assets/download.js"></script>
-<script>
-(function(){
-  var modal=document.getElementById('appModal');
-  var card=document.getElementById('appCard');
-  function open(e){if(e)e.preventDefault();modal.hidden=false;}
-  function close(){modal.hidden=true; if(location.hash==='#appCard'){history.replaceState(null,'',location.pathname+location.search);}}
-  card.addEventListener('click',open);
-  modal.addEventListener('click',function(e){if(e.target.hasAttribute('data-close'))close();});
-  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!modal.hidden)close();});
-  // "Databricks app" links (this page's footer + other pages/sketch) point to
-  // #appCard — open the QR modal directly on arrival or same-page click.
-  // A plain homepage load (no hash) still shows no popup.
-  function checkHash(){ if(location.hash==='#appCard') open(); }
-  window.addEventListener('hashchange',checkHash);
-  checkHash();
-})();
-</script>
 </body></html>
