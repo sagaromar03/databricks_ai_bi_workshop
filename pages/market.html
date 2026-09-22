@@ -1,64 +1,136 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Whose data is this?</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231B3139'/%3E%3Cg transform='translate(4 4)'%3E%3Cpath fill='%23FF3621' d='M.95 14.184L12 20.403l9.919-5.55v2.21L12 22.662l-10.484-5.96-.565.308v.77L12 24l11.05-6.218v-4.317l-.515-.309L12 19.118l-9.867-5.653v-2.21L12 16.805l11.05-6.218V6.32l-.515-.308L12 11.974 2.647 6.681 12 1.388l7.76 4.368.668-.411v-.566L12 0 .95 6.27v.72L12 13.207l9.919-5.55v2.26L12 15.52 1.516 9.56l-.565.308Z'/%3E%3C/g%3E%3C/svg%3E"><link rel="stylesheet" href="shared.css">
 <style>
- .stage{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px;overflow:auto}
- #stage svg{display:block;min-width:760px;width:100%;height:auto;font-family:'Segoe UI',Helvetica,Arial,sans-serif}
- .player rect{transition:opacity .12s}
- .player{cursor:pointer}
- .spoke{stroke:#c3c7e0;stroke-width:1.5;transition:stroke .12s,stroke-width .12s,opacity .12s}
- svg.focus .spoke{opacity:.15}
- svg.focus .player{opacity:.34}
- svg.focus .player.on{opacity:1}
- svg.focus .spoke.on{opacity:1;stroke:#D85A30;stroke-width:2.5}
- svg.focus .hub{opacity:1}
+ .lead code{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-size:13px}
+ .picker{margin:20px 0 8px;font-size:13px;font-weight:600;color:var(--grey)}
+ .chips{display:flex;flex-wrap:wrap;gap:8px}
+ .chip{border:1px solid var(--border);background:#fff;border-radius:999px;padding:7px 14px;font-size:13px;
+   font-weight:600;color:var(--navy);cursor:pointer;transition:background .12s,color .12s,border-color .12s}
+ .chip:hover{border-color:var(--navy)}
+ .chip.sel{background:var(--navy);color:#fff;border-color:var(--navy)}
+
+ .summary{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:15px 17px;margin:16px 0 18px;font-size:14px;color:var(--ink)}
+ .summary .co{font-weight:700;color:var(--navy)}
+ .pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:2px 11px;font-size:13px;font-weight:700;margin:0 1px;white-space:nowrap}
+ .pill.tr{background:rgba(27,49,57,.12);color:var(--navy)}
+ .pill.cp{background:rgba(255,54,33,.14);color:#b32d1a}
+ .summary .concl{display:block;margin-top:7px;font-size:13px;color:var(--grey)}
+
+ .tablewrap{overflow-x:auto;border:1px solid var(--border);border-radius:10px}
+ table.tape{width:100%;min-width:560px;border-collapse:collapse;font-size:13.5px;background:#fff}
+ .tape th{background:var(--panel);text-align:left;padding:10px 12px;font-size:11.5px;text-transform:uppercase;
+   letter-spacing:.03em;color:var(--grey);white-space:nowrap}
+ .tape td{padding:10px 12px;border-top:1px solid var(--border)}
+ .tape .arrow{color:#9aa4a8;text-align:center;width:26px}
+ .tape .price{white-space:nowrap;color:var(--ink)}
+ .tape .comm{color:var(--grey)}
+ .tape tr.dim td{opacity:.38}
+ .tape td.co{font-weight:600;color:var(--ink);transition:background .12s,color .12s}
+ .tape td.co.tr-hit{background:rgba(27,49,57,.12);color:var(--navy);font-weight:700;box-shadow:inset 3px 0 0 var(--navy)}
+ .tape td.co.cp-hit{background:rgba(255,54,33,.12);color:#b32d1a;font-weight:700;box-shadow:inset 3px 0 0 var(--coral)}
+ .flag{color:#b32d1a;font-weight:700;font-size:11.5px;white-space:nowrap}
+
+ .legend{display:flex;flex-wrap:wrap;gap:18px;font-size:12px;color:var(--grey);margin:12px 2px 0}
+ .legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+ .legend .l-tr{background:var(--navy)} .legend .l-cp{background:var(--coral)}
 </style></head>
 <body>
 <header class="top"><a href="../home.html">← Workshop repository</a>
 <h1>Whose data is this?</h1>
-<p>A market-wide trade tape — not one company's books. Every row is one deal between two of the market's participants; there is no single "us". Hover a company to see its link to the market.</p></header>
+<p class="lead">A quick gut-check before you dig in. <code>fact_trade</code> looks like a list of trades — but whose? Every row is one deal between <b>two</b> participants, so there is no single “us”. Pick a company below and watch where it turns up.</p></header>
 <div class="wrap">
-<div class="stage" id="stage"></div>
-<div class="note"><b>The tell:</b> the same company can be the trader on one row and the counterparty on another — the classic sign of exchange / regulator data, not a single firm's ledger.</div>
+
+<div class="picker">Trace a company across the tape:</div>
+<div class="chips" id="chips"></div>
+
+<div class="summary" id="summary"></div>
+
+<div class="tablewrap">
+<table class="tape">
+ <thead><tr><th>#</th><th>Trader</th><th class="arrow"></th><th>Counterparty</th><th>Commodity</th><th>Price</th><th></th></tr></thead>
+ <tbody id="tbody"></tbody>
+</table>
 </div>
-<footer>Energy Trading workshop pack · market structure <a class="contact-link" href="../home.html#appCard">📱 Databricks app</a> <a class="contact-link" href="contact.html">✉ Contact us</a></footer>
+<div class="legend">
+  <span><i class="l-tr"></i>Selected company as the <b>trader</b></span>
+  <span><i class="l-cp"></i>Selected company as the <b>counterparty</b></span>
+</div>
+
+<div class="note"><b>The tell:</b> the company you picked is the <b>trader on some rows and the counterparty on others</b>. A single firm’s own ledger never does that — it is always one side of every deal. Seeing every name on both sides is the signature of a <b>market-wide tape</b>, the view an exchange or regulator has.</div>
+
+</div>
+<footer>Energy Trading workshop pack · whose data is this? <a class="contact-link" href="../home.html#appCard">📱 Databricks app</a> <a class="contact-link" href="contact.html">✉ Contact us</a></footer>
 <script src="../assets/logos.js?v=6"></script>
 <script src="../assets/appmodal.js?v=1"></script>
 <script>
-const NS='http://www.w3.org/2000/svg';
-function el(n,a){const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);return e;}
-const players=[
- ['Equinor','producer'],['Shell','major'],['Kong Corp','LNG producer'],['Manta Res.','trader ⚠'],
- ['Nord Pool','exchange'],['EEX','exchange'],['RWE','utility'],['Vitol','trading house']
+// One row = one deal between two participants (trader ⇄ counterparty).
+// Sample shaped from the notebook's companies & commodities — not live data.
+const ROWS=[
+ {t:'Vitol Group',       c:'Shell',            k:'Natural Gas · TTF',  p:'€32.4 /MWh'},
+ {t:'Equinor',           c:'Vitol Group',      k:'Power · Day-Ahead',  p:'€95.1 /MWh'},
+ {t:'Shell',             c:'RWE',              k:'Carbon · EUA',       p:'€61.8 /t'},
+ {t:'RWE',               c:'Nord Pool Spot',   k:'Power · Day-Ahead',  p:'€96.0 /MWh'},
+ {t:'Kong Corporation',  c:'Vitol Group',      k:'LNG · JKM',          p:'$558 /t'},
+ {t:'Vitol Group',       c:'Gunvor Group',     k:'Crude Oil · Brent',  p:'$64.7 /bbl'},
+ {t:'Nord Pool Spot',    c:'Equinor',          k:'Power · Day-Ahead',  p:'€94.3 /MWh'},
+ {t:'Shell',             c:'Manta Resources',  k:'Natural Gas · TTF',  p:'€31.9 /MWh'},
+ {t:'Manta Resources',   c:'RWE',              k:'Power · Day-Ahead',  p:'€61.2 /MWh', flag:'⚠ 35% below market'},
+ {t:'Gunvor Group',      c:'Shell',            k:'Carbon · EUA',       p:'€62.3 /t'},
+ {t:'Equinor',           c:'Kong Corporation', k:'LNG · JKM',          p:'$561 /t'},
+ {t:'RWE',               c:'Gunvor Group',     k:'Natural Gas · TTF',  p:'€33.1 /MWh'}
 ];
-const W=760,H=520,cx=380,cy=270,R=95,ringR=210;
-const svg=el('svg',{viewBox:`0 0 ${W} ${H}`});
-const gS=el('g',{}); svg.appendChild(gS);
-const gP=el('g',{}); svg.appendChild(gP);
-const boxes=[]; const spokes=[];
-players.forEach((pl,i)=>{
- const ang=-Math.PI/2 + 2*Math.PI*i/players.length;
- const px=cx+ringR*Math.cos(ang), py=cy+ringR*0.78*Math.sin(ang);
- const w=150,h=50, rx=px-w/2, ry=py-h/2;
- const warn = pl[1].includes('⚠');
- // spoke from hub edge to box edge
- const hx=cx+R*Math.cos(ang), hy=cy+R*0.9*Math.sin(ang);
- const bx=px-(px-cx)*0.16, by=py-(py-cy)*0.16;
- const sp=el('line',{x1:hx,y1:hy,x2:bx,y2:by,class:'spoke'}); gS.appendChild(sp);
- const g=el('g',{class:'player'});
- g.appendChild(el('rect',{x:rx,y:ry,width:w,height:h,rx:9,fill:warn?'#fbf1ec':'#eef0fb',stroke:warn?'#D85A30':'#4a42a6','stroke-width':1.4}));
- const nm=el('text',{x:px,y:py-4,'text-anchor':'middle',fill:warn?'#993C1D':'#0d0e27','font-size':13,'font-weight':700});nm.textContent=pl[0];g.appendChild(nm);
- const rl=el('text',{x:px,y:py+14,'text-anchor':'middle',fill:'#5F5E5A','font-size':11});rl.textContent=pl[1];g.appendChild(rl);
- gP.appendChild(g); boxes.push(g); spokes.push(sp);
- g.addEventListener('mouseenter',()=>{svg.classList.add('focus');g.classList.add('on');sp.classList.add('on');});
- g.addEventListener('mouseleave',()=>{svg.classList.remove('focus');g.classList.remove('on');sp.classList.remove('on');});
+const COMPANIES=[...new Set(ROWS.flatMap(r=>[r.t,r.c]))].sort();
+let sel='Vitol Group';
+
+const tbody=document.getElementById('tbody');
+const chipsEl=document.getElementById('chips');
+const summaryEl=document.getElementById('summary');
+
+// chips
+COMPANIES.forEach(name=>{
+ const b=document.createElement('button');
+ b.className='chip'; b.textContent=name;
+ b.addEventListener('click',()=>{ sel = (sel===name)?null:name; render(); });
+ chipsEl.appendChild(b);
 });
-// hub
-const hub=el('g',{class:'hub'});
-hub.appendChild(el('ellipse',{cx:cx,cy:cy,rx:R,ry:R*0.9,fill:'#eef0fb',stroke:'#0d0e27','stroke-width':1.6}));
-const t1=el('text',{x:cx,y:cy-8,'text-anchor':'middle',fill:'#0d0e27','font-size':17,'font-weight':700});t1.textContent='The market';hub.appendChild(t1);
-const t2=el('text',{x:cx,y:cy+13,'text-anchor':'middle',fill:'#5F5E5A','font-size':12});t2.textContent='1.0M trades';hub.appendChild(t2);
-const t3=el('text',{x:cx,y:cy+30,'text-anchor':'middle',fill:'#5F5E5A','font-size':11});t3.textContent='32 companies · 122 traders';hub.appendChild(t3);
-gP.appendChild(hub);
-document.getElementById('stage').appendChild(svg);
+
+// rows (built once, highlighted on render)
+const trEls=ROWS.map((r,i)=>{
+ const tr=document.createElement('tr');
+ tr.innerHTML =
+   '<td>'+(i+1)+'</td>'+
+   '<td class="co t">'+r.t+'</td>'+
+   '<td class="arrow">⇄</td>'+
+   '<td class="co c">'+r.c+'</td>'+
+   '<td class="comm">'+r.k+'</td>'+
+   '<td class="price">'+r.p+'</td>'+
+   '<td>'+(r.flag?'<span class="flag">'+r.flag+'</span>':'')+'</td>';
+ tbody.appendChild(tr);
+ return tr;
+});
+
+function render(){
+ [...chipsEl.children].forEach(b=>b.classList.toggle('sel', b.textContent===sel));
+ trEls.forEach((tr,i)=>{
+   const r=ROWS[i];
+   const tCell=tr.querySelector('.co.t'), cCell=tr.querySelector('.co.c');
+   const tHit=sel && r.t===sel, cHit=sel && r.c===sel;
+   tCell.classList.toggle('tr-hit',!!tHit);
+   cCell.classList.toggle('cp-hit',!!cHit);
+   tr.classList.toggle('dim', !!sel && !tHit && !cHit);
+ });
+ if(!sel){
+   summaryEl.innerHTML='Pick a company above to trace it across the tape.';
+   return;
+ }
+ const asT=ROWS.filter(r=>r.t===sel).length;
+ const asC=ROWS.filter(r=>r.c===sel).length;
+ summaryEl.innerHTML =
+   '<span class="co">'+sel+'</span> shows up as '+
+   '<span class="pill tr">trader · '+asT+' row'+(asT===1?'':'s')+'</span> and '+
+   '<span class="pill cp">counterparty · '+asC+' row'+(asC===1?'':'s')+'</span>.'+
+   '<span class="concl">Same company, <b>both sides</b> of the market — so this data belongs to no single firm.</span>';
+}
+render();
 </script>
 </body></html>
