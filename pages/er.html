@@ -50,12 +50,25 @@
   table.rec td{padding:7px 12px;border-bottom:1px solid var(--border);white-space:nowrap;font-family:'SFMono-Regular',Consolas,monospace;color:var(--ink)}
   table.rec tr:nth-child(even) td{background:var(--panel)}
   .rfoot{padding:9px 22px;border-top:1px solid var(--border);font-size:11px;color:var(--grey)}
+ .basics-cue{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--border);
+   border-left:4px solid var(--coral);border-radius:10px;padding:12px 16px;margin:0 0 20px;
+   text-decoration:none;color:var(--ink);font-size:13.5px;transition:box-shadow .12s,transform .12s}
+ .basics-cue:hover{box-shadow:0 4px 14px rgba(11,79,108,.09);transform:translateY(-1px)}
+ .basics-cue .bc-ic{font-size:20px;flex:none}
+ .basics-cue b{color:var(--navy)}
+ .basics-cue .bc-go{margin-left:auto;white-space:nowrap;font-weight:700;color:#b32d1a}
+ @media(max-width:560px){.basics-cue{flex-wrap:wrap}.basics-cue .bc-go{margin-left:0}}
 </style></head>
 <body>
 <header class="top"><a href="../home.html">← Workshop repository</a>
 <h1>Data model — interactive ER diagram</h1>
 <p>The energy_trading star schema with straight connectors. Hover any line (or a table) to highlight that relationship — or <b>click a table to see sample records</b>.</p></header>
 <div class="wrap">
+<a class="basics-cue" href="basics.html">
+  <span class="bc-ic">👋</span>
+  <span><b>New to energy trading?</b> It helps to skim the basics first — the players, exchanges and commodities in plain words.</span>
+  <span class="bc-go">Read the basics →</span>
+</a>
 <div class="stage" id="stage"></div>
 <div class="legend">
   <span><span class="sw"></span> relationship (hover to highlight)</span>
