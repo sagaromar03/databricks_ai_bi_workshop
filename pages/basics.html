@@ -1,0 +1,110 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Energy trading — the basics</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231B3139'/%3E%3Cg transform='translate(4 4)'%3E%3Cpath fill='%23FF3621' d='M.95 14.184L12 20.403l9.919-5.55v2.21L12 22.662l-10.484-5.96-.565.308v.77L12 24l11.05-6.218v-4.317l-.515-.309L12 19.118l-9.867-5.653v-2.21L12 16.805l11.05-6.218V6.32l-.515-.308L12 11.974 2.647 6.681 12 1.388l7.76 4.368.668-.411v-.566L12 0 .95 6.27v.72L12 13.207l9.919-5.55v2.26L12 15.52 1.516 9.56l-.565.308Z'/%3E%3C/g%3E%3C/svg%3E"><link rel="stylesheet" href="shared.css">
+<style>
+ .primer h2{font-size:16px;color:var(--navy);margin:30px 0 4px;display:flex;align-items:center;gap:9px}
+ .primer h2 .em{font-size:20px}
+ .primer .intro{font-size:13px;color:var(--grey);margin:0 0 14px;max-width:640px}
+
+ .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+ @media(max-width:640px){.grid{grid-template-columns:1fr}}
+ .item{background:#fff;border:1px solid var(--border);border-radius:10px;border-left:4px solid var(--teal);padding:14px 16px}
+ .item.coral{border-left-color:var(--coral)}
+ .item .t{font-size:14.5px;font-weight:700;color:var(--navy);margin:0 0 3px}
+ .item .t .who{font-weight:400;color:var(--grey);font-size:12.5px}
+ .item p{margin:0;font-size:13px;color:var(--ink);line-height:1.5}
+ .item .eg{display:block;margin-top:6px;font-size:12px;color:var(--grey)}
+ .item .eg b{color:var(--navy)}
+
+ .split{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+ @media(max-width:640px){.split{grid-template-columns:1fr}}
+ .vs{background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+ .vs .h{font-size:14px;font-weight:700;color:var(--navy);margin:0 0 4px}
+ .vs p{margin:0;font-size:13px;color:var(--ink)}
+ .vs .eg{display:block;margin-top:6px;font-size:12px;color:var(--grey)}
+
+ .comm{display:flex;flex-wrap:wrap;gap:8px}
+ .comm span{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--border);
+   border-radius:999px;padding:8px 14px;font-size:13px;color:var(--ink)}
+ .comm span b{color:var(--navy);font-weight:600}
+
+ .map{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-top:12px;font-size:13px;color:var(--ink)}
+ .map .row{display:flex;gap:10px;padding:5px 0;flex-wrap:wrap}
+ .map code{background:#fff;border:1px solid var(--border);border-radius:5px;padding:1px 7px;font-size:12px;color:var(--navy);white-space:nowrap}
+ .map .row span{color:var(--grey)}
+ .cta-next{display:inline-flex;align-items:center;gap:8px;margin-top:26px;background:var(--navy);color:#fff;
+   text-decoration:none;font-weight:600;font-size:14px;padding:12px 20px;border-radius:10px}
+ .cta-next:hover{background:#12232a}
+</style></head>
+<body>
+<header class="top"><a href="../home.html">← Workshop repository</a>
+<h1>Energy trading — the basics</h1>
+<p>New to energy markets? Here is the handful of words you’ll meet in this dataset, in plain language. Two minutes here and the tables will make sense.</p></header>
+<div class="wrap primer">
+
+<h2><span class="em">👥</span> Who’s who — the players</h2>
+<p class="intro">Different companies are in the market for different reasons. Knowing the type tells you why they trade.</p>
+<div class="grid">
+  <div class="item"><div class="t">Producer</div>
+    <p>Makes or extracts energy and sells it. Mostly a <b>seller</b>.</p>
+    <span class="eg">e.g. <b>Equinor</b> pumps gas &amp; oil · <b>Kong Corporation</b> ships LNG</span></div>
+  <div class="item"><div class="t">Utility</div>
+    <p>Delivers power to homes and businesses, so it needs to <b>buy</b> a lot of energy.</p>
+    <span class="eg">e.g. <b>RWE</b></span></div>
+  <div class="item"><div class="t">Trader / trading house</div>
+    <p>Doesn’t produce or use energy — it <b>buys and sells</b> to profit from price moves. On both sides constantly.</p>
+    <span class="eg">e.g. <b>Vitol</b>, <b>Gunvor</b></span></div>
+  <div class="item coral"><div class="t">Exchange <span class="who">— a place, not a trader</span></div>
+    <p>The <b>marketplace</b> itself, where everyone else meets to trade. Like a stock exchange, but for power and gas. It doesn’t take a position of its own.</p>
+    <span class="eg">e.g. <b>Nord Pool</b>, <b>EEX</b></span></div>
+</div>
+
+<h2><span class="em">🤝</span> What’s a “counterparty”?</h2>
+<p class="intro">Every trade has <b>two</b> companies in it. Whoever is on the <b>other</b> side of your deal is your <b>counterparty</b>. That’s why each row in the data names two parties — and why the same company can be a counterparty on one deal and the initiator on the next.</p>
+
+<h2><span class="em">📍</span> Where deals happen — exchange vs OTC</h2>
+<div class="split">
+  <div class="vs"><div class="h">On an exchange</div>
+    <p>Trade through a central marketplace. Standardised and often anonymous — you may not know who’s on the other side.</p>
+    <span class="eg">like buying a share on a stock exchange</span></div>
+  <div class="vs"><div class="h">OTC (over-the-counter)</div>
+    <p>Two companies agree a deal <b>directly</b> with each other, off the exchange.</p>
+    <span class="eg">like buying a car privately instead of at an auction</span></div>
+</div>
+
+<h2><span class="em">⏱️</span> When the energy is delivered — spot vs futures</h2>
+<div class="split">
+  <div class="vs"><div class="h">Spot / day-ahead</div>
+    <p>For delivery <b>now or tomorrow</b>. The price you pay today.</p>
+    <span class="eg">like buying groceries for tonight</span></div>
+  <div class="vs"><div class="h">Forward / futures</div>
+    <p>Agree a price <b>now</b> for delivery <b>weeks or months later</b> — a way to lock in a price ahead of time.</p>
+    <span class="eg">like pre-ordering next season’s harvest at today’s price</span></div>
+</div>
+
+<h2><span class="em">⚡</span> What’s actually traded — the commodities</h2>
+<p class="intro">A handful of energy products show up throughout the data:</p>
+<div class="comm">
+  <span>⚡ <b>Electricity</b> (power)</span>
+  <span>🔥 <b>Natural gas</b></span>
+  <span>🛢️ <b>Crude oil</b></span>
+  <span>🚢 <b>LNG</b> — gas shipped as a liquid</span>
+  <span>🌍 <b>Carbon</b> — permits to emit CO₂</span>
+</div>
+
+<h2><span class="em">🗂️</span> Where you’ll see these in the tables</h2>
+<div class="map">
+  <div class="row"><code>dim_trader</code> <span>the company that started the trade — the players above</span></div>
+  <div class="row"><code>dim_counterparty</code> <span>the company on the other side of the deal</span></div>
+  <div class="row"><code>dim_market</code> <span>how it traded — spot, forward, futures, on-exchange or OTC</span></div>
+  <div class="row"><code>dim_instrument</code> <span>what was traded — the commodity (power, gas, oil…)</span></div>
+  <div class="row"><code>dim_delivery_point</code> <span>where the energy is delivered (a hub or grid zone)</span></div>
+  <div class="row"><code>fact_trade</code> <span>the trades themselves — one row per deal, tying all of the above together</span></div>
+</div>
+
+<a class="cta-next" href="market.html">Next: whose data is this? →</a>
+
+</div>
+<footer>Energy Trading workshop pack · the basics <a class="contact-link" href="../home.html#appCard">📱 Databricks app</a> <a class="contact-link" href="contact.html">✉ Contact us</a></footer>
+<script src="../assets/logos.js?v=6"></script>
+<script src="../assets/appmodal.js?v=1"></script>
+</body></html>
