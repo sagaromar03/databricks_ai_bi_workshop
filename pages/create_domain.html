@@ -1,0 +1,184 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Create a domain &amp; pages</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231B3139'/%3E%3Cg transform='translate(4 4)'%3E%3Cpath fill='%23FF3621' d='M.95 14.184L12 20.403l9.919-5.55v2.21L12 22.662l-10.484-5.96-.565.308v.77L12 24l11.05-6.218v-4.317l-.515-.309L12 19.118l-9.867-5.653v-2.21L12 16.805l11.05-6.218V6.32l-.515-.308L12 11.974 2.647 6.681 12 1.388l7.76 4.368.668-.411v-.566L12 0 .95 6.27v.72L12 13.207l9.919-5.55v2.26L12 15.52 1.516 9.56l-.565.308Z'/%3E%3C/g%3E%3C/svg%3E"><link rel="stylesheet" href="shared.css">
+<style>
+ .steps{counter-reset:s;margin:0;padding:0;list-style:none}
+ .steps li{position:relative;background:#fff;border:1px solid var(--border);border-radius:10px;
+   padding:16px 18px 16px 60px;margin-bottom:12px;border-left:5px solid var(--blue)}
+ .steps li::before{counter-increment:s;content:counter(s);position:absolute;left:16px;top:16px;
+   width:28px;height:28px;border-radius:50%;background:var(--navy);color:#fff;font-weight:700;
+   font-size:14px;display:flex;align-items:center;justify-content:center}
+ .steps h3{margin:0 0 5px;font-size:15px;color:var(--navy)}
+ .steps p{margin:0;font-size:13px;color:var(--ink)}
+ .steps code{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-size:12px}
+ h2.sec{font-size:14px;text-transform:uppercase;letter-spacing:.04em;color:var(--grey);margin:26px 0 12px}
+ .steps .clicks{margin:8px 0 0;padding-left:18px;font-size:12.5px;color:var(--grey)}
+ .steps .clicks li{background:none;border:0;border-radius:0;padding:2px 0;margin:0;list-style:disc}
+ .steps .clicks li::before{content:none}
+ .steps .clicks b{color:var(--navy)}
+ .shot{margin:14px 0 2px;max-width:620px}
+ .shot img,.shot video{width:100%;display:block;border:1px solid var(--border);border-radius:8px;background:#fff}
+ .shot figcaption{font-size:12px;color:var(--grey);margin-top:6px}
+ .shot.missing img,.shot.missing video{display:none}
+ .shot.missing{border:1.5px dashed #bcbad0;border-radius:8px;background:var(--panel);padding:22px 18px}
+ .shot.missing::before{content:"▶  Screen recording";display:block;font-weight:700;color:var(--navy);
+   font-size:13px;letter-spacing:.02em;margin-bottom:4px}
+ .shot.missing figcaption{margin-top:0}
+ /* copy fields */
+ .fields{margin:12px 0 2px;max-width:680px;display:flex;flex-direction:column;gap:8px}
+ .copyrow{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--border);
+   border-left:4px solid var(--blue);border-radius:8px;padding:8px 10px}
+ .copyrow .crlabel{font-size:11px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.03em;flex:0 0 78px}
+ .copyrow .crval{flex:1;font-size:12.5px;color:var(--ink);background:#fff;border:1px solid var(--border);
+   border-radius:6px;padding:6px 9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ .copybox{background:var(--panel);border:1px solid var(--border);border-left:4px solid var(--blue);border-radius:8px;padding:0;margin:0;max-width:680px;overflow:hidden}
+ .cbhead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;border-bottom:1px solid var(--border);background:#fff}
+ .copybox.collapsed .cbhead{border-bottom:0}
+ .copybox.collapsed .ctext{display:none}
+ .cbtoggle{display:inline-flex;align-items:center;gap:8px;border:0;background:transparent;cursor:pointer;padding:0;font:inherit;flex:1;text-align:left}
+ .cbtoggle .chev{color:var(--grey);font-size:11px;transition:transform .15s}
+ .copybox:not(.collapsed) .cbtoggle .chev{transform:rotate(180deg)}
+ .cblabel{font-size:11px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.04em}
+ .copy{border:1px solid var(--border);background:#fff;color:var(--navy);font-weight:600;font-size:12px;
+   padding:5px 13px;border-radius:6px;cursor:pointer;transition:background .12s,color .12s;flex:none}
+ .copy:hover{border-color:var(--navy)}
+ .copy.copied{background:var(--teal);color:#fff;border-color:var(--teal)}
+ .copybox .ctext{margin:0;padding:12px 14px;font-size:12.5px;color:var(--ink);line-height:1.5;white-space:pre-wrap;font-family:'Segoe UI',Helvetica,Arial,sans-serif}
+ .stepnav{display:flex;justify-content:space-between;gap:12px;margin-top:24px;flex-wrap:wrap}
+ .stepnav a{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);
+   border-radius:10px;padding:12px 16px;text-decoration:none;color:var(--navy);font-weight:600;font-size:13px}
+ .stepnav a:hover{border-color:var(--navy)}
+ .stepnav a.prev{border-left:5px solid var(--coral)}
+ .stepnav a span{display:block;font-weight:400;color:var(--grey);font-size:11px}
+</style></head>
+<body>
+<header class="top"><a href="../index.html">← Workshop repository</a>
+<h1>Create a domain &amp; pages</h1>
+<p>Organize the <code>energy_trading</code> data for business users in <b>Discover</b>: create a <b>domain</b> to group the tables, add a <b>subdomain</b>, and write <b>Pages</b> — governed definitions of key terms that also make Genie's answers sharper.</p></header>
+<div class="wrap">
+
+<div class="note"><b>What these are:</b> a <b>domain</b> is an organization layer that groups data assets by business purpose on the Discover page; a <b>subdomain</b> splits it further. A <b>Page</b> is a governed, authoritative definition of a business term (e.g. VWAP) — Genie retrieves Pages and prioritizes their definitions when it answers. <b>Before you start:</b> you need the <code>energy_trading</code> tables and the <code>MANAGE DISCOVERY</code> permission (workspace admins have it by default).</div>
+
+<h2 class="sec">Domain &amp; subdomain</h2>
+<ol class="steps">
+
+  <li><h3>Create the domain</h3>
+    <p>Group the whole dataset under one business-facing domain.</p>
+    <ul class="clicks">
+      <li>In the sidebar open <b>Discover</b>, then top-right click <b>Create</b> → <b>Create domain</b>.</li>
+      <li>Under <b>Source</b>, create (or pick) a governed tag, then fill in the fields below and click <b>Create</b>.</li>
+    </ul>
+    <div class="fields">
+      <div class="copyrow"><span class="crlabel">Title</span><span class="crval">Energy Trading</span><button class="copy" type="button">Copy</button></div>
+      <div class="copyrow"><span class="crlabel">Subtitle</span><span class="crval">Market-wide trade tape — power, gas, oil &amp; carbon</span><button class="copy" type="button">Copy</button></div>
+      <div class="copybox collapsed">
+        <div class="cbhead"><button class="cbtoggle" type="button"><span class="cblabel">Description</span><span class="chev">▾</span></button><button class="copy" type="button">Copy</button></div>
+        <p class="ctext">A market-wide tape of every energy trade across power, gas, oil and carbon — the view an exchange or regulator has. Covers trades, positions and market prices, plus the reference data they join to: traders, counterparties, instruments, delivery points, geography and FX rates. Money mixes EUR, GBP and USD.</p>
+      </div>
+    </div>
+    <figure class="shot"><video src="../assets/gifs/domain_create.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Discover ▸ Create ▸ Create domain ▸ fill fields ▸ Create</figcaption></figure>
+  </li>
+
+  <li><h3>Add a subdomain</h3>
+    <p>Give the domain one subdomain to hold every <code>energy_trading</code> table.</p>
+    <ul class="clicks">
+      <li>On the <b>Energy Trading</b> domain, click <b>Create</b> → <b>Create subdomain</b>.</li>
+      <li>The name is prefixed with the domain (<code>Energy Trading/…</code>) — add the fields below and click <b>Create</b>.</li>
+    </ul>
+    <div class="fields">
+      <div class="copyrow"><span class="crlabel">Name</span><span class="crval">Market Activity</span><button class="copy" type="button">Copy</button></div>
+      <div class="copyrow"><span class="crlabel">Subtitle</span><span class="crval">The energy_trading tables — trades, prices &amp; reference data</span><button class="copy" type="button">Copy</button></div>
+      <div class="copybox collapsed">
+        <div class="cbhead"><button class="cbtoggle" type="button"><span class="cblabel">Description</span><span class="chev">▾</span></button><button class="copy" type="button">Copy</button></div>
+        <p class="ctext">Every table in the energy_trading schema: the trade tape (fact_trade), positions and market prices, plus all the dimensions they join to — traders, counterparties, instruments, delivery points, geography, market and FX rates.</p>
+      </div>
+    </div>
+    <figure class="shot"><video src="../assets/gifs/domain_subdomain.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Create ▸ Create subdomain ▸ name it ▸ fill fields ▸ Create</figcaption></figure>
+  </li>
+
+</ol>
+
+<h2 class="sec">Pages, assets &amp; publish</h2>
+<ol class="steps">
+
+  <li><h3>Add Pages for your key terms</h3>
+    <p>Create one Page per important business term. Pages are governed definitions that Genie prioritizes when answering, so they sharpen every question — the governed counterpart to the Genie instructions from <a href="create_genie.html">Step 5</a>. Good candidates here: <b>VWAP</b>, <b>market-wide trade tape</b>, <b>currency → EUR</b>, <b>cancelled trades</b>.</p>
+    <ul class="clicks">
+      <li>On the domain, click <b>Create</b> → <b>Create page</b>.</li>
+      <li>Author it manually or <b>generate with Genie</b> from source text, assign it to the <b>Energy Trading</b> domain, then <b>Publish</b>.</li>
+      <li>Repeat for each term. One example to start with is below.</li>
+    </ul>
+    <p style="margin:14px 0 0;font-size:11px;font-weight:700;color:var(--grey);text-transform:uppercase;letter-spacing:.04em">Example page — VWAP</p>
+    <div class="fields">
+      <div class="copyrow"><span class="crlabel">Name</span><span class="crval">VWAP</span><button class="copy" type="button">Copy</button></div>
+      <div class="copyrow"><span class="crlabel">Synonyms</span><span class="crval">volume-weighted average price</span><button class="copy" type="button">Copy</button></div>
+      <div class="copybox collapsed">
+        <div class="cbhead"><button class="cbtoggle" type="button"><span class="cblabel">Description</span><span class="chev">▾</span></button><button class="copy" type="button">Copy</button></div>
+        <p class="ctext">The volume-weighted average price — the average trade price weighted by trade volume.</p>
+      </div>
+      <div class="copybox collapsed">
+        <div class="cbhead"><button class="cbtoggle" type="button"><span class="cblabel">Page body</span><span class="chev">▾</span></button><button class="copy" type="button">Copy</button></div>
+        <p class="ctext">Computed from the energy_trading_metrics metric view — use MEASURE(`VWAP`), not a plain average. Money mixes EUR/GBP/USD, so convert to EUR via dim_fx_rate when comparing across currencies. Exclude trades with status = 'CANCELLED'.</p>
+      </div>
+    </div>
+    <figure class="shot"><video src="../assets/gifs/domain_pages.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Create ▸ Create page ▸ define the term ▸ assign to domain ▸ Publish</figcaption></figure>
+  </li>
+
+  <li><h3>Add assets to the domain</h3>
+    <p>Fill the domain with the real assets so business users find everything in one place — the tables plus the BI you built in earlier steps.</p>
+    <ul class="clicks">
+      <li>On the <b>Energy Trading</b> domain, click <b>+ Add to domain</b>.</li>
+      <li>Add all the <code>energy_trading</code> <b>tables</b> from the catalog.</li>
+      <li>Also add your <b>Genie agent</b> (Step 5) and the <b>dashboard</b> (Step 3).</li>
+    </ul>
+    <figure class="shot"><video src="../assets/gifs/domain_assets.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Add to domain ▸ all energy_trading tables ▸ Genie agent + dashboard</figcaption></figure>
+  </li>
+
+  <li><h3>Publish the domain</h3>
+    <p>Make it visible to business users browsing Discover.</p>
+    <ul class="clicks">
+      <li>On the domain, click <b>Edit sections</b>, arrange what appears, then <b>Publish</b>.</li>
+    </ul>
+    <figure class="shot"><video src="../assets/gifs/domain_publish.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Edit sections ▸ arrange ▸ Publish</figcaption></figure>
+  </li>
+
+</ol>
+
+<div class="note"><b>Tip:</b> the clearer your Pages, the better Genie does — it cites them in its answers. Keep them short and authoritative, one term per Page.</div>
+
+<div class="stepnav">
+  <a class="prev" href="create_genie.html">← Step 5 · Create a Genie agent<span>Ask questions in plain English</span></a>
+  <a href="genie.html">Genie question bank →<span>Ready-to-paste questions</span></a>
+</div>
+
+</div>
+<footer>Energy Trading workshop pack · create a domain &amp; pages <a class="contact-link" href="../index.html#appCard">📱 Databricks app</a> <a class="contact-link" href="contact.html">✉ Contact us</a></footer>
+<script src="../assets/logos.js?v=3"></script>
+<script src="../assets/download.js"></script>
+<script>
+document.querySelectorAll('.shot video').forEach(function(v){
+  function fail(){v.closest('.shot').classList.add('missing');}
+  v.addEventListener('error',fail);
+  if(v.error) fail();
+  // a 404'd source never loads metadata; catch it after a beat
+  setTimeout(function(){ if(v.readyState===0) fail(); },1500);
+});
+// Expand / collapse the description blocks.
+document.querySelectorAll('.copybox .cbtoggle').forEach(function(t){
+  t.addEventListener('click',function(){t.closest('.copybox').classList.toggle('collapsed');});
+});
+// One-click copy for the copy rows and copy boxes (works whether expanded or not).
+document.querySelectorAll('.copy').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var host=btn.closest('.copyrow')||btn.closest('.copybox');
+    var el=host.querySelector('.crval')||host.querySelector('.ctext');
+    var text=el.textContent.trim();
+    function done(){var o=btn.textContent;btn.textContent='Copied!';btn.classList.add('copied');
+      setTimeout(function(){btn.textContent=o;btn.classList.remove('copied');},1500);}
+    function fallback(){var ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
+      document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done();}catch(e){}document.body.removeChild(ta);}
+    if(navigator.clipboard && navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done).catch(fallback);}
+    else{fallback();}
+  });
+});
+</script>
+</body></html>
