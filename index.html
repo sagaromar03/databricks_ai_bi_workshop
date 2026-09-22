@@ -16,6 +16,9 @@ body{margin:0;font-family:'Segoe UI',Helvetica,Arial,sans-serif;color:#fff;backg
   background:radial-gradient(closest-side,rgba(255,54,33,.16),transparent 70%);pointer-events:none}
 
 .splash{position:relative;z-index:2;max-width:600px}
+.mark{width:62px;height:62px;margin:0 auto 20px;filter:drop-shadow(0 8px 22px rgba(255,54,33,.4))}
+.mark svg{width:100%;height:100%;display:block}
+@media(max-width:560px){.mark{width:54px;height:54px}}
 .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
   color:#fff;background:rgba(255,54,33,.16);border:1px solid rgba(255,54,33,.4);
   padding:6px 14px;border-radius:999px;margin-bottom:26px}
@@ -58,9 +61,10 @@ footer .brandbar.in-footer{display:none} /* one brandbar (top) is enough on the 
 <body>
 <div class="hero">
   <div class="splash">
-    <span class="eyebrow">Databricks AI/BI · hands-on</span>
-    <h1>Energy&nbsp;Trading<br><span class="accent">Workshop</span></h1>
-    <p class="sub">Build a real trading dataset, explore it, and let AI/BI Genie answer questions in plain English — all in a free Databricks workspace.</p>
+    <span class="eyebrow">Energy Trading</span>
+    <div class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="#FF3621" d="M.95 14.184L12 20.403l9.919-5.55v2.21L12 22.662l-10.484-5.96-.565.308v.77L12 24l11.05-6.218v-4.317l-.515-.309L12 19.118l-9.867-5.653v-2.21L12 16.805l11.05-6.218V6.32l-.515-.308L12 11.974 2.647 6.681 12 1.388l7.76 4.368.668-.411v-.566L12 0 .95 6.27v.72L12 13.207l9.919-5.55v2.26L12 15.52 1.516 9.56l-.565.308Z"/></svg></div>
+    <h1>Databricks&nbsp;AI/BI<br><span class="accent">hands-on</span></h1>
+    <p class="sub">Build a real energy-trading dataset, explore it, and let AI/BI Genie answer questions in plain English — all in a free Databricks workspace.</p>
     <a class="cta" href="home.html">Start the workshop <span class="arrow">→</span></a>
     <div class="chips">
       <span>📊 <b>Data model</b> &amp; KPIs</span>
