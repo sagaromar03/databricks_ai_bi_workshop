@@ -18,8 +18,6 @@ body{margin:0;font-family:'Segoe UI',Helvetica,Arial,sans-serif;color:#fff;backg
 /* Entrance + idle animations */
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes riseUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-@keyframes logoFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
-@keyframes glowPulse{0%,100%{opacity:.4;transform:scale(.95)}50%{opacity:.85;transform:scale(1.07)}}
 
 .splash{position:relative;z-index:2;max-width:600px}
 .splash h1{font-size:clamp(30px,6.4vw,48px);font-weight:600;margin:0 0 16px;line-height:1.1;letter-spacing:-.01em;
@@ -42,11 +40,11 @@ body{margin:0;font-family:'Segoe UI',Helvetica,Arial,sans-serif;color:#fff;backg
 .brandbar{display:inline-flex;align-items:center;gap:14px}
 .hero .brandbar.corner{position:relative;order:-1;margin:0 0 34px;
   filter:drop-shadow(0 8px 22px rgba(0,0,0,.35));
-  animation:fadeIn 1s ease-out both, logoFloat 6s ease-in-out 1s infinite}
-/* soft coral halo that breathes behind the logo lockup */
+  animation:fadeIn 1s ease-out both}
+/* soft static coral halo behind the logo lockup */
 .hero .brandbar.corner::before{content:"";position:absolute;inset:-38px -24px;z-index:-1;
-  background:radial-gradient(closest-side,rgba(255,54,33,.30),transparent 72%);filter:blur(6px);
-  animation:glowPulse 4.2s ease-in-out infinite;pointer-events:none}
+  background:radial-gradient(closest-side,rgba(255,54,33,.26),transparent 72%);filter:blur(6px);
+  pointer-events:none}
 .brand-slot{display:inline-flex;align-items:center;line-height:0;text-decoration:none;transition:opacity .12s}
 .brand-slot:hover{opacity:.78}
 .brand-img{display:block;height:34px;width:auto;max-width:200px;object-fit:contain}
