@@ -129,10 +129,16 @@ ul.mini{margin:8px 0 0;padding-left:18px;font-size:13px;color:var(--grey)}
   var modal=document.getElementById('appModal');
   var card=document.getElementById('appCard');
   function open(e){if(e)e.preventDefault();modal.hidden=false;}
-  function close(){modal.hidden=true;}
+  function close(){modal.hidden=true; if(location.hash==='#appCard'){history.replaceState(null,'',location.pathname+location.search);}}
   card.addEventListener('click',open);
   modal.addEventListener('click',function(e){if(e.target.hasAttribute('data-close'))close();});
   document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!modal.hidden)close();});
+  // "Databricks app" links (this page's footer + other pages/sketch) point to
+  // #appCard — open the QR modal directly on arrival or same-page click.
+  // A plain homepage load (no hash) still shows no popup.
+  function checkHash(){ if(location.hash==='#appCard') open(); }
+  window.addEventListener('hashchange',checkHash);
+  checkHash();
 })();
 </script>
 </body></html>
