@@ -15,14 +15,23 @@ body{margin:0;font-family:'Segoe UI',Helvetica,Arial,sans-serif;color:#fff;backg
 .hero::after{content:"";position:absolute;left:50%;bottom:-160px;width:520px;height:320px;transform:translateX(-50%);
   background:radial-gradient(closest-side,rgba(255,54,33,.16),transparent 70%);pointer-events:none}
 
+/* Entrance + idle animations */
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes riseUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes logoFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes glowPulse{0%,100%{opacity:.4;transform:scale(.95)}50%{opacity:.85;transform:scale(1.07)}}
+
 .splash{position:relative;z-index:2;max-width:600px}
-.splash h1{font-size:clamp(30px,6.4vw,48px);font-weight:600;margin:0 0 16px;line-height:1.1;letter-spacing:-.01em}
+.splash h1{font-size:clamp(30px,6.4vw,48px);font-weight:600;margin:0 0 16px;line-height:1.1;letter-spacing:-.01em;
+  animation:riseUp .8s cubic-bezier(.2,.7,.2,1) .25s both}
 .splash h1 .accent{color:var(--coral)}
-.splash .sub{font-size:16px;color:#C3CDD1;margin:0 auto 34px;max-width:470px}
+.splash .sub{font-size:16px;color:#C3CDD1;margin:0 auto 34px;max-width:470px;
+  animation:riseUp .8s cubic-bezier(.2,.7,.2,1) .4s both}
 
 .cta{display:inline-flex;align-items:center;gap:10px;background:var(--coral);color:#fff;font-size:17px;font-weight:600;
   padding:16px 34px;border-radius:999px;text-decoration:none;
-  box-shadow:0 12px 34px rgba(255,54,33,.38);transition:transform .14s,box-shadow .14s}
+  box-shadow:0 12px 34px rgba(255,54,33,.38);transition:transform .14s,box-shadow .14s;
+  animation:fadeIn .8s ease-out .55s both}
 .cta:hover{transform:translateY(-2px);box-shadow:0 18px 44px rgba(255,54,33,.5)}
 .cta .arrow{transition:transform .14s}
 .cta:hover .arrow{transform:translateX(4px)}
@@ -31,8 +40,13 @@ body{margin:0;font-family:'Segoe UI',Helvetica,Arial,sans-serif;color:#fff;backg
 /* Brand lockup (logos.js injects the "Databricks x knowit" markup;
    we pull it out of the corner and center it, enlarged, above the title). */
 .brandbar{display:inline-flex;align-items:center;gap:14px}
-.hero .brandbar.corner{position:static;transform:none;order:-1;margin:0 0 34px;
-  filter:drop-shadow(0 8px 22px rgba(0,0,0,.35))}
+.hero .brandbar.corner{position:relative;order:-1;margin:0 0 34px;
+  filter:drop-shadow(0 8px 22px rgba(0,0,0,.35));
+  animation:fadeIn 1s ease-out both, logoFloat 6s ease-in-out 1s infinite}
+/* soft coral halo that breathes behind the logo lockup */
+.hero .brandbar.corner::before{content:"";position:absolute;inset:-38px -24px;z-index:-1;
+  background:radial-gradient(closest-side,rgba(255,54,33,.30),transparent 72%);filter:blur(6px);
+  animation:glowPulse 4.2s ease-in-out infinite;pointer-events:none}
 .brand-slot{display:inline-flex;align-items:center;line-height:0;text-decoration:none;transition:opacity .12s}
 .brand-slot:hover{opacity:.78}
 .brand-img{display:block;height:34px;width:auto;max-width:200px;object-fit:contain}
@@ -43,6 +57,9 @@ body{margin:0;font-family:'Segoe UI',Helvetica,Arial,sans-serif;color:#fff;backg
 
 @media(max-width:560px){
   .hero{padding-top:88px}
+}
+@media(prefers-reduced-motion:reduce){
+  .hero .brandbar.corner,.hero .brandbar.corner::before,.splash h1,.splash .sub,.cta{animation:none;opacity:1}
 }
 </style></head>
 <body>
