@@ -1,39 +1,81 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Energy trading — the basics</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231B3139'/%3E%3Cg transform='translate(4 4)'%3E%3Cpath fill='%23FF3621' d='M.95 14.184L12 20.403l9.919-5.55v2.21L12 22.662l-10.484-5.96-.565.308v.77L12 24l11.05-6.218v-4.317l-.515-.309L12 19.118l-9.867-5.653v-2.21L12 16.805l11.05-6.218V6.32l-.515-.308L12 11.974 2.647 6.681 12 1.388l7.76 4.368.668-.411v-.566L12 0 .95 6.27v.72L12 13.207l9.919-5.55v2.26L12 15.52 1.516 9.56l-.565.308Z'/%3E%3C/g%3E%3C/svg%3E"><link rel="stylesheet" href="shared.css">
 <style>
- .primer h2{font-size:16px;color:var(--navy);margin:30px 0 4px;display:flex;align-items:center;gap:9px}
- .primer h2 .em{font-size:20px}
- .primer .intro{font-size:13px;color:var(--grey);margin:0 0 14px;max-width:640px}
+ .primer{max-width:900px}
+ /* section header */
+ .sh{display:flex;align-items:flex-start;gap:13px;margin:38px 0 16px}
+ .sh:first-of-type{margin-top:8px}
+ .sh .ic{width:40px;height:40px;border-radius:11px;background:var(--navy);color:#fff;display:flex;
+   align-items:center;justify-content:center;font-size:20px;flex:none}
+ .sh h2{margin:0;font-size:18px;color:var(--navy);line-height:1.3}
+ .sh p{margin:2px 0 0;font-size:13px;color:var(--grey);max-width:640px}
 
- .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
- @media(max-width:640px){.grid{grid-template-columns:1fr}}
- .item{background:#fff;border:1px solid var(--border);border-radius:10px;border-left:4px solid var(--teal);padding:14px 16px}
- .item.coral{border-left-color:var(--coral)}
- .item .t{font-size:14.5px;font-weight:700;color:var(--navy);margin:0 0 3px}
- .item .t .who{font-weight:400;color:var(--grey);font-size:12.5px}
- .item p{margin:0;font-size:13px;color:var(--ink);line-height:1.5}
- .item .eg{display:block;margin-top:6px;font-size:12px;color:var(--grey)}
- .item .eg b{color:var(--navy)}
+ /* player cards */
+ .players{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+ @media(max-width:640px){.players{grid-template-columns:1fr}}
+ .pcard{background:#fff;border:1px solid var(--border);border-radius:14px;padding:18px;transition:transform .12s,box-shadow .12s}
+ .pcard:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(11,79,108,.10)}
+ .pcard .top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+ .pcard .badge{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:23px;flex:none}
+ .pcard h3{margin:0;font-size:15.5px;color:var(--navy)}
+ .pcard .role{display:inline-block;margin-top:3px;font-size:10.5px;font-weight:700;text-transform:uppercase;
+   letter-spacing:.05em;padding:3px 9px;border-radius:999px}
+ .pcard p{margin:0;font-size:13px;color:var(--ink);line-height:1.5}
+ .pcard .eg{display:block;margin-top:9px;padding-top:9px;border-top:1px dashed var(--border);font-size:12px;color:var(--grey)}
+ .pcard .eg b{color:var(--navy)}
+ .p-prod .badge{background:rgba(27,49,57,.10)} .p-prod .role{background:rgba(27,49,57,.10);color:var(--navy)}
+ .p-util .badge{background:rgba(255,95,70,.15)} .p-util .role{background:rgba(255,95,70,.15);color:#c23a1f}
+ .p-trade .badge{background:rgba(255,54,33,.13)} .p-trade .role{background:rgba(255,54,33,.13);color:#b32d1a}
+ .p-exch{border-style:dashed}
+ .p-exch .badge{background:#eef1f3} .p-exch .role{background:#eef1f3;color:#55636b}
 
- .split{display:grid;grid-template-columns:1fr 1fr;gap:12px}
- @media(max-width:640px){.split{grid-template-columns:1fr}}
- .vs{background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px 16px}
- .vs .h{font-size:14px;font-weight:700;color:var(--navy);margin:0 0 4px}
- .vs p{margin:0;font-size:13px;color:var(--ink)}
- .vs .eg{display:block;margin-top:6px;font-size:12px;color:var(--grey)}
+ /* counterparty visual */
+ .dealvis{background:#fff;border:1px solid var(--border);border-radius:14px;padding:26px 20px 18px;text-align:center}
+ .dealrow{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap}
+ .party{min-width:150px;background:var(--panel);border:1px solid var(--border);border-radius:11px;padding:12px 14px}
+ .party .lab{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--grey)}
+ .party .nm{font-size:15px;font-weight:700;color:var(--navy);margin-top:2px}
+ .party.you{border-color:var(--navy)} .party.you .lab{color:var(--navy)}
+ .party.cp{border-color:var(--coral)} .party.cp .lab{color:#b32d1a}
+ .connector{display:flex;flex-direction:column;align-items:center;padding:0 6px;color:var(--grey);min-width:120px}
+ .connector .line{width:100%;height:2px;background:linear-gradient(90deg,var(--navy),var(--coral));border-radius:2px;position:relative}
+ .connector .cap{font-size:11px;color:var(--grey);margin-bottom:5px}
+ .dealnote{font-size:13px;color:var(--grey);margin:16px auto 0;max-width:520px}
+ @media(max-width:520px){.connector{transform:rotate(90deg);min-width:auto;padding:12px 0}.dealrow{flex-direction:column}}
 
- .comm{display:flex;flex-wrap:wrap;gap:8px}
- .comm span{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--border);
-   border-radius:999px;padding:8px 14px;font-size:13px;color:var(--ink)}
- .comm span b{color:var(--navy);font-weight:600}
+ /* comparison cards */
+ .compare{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+ @media(max-width:640px){.compare{grid-template-columns:1fr}}
+ .ccard{background:#fff;border:1px solid var(--border);border-radius:14px;padding:18px;border-top:4px solid var(--teal)}
+ .ccard.alt{border-top-color:var(--coral)}
+ .ccard .ct{display:flex;align-items:center;gap:9px;margin-bottom:7px}
+ .ccard .ct .e{font-size:20px}
+ .ccard h3{margin:0;font-size:15px;color:var(--navy)}
+ .ccard p{margin:0;font-size:13px;color:var(--ink);line-height:1.5}
+ .ccard .analogy{display:flex;gap:7px;margin-top:10px;font-size:12.5px;color:var(--grey);font-style:italic}
+ .ccard .analogy::before{content:"💡";font-style:normal}
 
- .map{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-top:12px;font-size:13px;color:var(--ink)}
- .map .row{display:flex;gap:10px;padding:5px 0;flex-wrap:wrap}
- .map code{background:#fff;border:1px solid var(--border);border-radius:5px;padding:1px 7px;font-size:12px;color:var(--navy);white-space:nowrap}
- .map .row span{color:var(--grey)}
- .cta-next{display:inline-flex;align-items:center;gap:8px;margin-top:26px;background:var(--navy);color:#fff;
-   text-decoration:none;font-weight:600;font-size:14px;padding:12px 20px;border-radius:10px}
- .cta-next:hover{background:#12232a}
+ /* commodities */
+ .commods{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+ @media(max-width:620px){.commods{grid-template-columns:repeat(2,1fr)}}
+ .ccom{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 12px;text-align:center;transition:transform .12s}
+ .ccom:hover{transform:translateY(-2px)}
+ .ccom .e{font-size:28px;line-height:1}
+ .ccom .n{font-weight:700;color:var(--navy);margin-top:8px;font-size:14px}
+ .ccom .d{font-size:11.5px;color:var(--grey);margin-top:3px;line-height:1.4}
+
+ /* table map */
+ .tmap{background:#fff;border:1px solid var(--border);border-radius:14px;padding:6px 18px}
+ .tmap .r{display:grid;grid-template-columns:180px 1fr;gap:16px;align-items:center;padding:13px 0;border-top:1px solid var(--border)}
+ .tmap .r:first-child{border-top:0}
+ .tmap code{justify-self:start;background:var(--panel);border:1px solid var(--border);border-radius:6px;
+   padding:3px 9px;font-size:12.5px;color:var(--navy);font-weight:600;white-space:nowrap}
+ .tmap .r span{font-size:13px;color:var(--ink)}
+ @media(max-width:560px){.tmap .r{grid-template-columns:1fr;gap:5px}}
+
+ .cta-next{display:inline-flex;align-items:center;gap:8px;margin-top:30px;background:var(--navy);color:#fff;
+   text-decoration:none;font-weight:600;font-size:14px;padding:13px 22px;border-radius:11px;transition:background .12s,transform .12s}
+ .cta-next:hover{background:#12232a;transform:translateY(-1px)}
 </style></head>
 <body>
 <header class="top"><a href="../home.html">← Workshop repository</a>
@@ -41,64 +83,77 @@
 <p>New to energy markets? Here is the handful of words you’ll meet in this dataset, in plain language. Two minutes here and the tables will make sense.</p></header>
 <div class="wrap primer">
 
-<h2><span class="em">👥</span> Who’s who — the players</h2>
-<p class="intro">Different companies are in the market for different reasons. Knowing the type tells you why they trade.</p>
-<div class="grid">
-  <div class="item"><div class="t">Producer</div>
-    <p>Makes or extracts energy and sells it. Mostly a <b>seller</b>.</p>
-    <span class="eg">e.g. <b>Equinor</b> pumps gas &amp; oil · <b>Kong Corporation</b> ships LNG</span></div>
-  <div class="item"><div class="t">Utility</div>
-    <p>Delivers power to homes and businesses, so it needs to <b>buy</b> a lot of energy.</p>
-    <span class="eg">e.g. <b>RWE</b></span></div>
-  <div class="item"><div class="t">Trader / trading house</div>
-    <p>Doesn’t produce or use energy — it <b>buys and sells</b> to profit from price moves. On both sides constantly.</p>
-    <span class="eg">e.g. <b>Vitol</b>, <b>Gunvor</b></span></div>
-  <div class="item coral"><div class="t">Exchange <span class="who">— a place, not a trader</span></div>
-    <p>The <b>marketplace</b> itself, where everyone else meets to trade. Like a stock exchange, but for power and gas. It doesn’t take a position of its own.</p>
-    <span class="eg">e.g. <b>Nord Pool</b>, <b>EEX</b></span></div>
+<div class="sh"><span class="ic">👥</span><div><h2>Who’s who — the players</h2>
+  <p>Different companies are in the market for different reasons. The type tells you why they trade.</p></div></div>
+<div class="players">
+  <div class="pcard p-prod"><div class="top"><span class="badge">🏭</span>
+    <div><h3>Producer</h3><div class="role">mostly sells</div></div></div>
+    <p>Makes or extracts energy and sells it into the market.</p>
+    <span class="eg"><b>Equinor</b> pumps gas &amp; oil · <b>Kong Corporation</b> ships LNG</span></div>
+  <div class="pcard p-util"><div class="top"><span class="badge">🔌</span>
+    <div><h3>Utility</h3><div class="role">mostly buys</div></div></div>
+    <p>Delivers power to homes and businesses, so it needs to buy a lot of energy.</p>
+    <span class="eg"><b>RWE</b></span></div>
+  <div class="pcard p-trade"><div class="top"><span class="badge">💹</span>
+    <div><h3>Trader / trading house</h3><div class="role">buys &amp; sells</div></div></div>
+    <p>Doesn’t produce or use energy — it trades to profit from price moves. On both sides constantly.</p>
+    <span class="eg"><b>Vitol</b>, <b>Gunvor</b></span></div>
+  <div class="pcard p-exch"><div class="top"><span class="badge">🏛️</span>
+    <div><h3>Exchange</h3><div class="role">a place, not a trader</div></div></div>
+    <p>The marketplace itself, where everyone else meets to trade — like a stock exchange, but for power and gas. Takes no position of its own.</p>
+    <span class="eg"><b>Nord Pool</b>, <b>EEX</b></span></div>
 </div>
 
-<h2><span class="em">🤝</span> What’s a “counterparty”?</h2>
-<p class="intro">Every trade has <b>two</b> companies in it. Whoever is on the <b>other</b> side of your deal is your <b>counterparty</b>. That’s why each row in the data names two parties — and why the same company can be a counterparty on one deal and the initiator on the next.</p>
+<div class="sh"><span class="ic">🤝</span><div><h2>What’s a “counterparty”?</h2>
+  <p>Every trade has two companies in it. Whoever is on the other side of your deal is your counterparty.</p></div></div>
+<div class="dealvis">
+  <div class="dealrow">
+    <div class="party you"><div class="lab">You</div><div class="nm">Vitol</div></div>
+    <div class="connector"><span class="cap">one deal</span><span class="line"></span></div>
+    <div class="party cp"><div class="lab">Counterparty</div><div class="nm">Shell</div></div>
+  </div>
+  <p class="dealnote">Swap sides and the labels swap too — so each row in the data simply lists <b>both</b> parties. That’s why the same company can be the counterparty on one deal and the initiator on the next.</p>
+</div>
 
-<h2><span class="em">📍</span> Where deals happen — exchange vs OTC</h2>
-<div class="split">
-  <div class="vs"><div class="h">On an exchange</div>
+<div class="sh"><span class="ic">📍</span><div><h2>Where deals happen — exchange vs OTC</h2></div></div>
+<div class="compare">
+  <div class="ccard"><div class="ct"><span class="e">🏛️</span><h3>On an exchange</h3></div>
     <p>Trade through a central marketplace. Standardised and often anonymous — you may not know who’s on the other side.</p>
-    <span class="eg">like buying a share on a stock exchange</span></div>
-  <div class="vs"><div class="h">OTC (over-the-counter)</div>
-    <p>Two companies agree a deal <b>directly</b> with each other, off the exchange.</p>
-    <span class="eg">like buying a car privately instead of at an auction</span></div>
+    <div class="analogy">like buying a share on a stock exchange</div></div>
+  <div class="ccard alt"><div class="ct"><span class="e">🤝</span><h3>OTC (over-the-counter)</h3></div>
+    <p>Two companies agree a deal directly with each other, off the exchange.</p>
+    <div class="analogy">like buying a car privately instead of at auction</div></div>
 </div>
 
-<h2><span class="em">⏱️</span> When the energy is delivered — spot vs futures</h2>
-<div class="split">
-  <div class="vs"><div class="h">Spot / day-ahead</div>
-    <p>For delivery <b>now or tomorrow</b>. The price you pay today.</p>
-    <span class="eg">like buying groceries for tonight</span></div>
-  <div class="vs"><div class="h">Forward / futures</div>
-    <p>Agree a price <b>now</b> for delivery <b>weeks or months later</b> — a way to lock in a price ahead of time.</p>
-    <span class="eg">like pre-ordering next season’s harvest at today’s price</span></div>
+<div class="sh"><span class="ic">⏱️</span><div><h2>When the energy is delivered — spot vs futures</h2></div></div>
+<div class="compare">
+  <div class="ccard"><div class="ct"><span class="e">🛒</span><h3>Spot / day-ahead</h3></div>
+    <p>For delivery now or tomorrow, at today’s price.</p>
+    <div class="analogy">like buying groceries for tonight</div></div>
+  <div class="ccard alt"><div class="ct"><span class="e">📅</span><h3>Forward / futures</h3></div>
+    <p>Agree a price now for delivery weeks or months later — a way to lock in a price ahead of time.</p>
+    <div class="analogy">like pre-ordering next season’s harvest at today’s price</div></div>
 </div>
 
-<h2><span class="em">⚡</span> What’s actually traded — the commodities</h2>
-<p class="intro">A handful of energy products show up throughout the data:</p>
-<div class="comm">
-  <span>⚡ <b>Electricity</b> (power)</span>
-  <span>🔥 <b>Natural gas</b></span>
-  <span>🛢️ <b>Crude oil</b></span>
-  <span>🚢 <b>LNG</b> — gas shipped as a liquid</span>
-  <span>🌍 <b>Carbon</b> — permits to emit CO₂</span>
+<div class="sh"><span class="ic">⚡</span><div><h2>What’s actually traded — the commodities</h2>
+  <p>A handful of energy products show up throughout the data.</p></div></div>
+<div class="commods">
+  <div class="ccom"><div class="e">⚡</div><div class="n">Electricity</div><div class="d">also called power</div></div>
+  <div class="ccom"><div class="e">🔥</div><div class="n">Natural gas</div><div class="d">heating &amp; power fuel</div></div>
+  <div class="ccom"><div class="e">🛢️</div><div class="n">Crude oil</div><div class="d">e.g. Brent</div></div>
+  <div class="ccom"><div class="e">🚢</div><div class="n">LNG</div><div class="d">gas shipped as a liquid</div></div>
+  <div class="ccom"><div class="e">🌍</div><div class="n">Carbon</div><div class="d">permits to emit CO₂</div></div>
 </div>
 
-<h2><span class="em">🗂️</span> Where you’ll see these in the tables</h2>
-<div class="map">
-  <div class="row"><code>dim_trader</code> <span>the company that started the trade — the players above</span></div>
-  <div class="row"><code>dim_counterparty</code> <span>the company on the other side of the deal</span></div>
-  <div class="row"><code>dim_market</code> <span>how it traded — spot, forward, futures, on-exchange or OTC</span></div>
-  <div class="row"><code>dim_instrument</code> <span>what was traded — the commodity (power, gas, oil…)</span></div>
-  <div class="row"><code>dim_delivery_point</code> <span>where the energy is delivered (a hub or grid zone)</span></div>
-  <div class="row"><code>fact_trade</code> <span>the trades themselves — one row per deal, tying all of the above together</span></div>
+<div class="sh"><span class="ic">🗂️</span><div><h2>Where you’ll see these in the tables</h2>
+  <p>Each concept above maps to a table in the dataset.</p></div></div>
+<div class="tmap">
+  <div class="r"><code>dim_trader</code><span>the company that started the trade — the players above</span></div>
+  <div class="r"><code>dim_counterparty</code><span>the company on the other side of the deal</span></div>
+  <div class="r"><code>dim_market</code><span>how it traded — spot, forward, futures, on-exchange or OTC</span></div>
+  <div class="r"><code>dim_instrument</code><span>what was traded — the commodity (power, gas, oil…)</span></div>
+  <div class="r"><code>dim_delivery_point</code><span>where the energy is delivered (a hub or grid zone)</span></div>
+  <div class="r"><code>fact_trade</code><span>the trades themselves — one row per deal, tying it all together</span></div>
 </div>
 
 <a class="cta-next" href="market.html">Next: whose data is this? →</a>
