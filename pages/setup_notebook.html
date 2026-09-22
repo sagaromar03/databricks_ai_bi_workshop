@@ -56,7 +56,7 @@
       <li>Keep source set to <b>File</b>, then drag the <code>.py</code> in or <b>Browse</b> to it, and click <b>Import</b>.</li>
       <li>The notebook opens automatically once the import finishes.</li>
     </ul>
-    <figure class="shot"><video src="../assets/gifs/import_notebook.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Workspace ▸ Home ▸ ⋯ ▸ Import ▸ drop the file ▸ Import</figcaption></figure>
+    <figure class="shot"><video src="../assets/gifs/import_notebook.mp4" loop muted playsinline preload="metadata"></video><figcaption>Workspace ▸ Home ▸ ⋯ ▸ Import ▸ drop the file ▸ Import</figcaption></figure>
   </li>
 
   <li><h3>Attach serverless compute</h3>
@@ -65,7 +65,7 @@
       <li>With the notebook open, look at the <b>compute selector</b> in the top-right toolbar.</li>
       <li>Click it and choose <b>Serverless</b>. It spins up on its own the first time you run a cell.</li>
     </ul>
-    <figure class="shot"><video src="../assets/gifs/attach_compute.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Top-right compute selector ▸ Serverless</figcaption></figure>
+    <figure class="shot"><video src="../assets/gifs/attach_compute.mp4" loop muted playsinline preload="metadata"></video><figcaption>Top-right compute selector ▸ Serverless</figcaption></figure>
   </li>
 
   <li><h3>Create and set the widgets</h3>
@@ -76,7 +76,7 @@
       <li>Leave <code>schema</code> as <code>energy_trading</code>.</li>
       <li>Optional: pin <code>date_end</code> to a fixed date so the synthetic data is reproducible.</li>
     </ul>
-    <figure class="shot"><video src="../assets/gifs/set_widgets.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Run cell 1 ▸ set <code>catalog</code> and <code>schema</code> in the widget bar</figcaption></figure>
+    <figure class="shot"><video src="../assets/gifs/set_widgets.mp4" loop muted playsinline preload="metadata"></video><figcaption>Run cell 1 ▸ set <code>catalog</code> and <code>schema</code> in the widget bar</figcaption></figure>
   </li>
 
   <li><h3>Run all cells</h3>
@@ -86,7 +86,7 @@
       <li>The notebook writes 10 tables into <code>&lt;catalog&gt;.energy_trading</code> (plus the finance schema if you run Part 5).</li>
       <li>The <b>first run takes a few minutes</b> while serverless warms up — later runs are faster.</li>
     </ul>
-    <figure class="shot"><video src="../assets/gifs/run_all.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Top toolbar ▸ Run all ▸ wait for every cell to finish</figcaption></figure>
+    <figure class="shot"><video src="../assets/gifs/run_all.mp4" loop muted playsinline preload="metadata"></video><figcaption>Top toolbar ▸ Run all ▸ wait for every cell to finish</figcaption></figure>
   </li>
 
   <li><h3>Confirm the tables</h3>
@@ -96,7 +96,7 @@
       <li>Confirm the tables are present — the <b>10 core tables</b>, plus a few helper views.</li>
       <li>Then explore them with the <a href="er.html">interactive ER diagram</a> and the <a href="genie.html">Genie question bank</a>.</li>
     </ul>
-    <figure class="shot"><video src="../assets/gifs/confirm_tables.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Catalog ▸ your catalog ▸ energy_trading ▸ the tables</figcaption></figure>
+    <figure class="shot"><video src="../assets/gifs/confirm_tables.mp4" loop muted playsinline preload="metadata"></video><figcaption>Catalog ▸ your catalog ▸ energy_trading ▸ the tables</figcaption></figure>
   </li>
 
 </ol>
@@ -119,6 +119,19 @@ document.querySelectorAll('.shot img').forEach(function(img){
   img.addEventListener('error',fail);
   if(img.complete && img.naturalWidth===0) fail();
 });
+// Play a walkthrough clip only while its step is on screen; pause + rewind when it scrolls away.
+(function(){
+  var vids=document.querySelectorAll('.shot video');
+  if(!('IntersectionObserver' in window)){ vids.forEach(function(v){try{v.play();}catch(e){}}); return; }
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      var v=en.target;
+      if(en.isIntersecting){ var p=v.play(); if(p&&p.catch)p.catch(function(){}); }
+      else { v.pause(); try{v.currentTime=0;}catch(e){} }
+    });
+  },{threshold:0.5});
+  vids.forEach(function(v){ io.observe(v); });
+})();
 document.querySelectorAll('.shot video').forEach(function(v){
   v.addEventListener('error',function(){v.closest('.shot').classList.add('missing');});
 });

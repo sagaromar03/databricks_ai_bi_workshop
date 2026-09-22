@@ -61,7 +61,7 @@
       <li>When prompted, select your <code>energy_trading</code> datasets — <code>fact_trade</code> and the dimensions (and <code>energy_trading_metrics</code> if you built it).</li>
       <li>Open <b>Configuration</b> to see what Genie set up for you — instructions, sample questions and settings are already filled in.</li>
     </ul>
-    <figure class="shot"><video src="../assets/gifs/genie_new.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>New ▸ select datasets ▸ open Configuration to see the auto-setup</figcaption></figure>
+    <figure class="shot"><video src="../assets/gifs/genie_new.mp4" loop muted playsinline preload="metadata"></video><figcaption>New ▸ select datasets ▸ open Configuration to see the auto-setup</figcaption></figure>
   </li>
 
   <li><h3>Ask your first question</h3>
@@ -70,7 +70,7 @@
       <li>Type or click a question — e.g. <code>Show VWAP by Country Name</code> — and press <b>Enter</b>.</li>
       <li>Wait for the chart, then expand the <b>SQL</b> to see how Genie got there.</li>
     </ul>
-    <figure class="shot"><video src="../assets/gifs/genie_ask.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Ask a question ▸ review answer + SQL</figcaption></figure>
+    <figure class="shot"><video src="../assets/gifs/genie_ask.mp4" loop muted playsinline preload="metadata"></video><figcaption>Ask a question ▸ review answer + SQL</figcaption></figure>
   </li>
 
   <li><h3>Sharpen it <span style="font-weight:400;color:var(--grey)">(optional)</span></h3>
@@ -103,7 +103,7 @@ Vocabulary
     <ul class="clicks">
       <li>Then add a few <b>sample questions</b> — copy from the <a href="genie.html">Genie question bank</a>.</li>
     </ul>
-    <figure class="shot"><video src="../assets/gifs/genie_instructions.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Configure ▸ Instructions ▸ paste the block ▸ Save</figcaption></figure>
+    <figure class="shot"><video src="../assets/gifs/genie_instructions.mp4" loop muted playsinline preload="metadata"></video><figcaption>Configure ▸ Instructions ▸ paste the block ▸ Save</figcaption></figure>
   </li>
 
   <li><h3>Revisit your chat history</h3>
@@ -112,7 +112,7 @@ Vocabulary
       <li>Click the <b>history</b> (clock) icon at the top-right, next to <b>Configure</b>.</li>
       <li>Pick any past chat to reopen it exactly where you left off.</li>
     </ul>
-    <figure class="shot"><video src="../assets/gifs/genie_history.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>History (clock) ▸ open a past chat</figcaption></figure>
+    <figure class="shot"><video src="../assets/gifs/genie_history.mp4" loop muted playsinline preload="metadata"></video><figcaption>History (clock) ▸ open a past chat</figcaption></figure>
   </li>
 
   <li><h3>Share it</h3>
@@ -121,7 +121,7 @@ Vocabulary
       <li>Click <b>Share</b>, add the people or groups who should have access, and set their permission.</li>
       <li>Or use <b>Copy link</b> to send it directly.</li>
     </ul>
-    <figure class="shot"><video src="../assets/gifs/genie_share.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Share ▸ add people ▸ set access</figcaption></figure>
+    <figure class="shot"><video src="../assets/gifs/genie_share.mp4" loop muted playsinline preload="metadata"></video><figcaption>Share ▸ add people ▸ set access</figcaption></figure>
   </li>
 
 </ol>
@@ -143,6 +143,19 @@ document.querySelectorAll('.shot img').forEach(function(img){
   img.addEventListener('error',fail);
   if(img.complete && img.naturalWidth===0) fail();
 });
+// Play a walkthrough clip only while its step is on screen; pause + rewind when it scrolls away.
+(function(){
+  var vids=document.querySelectorAll('.shot video');
+  if(!('IntersectionObserver' in window)){ vids.forEach(function(v){try{v.play();}catch(e){}}); return; }
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      var v=en.target;
+      if(en.isIntersecting){ var p=v.play(); if(p&&p.catch)p.catch(function(){}); }
+      else { v.pause(); try{v.currentTime=0;}catch(e){} }
+    });
+  },{threshold:0.5});
+  vids.forEach(function(v){ io.observe(v); });
+})();
 document.querySelectorAll('.shot video').forEach(function(v){
   v.addEventListener('error',function(){v.closest('.shot').classList.add('missing');});
 });

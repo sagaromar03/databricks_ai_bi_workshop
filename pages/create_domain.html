@@ -75,7 +75,7 @@
         <p class="ctext">A market-wide tape of every energy trade across power, gas, oil and carbon — the view an exchange or regulator has. Covers trades, positions and market prices, plus the reference data they join to: traders, counterparties, instruments, delivery points, geography and FX rates. Money mixes EUR, GBP and USD.</p>
       </div>
     </div>
-    <figure class="shot"><video src="../assets/gifs/domain_create.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Discover ▸ Create ▸ Create domain ▸ fill fields ▸ Create</figcaption></figure>
+    <figure class="shot"><video src="../assets/gifs/domain_create.mp4" loop muted playsinline preload="metadata"></video><figcaption>Discover ▸ Create ▸ Create domain ▸ fill fields ▸ Create</figcaption></figure>
   </li>
 
   <li><h3>Add a subdomain</h3>
@@ -92,7 +92,7 @@
         <p class="ctext">Every table in the energy_trading schema: the trade tape (fact_trade), positions and market prices, plus all the dimensions they join to — traders, counterparties, instruments, delivery points, geography, market and FX rates.</p>
       </div>
     </div>
-    <figure class="shot"><video src="../assets/gifs/domain_subdomain.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Create ▸ Create subdomain ▸ name it ▸ fill fields ▸ Create</figcaption></figure>
+    <figure class="shot"><video src="../assets/gifs/domain_subdomain.mp4" loop muted playsinline preload="metadata"></video><figcaption>Create ▸ Create subdomain ▸ name it ▸ fill fields ▸ Create</figcaption></figure>
   </li>
 
 </ol>
@@ -120,7 +120,7 @@
         <p class="ctext">Computed from the energy_trading_metrics metric view — use MEASURE(`VWAP`), not a plain average. Money mixes EUR/GBP/USD, so convert to EUR via dim_fx_rate when comparing across currencies. Exclude trades with status = 'CANCELLED'.</p>
       </div>
     </div>
-    <figure class="shot"><video src="../assets/gifs/domain_pages.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Create ▸ Create page ▸ define the term ▸ assign to domain ▸ Publish</figcaption></figure>
+    <figure class="shot"><video src="../assets/gifs/domain_pages.mp4" loop muted playsinline preload="metadata"></video><figcaption>Create ▸ Create page ▸ define the term ▸ assign to domain ▸ Publish</figcaption></figure>
   </li>
 
   <li><h3>Add assets to the domain</h3>
@@ -130,7 +130,7 @@
       <li>Add all the <code>energy_trading</code> <b>tables</b> from the catalog.</li>
       <li>Also add your <b>Genie agent</b> (Step 5) and the <b>dashboard</b> (Step 3).</li>
     </ul>
-    <figure class="shot"><video src="../assets/gifs/domain_assets.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Add to domain ▸ all energy_trading tables ▸ Genie agent + dashboard</figcaption></figure>
+    <figure class="shot"><video src="../assets/gifs/domain_assets.mp4" loop muted playsinline preload="metadata"></video><figcaption>Add to domain ▸ all energy_trading tables ▸ Genie agent + dashboard</figcaption></figure>
   </li>
 
   <li><h3>Publish the domain</h3>
@@ -138,7 +138,7 @@
     <ul class="clicks">
       <li>On the domain, click <b>Edit sections</b>, arrange what appears, then <b>Publish</b>.</li>
     </ul>
-    <figure class="shot"><video src="../assets/gifs/domain_publish.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Edit sections ▸ arrange ▸ Publish</figcaption></figure>
+    <figure class="shot"><video src="../assets/gifs/domain_publish.mp4" loop muted playsinline preload="metadata"></video><figcaption>Edit sections ▸ arrange ▸ Publish</figcaption></figure>
   </li>
 
 </ol>
@@ -155,6 +155,19 @@
 <script src="../assets/logos.js?v=3"></script>
 <script src="../assets/download.js"></script>
 <script>
+// Play a walkthrough clip only while its step is on screen; pause + rewind when it scrolls away.
+(function(){
+  var vids=document.querySelectorAll('.shot video');
+  if(!('IntersectionObserver' in window)){ vids.forEach(function(v){try{v.play();}catch(e){}}); return; }
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      var v=en.target;
+      if(en.isIntersecting){ var p=v.play(); if(p&&p.catch)p.catch(function(){}); }
+      else { v.pause(); try{v.currentTime=0;}catch(e){} }
+    });
+  },{threshold:0.5});
+  vids.forEach(function(v){ io.observe(v); });
+})();
 document.querySelectorAll('.shot video').forEach(function(v){
   function fail(){v.closest('.shot').classList.add('missing');}
   v.addEventListener('error',fail);

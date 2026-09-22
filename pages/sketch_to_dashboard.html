@@ -57,7 +57,7 @@
     <ul class="clicks">
       <li>Open your dashboard and click <b>Edit draft</b> / <b>Edit dashboard</b> at the top.</li>
     </ul>
-    <figure class="shot"><video src="../assets/gifs/sketch_edit.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Open the dashboard ▸ Edit dashboard</figcaption></figure>
+    <figure class="shot"><video src="../assets/gifs/sketch_edit.mp4" loop muted playsinline preload="metadata"></video><figcaption>Open the dashboard ▸ Edit dashboard</figcaption></figure>
   </li>
 
   <li><h3>Add a new page</h3>
@@ -66,7 +66,7 @@
       <li>Next to the page tabs, click <b>+</b> to add a new page.</li>
       <li>(Optional) rename it, e.g. <code>From sketch</code>.</li>
     </ul>
-    <figure class="shot"><video src="../assets/gifs/sketch_newpage.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Page tabs ▸ + ▸ new page</figcaption></figure>
+    <figure class="shot"><video src="../assets/gifs/sketch_newpage.mp4" loop muted playsinline preload="metadata"></video><figcaption>Page tabs ▸ + ▸ new page</figcaption></figure>
   </li>
 
   <li><h3>Attach the sketch in Genie</h3>
@@ -77,7 +77,7 @@
       <li>Add a short prompt if you like (e.g. <code>build this dashboard from the sketch</code>) and press <b>Enter</b>.</li>
       <li>Wait while Genie reads the sketch and lays out the widgets — the dashboard builds itself.</li>
     </ul>
-    <figure class="shot"><video src="../assets/gifs/sketch_genie.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Genie ▸ attach sketch from Downloads ▸ Enter ▸ dashboard built</figcaption></figure>
+    <figure class="shot"><video src="../assets/gifs/sketch_genie.mp4" loop muted playsinline preload="metadata"></video><figcaption>Genie ▸ attach sketch from Downloads ▸ Enter ▸ dashboard built</figcaption></figure>
   </li>
 
   <li><h3>Publish it</h3>
@@ -115,6 +115,19 @@ document.querySelectorAll('.shot img').forEach(function(img){
   img.addEventListener('error',fail);
   if(img.complete && img.naturalWidth===0) fail();
 });
+// Play a walkthrough clip only while its step is on screen; pause + rewind when it scrolls away.
+(function(){
+  var vids=document.querySelectorAll('.shot video');
+  if(!('IntersectionObserver' in window)){ vids.forEach(function(v){try{v.play();}catch(e){}}); return; }
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      var v=en.target;
+      if(en.isIntersecting){ var p=v.play(); if(p&&p.catch)p.catch(function(){}); }
+      else { v.pause(); try{v.currentTime=0;}catch(e){} }
+    });
+  },{threshold:0.5});
+  vids.forEach(function(v){ io.observe(v); });
+})();
 document.querySelectorAll('.shot video').forEach(function(v){
   v.addEventListener('error',function(){v.closest('.shot').classList.add('missing');});
 });

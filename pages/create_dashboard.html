@@ -58,7 +58,7 @@
       <li>In the left sidebar, click <b>New</b> → <b>Dashboard</b> (or open <b>Dashboards</b> and click <b>Create dashboard</b>).</li>
       <li>Give it a name, e.g. <code>Energy Trading — Activity</code>.</li>
     </ul>
-    <figure class="shot"><video src="../assets/gifs/dash_new.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>New ▸ Dashboard ▸ name it</figcaption></figure>
+    <figure class="shot"><video src="../assets/gifs/dash_new.mp4" loop muted playsinline preload="metadata"></video><figcaption>New ▸ Dashboard ▸ name it</figcaption></figure>
   </li>
 
   <li><h3>Add a dataset</h3>
@@ -68,7 +68,7 @@
       <li>In <b>Add data from Unity Catalog</b>, browse to <code>energy</code> ▸ <code>energy_trading</code> and pick the <code>energy_trading_metrics</code> metric view (or any table), then click <b>Add</b>.</li>
       <li>It appears in the <b>Data Model</b> with its measures and fields ready to use. (Prefer SQL? Use <b>Add SQL dataset</b> instead.)</li>
     </ul>
-    <figure class="shot"><video src="../assets/gifs/dash_dataset.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Data tab ▸ Add data ▸ energy_trading_metrics ▸ Add</figcaption></figure>
+    <figure class="shot"><video src="../assets/gifs/dash_dataset.mp4" loop muted playsinline preload="metadata"></video><figcaption>Data tab ▸ Add data ▸ energy_trading_metrics ▸ Add</figcaption></figure>
   </li>
 
   <li><h3>Ask Genie for a counter</h3>
@@ -78,7 +78,7 @@
       <li>Type a request — e.g. <code>add a counter for total number of trades</code> — and press <b>Enter</b>.</li>
       <li>Genie generates the counter; <b>add it to the canvas</b>.</li>
     </ul>
-    <figure class="shot"><video src="../assets/gifs/dash_counter.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Genie ▸ "add a counter for total number of trades" ▸ Enter ▸ KPI</figcaption></figure>
+    <figure class="shot"><video src="../assets/gifs/dash_counter.mp4" loop muted playsinline preload="metadata"></video><figcaption>Genie ▸ "add a counter for total number of trades" ▸ Enter ▸ KPI</figcaption></figure>
   </li>
 
   <li><h3>Ask Genie for a chart</h3>
@@ -87,7 +87,7 @@
       <li>In Genie, type <code>add a bar graph for total trades by commodity and color it by direction</code> and press <b>Enter</b>.</li>
       <li>Add the generated <b>chart</b> to the canvas and position it next to the counter.</li>
     </ul>
-    <figure class="shot"><video src="../assets/gifs/dash_chart.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Genie ▸ "bar graph of trades by commodity, colored by direction" ▸ Enter ▸ chart</figcaption></figure>
+    <figure class="shot"><video src="../assets/gifs/dash_chart.mp4" loop muted playsinline preload="metadata"></video><figcaption>Genie ▸ "bar graph of trades by commodity, colored by direction" ▸ Enter ▸ chart</figcaption></figure>
   </li>
 
   <li><h3>Try a few power prompts</h3>
@@ -105,7 +105,7 @@
       <li>In Genie, type <code>add a filter for country and trade date at the top</code> (or any field) and press <b>Enter</b>.</li>
       <li>Add the filter to the canvas; the chart and counter update as you change it.</li>
     </ul>
-    <figure class="shot"><video src="../assets/gifs/dash_filter.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Genie ▸ "add a filter for country and trade date" ▸ Enter ▸ filters</figcaption></figure>
+    <figure class="shot"><video src="../assets/gifs/dash_filter.mp4" loop muted playsinline preload="metadata"></video><figcaption>Genie ▸ "add a filter for country and trade date" ▸ Enter ▸ filters</figcaption></figure>
   </li>
 
   <li><h3>Publish</h3>
@@ -114,7 +114,7 @@
       <li>Click <b>Publish</b> at the top-right.</li>
       <li>Choose who can view it, then open the published link to see the live dashboard.</li>
     </ul>
-    <figure class="shot"><video src="../assets/gifs/dash_publish.mp4" autoplay loop muted playsinline preload="metadata"></video><figcaption>Publish ▸ set access ▸ open the live dashboard</figcaption></figure>
+    <figure class="shot"><video src="../assets/gifs/dash_publish.mp4" loop muted playsinline preload="metadata"></video><figcaption>Publish ▸ set access ▸ open the live dashboard</figcaption></figure>
   </li>
 
 </ol>
@@ -137,6 +137,19 @@ document.querySelectorAll('.shot img').forEach(function(img){
   img.addEventListener('error',fail);
   if(img.complete && img.naturalWidth===0) fail();
 });
+// Play a walkthrough clip only while its step is on screen; pause + rewind when it scrolls away.
+(function(){
+  var vids=document.querySelectorAll('.shot video');
+  if(!('IntersectionObserver' in window)){ vids.forEach(function(v){try{v.play();}catch(e){}}); return; }
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      var v=en.target;
+      if(en.isIntersecting){ var p=v.play(); if(p&&p.catch)p.catch(function(){}); }
+      else { v.pause(); try{v.currentTime=0;}catch(e){} }
+    });
+  },{threshold:0.5});
+  vids.forEach(function(v){ io.observe(v); });
+})();
 document.querySelectorAll('.shot video').forEach(function(v){
   v.addEventListener('error',function(){v.closest('.shot').classList.add('missing');});
 });
