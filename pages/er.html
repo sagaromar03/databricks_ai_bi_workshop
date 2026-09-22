@@ -38,6 +38,7 @@
   .rhead h3{margin:0;font-size:18px;color:var(--navy);font-family:'SFMono-Regular',Consolas,monospace;display:inline-block}
   .rhead .tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;margin-left:8px;vertical-align:middle;color:#fff;background:var(--navy)}
   .rhead .tag.fact{background:var(--coral)}
+  .rdesc{font-size:13px;color:var(--ink);line-height:1.5;margin-top:7px;max-width:820px}
   .rhead .g{font-size:12px;color:var(--grey);margin-top:4px}
   .rx{position:absolute;top:11px;right:15px;border:0;background:transparent;font-size:24px;line-height:1;color:var(--grey);cursor:pointer;padding:4px}
   .rx:hover{color:var(--ink)}
@@ -69,7 +70,7 @@
   <div class="rbackdrop" data-rclose></div>
   <div class="rbox" role="dialog" aria-modal="true">
     <button class="rx" data-rclose aria-label="Close">×</button>
-    <div class="rhead"><h3 id="recTitle"></h3><span class="tag" id="recTag"></span><div class="g" id="recMeta"></div></div>
+    <div class="rhead"><h3 id="recTitle"></h3><span class="tag" id="recTag"></span><div class="rdesc" id="recDesc"></div><div class="g" id="recMeta"></div></div>
     <div class="rbody"><table class="rec"><thead id="recHead"></thead><tbody id="recBody"></tbody></table></div>
   </div>
 </div>
@@ -254,11 +255,25 @@ const SAMPLES={
    ['20240715_18',17,62.40,15000],
    ['20240101_09',19,559.00,8000]]},
 };
+const DESCRIPTIONS={
+ dim_time:'One row per calendar hour — the time spine every fact joins to.',
+ dim_trader:'One row per trader — who made the trade, plus their company, desk and seniority.',
+ dim_counterparty:'One row per counterparty — who the trade was with (exchanges, trading houses, producers).',
+ dim_market:'One row per market type / tenor — how the trade was struck (spot, forward, futures, swap…).',
+ dim_instrument:'One row per tradable product — what was traded, with its commodity, unit and currency.',
+ dim_delivery_point:'One row per delivery zone / hub / terminal — where the energy is delivered.',
+ dim_geography:'One row per country — the geography behind each delivery point (country, continent, currency).',
+ dim_fx_rate:'One row per currency — the rate used to convert money into EUR.',
+ fact_trade:'One row per trade execution — the market-wide trade tape: who, what, when, how much and at what price.',
+ fact_position:'One daily net position per trader × instrument × delivery point — net long / short exposure.',
+ fact_market_price:'One row per hour × delivery point — the reference market price (the “referee”).',
+};
 const recModal=document.getElementById('recModal');
 function openRecords(id){
   const t=T[id], s=SAMPLES[id]; if(!s)return;
   document.getElementById('recTitle').textContent=t.label;
   const tag=document.getElementById('recTag'); tag.textContent=t.type==='fact'?'FACT':'DIMENSION'; tag.className='tag'+(t.type==='fact'?' fact':'');
+  document.getElementById('recDesc').textContent=DESCRIPTIONS[id]||'';
   document.getElementById('recMeta').textContent=t.meta;
   document.getElementById('recHead').innerHTML='<tr>'+s.cols.map(c=>'<th>'+c+'</th>').join('')+'</tr>';
   document.getElementById('recBody').innerHTML=s.rows.map(r=>'<tr>'+r.map(v=>'<td>'+v+'</td>').join('')+'</tr>').join('');
