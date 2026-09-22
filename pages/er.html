@@ -29,6 +29,8 @@
   .sw{width:22px;height:0;border-top:3px solid #D85A30;display:inline-block}
   .swk{width:12px;height:12px;border-radius:3px;display:inline-block}
   .tbl{cursor:pointer}
+  .recico circle,.recico line{fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:.8;transition:opacity .12s}
+  .tbl:hover .recico circle,.tbl:hover .recico line{opacity:1}
   /* sample-records modal */
   .rmodal{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;padding:20px}
   .rmodal[hidden]{display:none}
@@ -155,6 +157,13 @@ for(const id in T){
   g.appendChild(el('rect',{x:t.x,y:t.y+HD-8,width:t.w,height:8,class:'hd'}));
   const tt=el('text',{x:t.x+10,y:t.y+16,class:'tt'}); tt.textContent=t.label; g.appendChild(tt);
   const mt=el('text',{x:t.x+10,y:t.y+28,class:'meta'}); mt.textContent=t.meta; g.appendChild(mt);
+  // sample-records affordance: a magnifier (inspect) icon top-right of header
+  const s=0.72, cx0=t.x+t.w-17, cy0=t.y+17;
+  const ico=el('g',{class:'recico',transform:`translate(${(cx0-12*s).toFixed(1)},${(cy0-12*s).toFixed(1)}) scale(${s})`});
+  ico.appendChild(el('circle',{cx:11,cy:11,r:7}));
+  ico.appendChild(el('line',{x1:21,y1:21,x2:16.5,y2:16.5}));
+  const ti=el('title',{}); ti.textContent='Click for sample records'; ico.appendChild(ti);
+  g.appendChild(ico);
   t.cols.forEach((c,i)=>{
     const yy=t.y+HD+META+i*ROW+ROW-4;
     if(c[0]){const k=el('text',{x:t.x+10,y:yy,class:'key '+(c[0]==='PK'?'pk':'fk')});k.textContent=c[0];g.appendChild(k);}
