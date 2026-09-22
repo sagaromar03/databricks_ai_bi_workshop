@@ -27,11 +27,6 @@ body{margin:0;font-family:'Segoe UI',Helvetica,Arial,sans-serif;color:#fff;backg
 .cta .arrow{transition:transform .14s}
 .cta:hover .arrow{transform:translateX(4px)}
 
-.chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:36px}
-.chips span{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:#C3CDD1;
-  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:8px 14px}
-.chips span b{color:#fff;font-weight:600}
-
 
 /* Brand lockup (logos.js injects the "Databricks x knowit" markup;
    we pull it out of the corner and center it, enlarged, above the title). */
@@ -48,7 +43,6 @@ body{margin:0;font-family:'Segoe UI',Helvetica,Arial,sans-serif;color:#fff;backg
 
 @media(max-width:560px){
   .hero{padding-top:88px}
-  .chips{gap:8px}
 }
 </style></head>
 <body>
@@ -57,11 +51,6 @@ body{margin:0;font-family:'Segoe UI',Helvetica,Arial,sans-serif;color:#fff;backg
     <h1>Databricks&nbsp;AI/BI<br><span class="accent">hands-on</span></h1>
     <p class="sub">Build a real energy-trading dataset, explore it, and let AI/BI Genie answer questions in plain English — all in a free Databricks workspace.</p>
     <a class="cta" href="home.html">Start the workshop <span class="arrow">→</span></a>
-    <div class="chips">
-      <span>📊 <b>Data model</b> &amp; KPIs</span>
-      <span>✨ <b>Genie</b> question bank</span>
-      <span>🚀 <b>6-step</b> setup</span>
-    </div>
   </div>
 </div>
 <script src="assets/logos.js?v=6"></script>
