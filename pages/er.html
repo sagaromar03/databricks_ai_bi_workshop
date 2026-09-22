@@ -28,11 +28,30 @@
   .legend span{display:inline-flex;align-items:center;gap:6px}
   .sw{width:22px;height:0;border-top:3px solid #D85A30;display:inline-block}
   .swk{width:12px;height:12px;border-radius:3px;display:inline-block}
+  .tbl{cursor:pointer}
+  /* sample-records modal */
+  .rmodal{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;padding:20px}
+  .rmodal[hidden]{display:none}
+  .rbackdrop{position:absolute;inset:0;background:rgba(13,14,39,.55)}
+  .rbox{position:relative;background:#fff;border-radius:14px;max-width:920px;width:100%;max-height:86vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.32);overflow:hidden}
+  .rhead{padding:16px 22px;border-bottom:1px solid var(--border)}
+  .rhead h3{margin:0;font-size:18px;color:var(--navy);font-family:'SFMono-Regular',Consolas,monospace;display:inline-block}
+  .rhead .tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;margin-left:8px;vertical-align:middle;color:#fff;background:var(--navy)}
+  .rhead .tag.fact{background:var(--coral)}
+  .rhead .g{font-size:12px;color:var(--grey);margin-top:4px}
+  .rx{position:absolute;top:11px;right:15px;border:0;background:transparent;font-size:24px;line-height:1;color:var(--grey);cursor:pointer;padding:4px}
+  .rx:hover{color:var(--ink)}
+  .rbody{overflow:auto}
+  table.rec{width:100%;border-collapse:collapse;font-size:12px}
+  table.rec th{position:sticky;top:0;background:var(--navy);color:#fff;text-align:left;padding:8px 12px;font-weight:600;font-size:11px;white-space:nowrap}
+  table.rec td{padding:7px 12px;border-bottom:1px solid var(--border);white-space:nowrap;font-family:'SFMono-Regular',Consolas,monospace;color:var(--ink)}
+  table.rec tr:nth-child(even) td{background:var(--panel)}
+  .rfoot{padding:9px 22px;border-top:1px solid var(--border);font-size:11px;color:var(--grey)}
 </style></head>
 <body>
 <header class="top"><a href="../index.html">← Workshop repository</a>
 <h1>Data model — interactive ER diagram</h1>
-<p>The energy_trading star schema with straight connectors. Hover any line (or a table) to highlight that relationship and the two tables it joins.</p></header>
+<p>The energy_trading star schema with straight connectors. Hover any line (or a table) to highlight that relationship — or <b>click a table to see sample records</b>.</p></header>
 <div class="wrap">
 <div class="stage" id="stage"></div>
 <div class="legend">
@@ -44,7 +63,17 @@
 </div>
 <div class="note"><b>Reading it:</b> every line runs fact → dimension (many-to-one). The small square marks the “one” (dimension) end. dim_delivery_point → dim_geography is the one dimension-to-dimension hop (snowflake). Constraints are informational, not enforced.</div>
 </div>
-<footer>Energy Trading workshop pack · interactive ER diagram · hover to trace relationships <a class="contact-link" href="../index.html#appCard">📱 Databricks app</a> <a class="contact-link" href="contact.html">✉ Contact us</a></footer>
+<footer>Energy Trading workshop pack · interactive ER diagram · hover to trace, click a table for sample records <a class="contact-link" href="../index.html#appCard">📱 Databricks app</a> <a class="contact-link" href="contact.html">✉ Contact us</a></footer>
+
+<div class="rmodal" id="recModal" hidden>
+  <div class="rbackdrop" data-rclose></div>
+  <div class="rbox" role="dialog" aria-modal="true">
+    <button class="rx" data-rclose aria-label="Close">×</button>
+    <div class="rhead"><h3 id="recTitle"></h3><span class="tag" id="recTag"></span><div class="g" id="recMeta"></div></div>
+    <div class="rbody"><table class="rec"><thead id="recHead"></thead><tbody id="recBody"></tbody></table></div>
+    <div class="rfoot">Illustrative sample rows — shaped from the source notebook, not live data.</div>
+  </div>
+</div>
 
 <script>
 // ---- table definitions: id,label,type,x,y, rows[], cols[[key,name]] ----
@@ -135,6 +164,8 @@ for(const id in T){
   // hovering a table highlights all its relationships
   g.addEventListener('mouseenter',()=>focusTable(id));
   g.addEventListener('mouseleave',blur);
+  // clicking a table opens its sample records
+  g.addEventListener('click',()=>openRecords(id));
 }
 document.getElementById('stage').appendChild(svg);
 
@@ -159,6 +190,85 @@ function blur(){
   relEls.forEach(r=>{r.line.classList.remove('on');r.dot.classList.remove('on');});
   for(const id in boxEls)boxEls[id].classList.remove('on');
 }
+
+// ---- illustrative sample records (shaped from the notebook) ----
+const SAMPLES={
+ dim_time:{cols:['time_key','event_timestamp','cal_date','trading_season','is_peak'],rows:[
+   ['20240101_00','2024-01-01 00:00','2024-01-01','Winter',false],
+   ['20240101_09','2024-01-01 09:00','2024-01-01','Winter',true],
+   ['20240115_12','2024-01-15 12:00','2024-01-15','Winter',true],
+   ['20240715_18','2024-07-15 18:00','2024-07-15','Summer',true],
+   ['20240715_23','2024-07-15 23:00','2024-07-15','Summer',false]]},
+ dim_trader:{cols:['trader_key','trader_name','company','company_type','desk','seniority'],rows:[
+   [1,'Astrid Berg','Statkraft','Utility','Power-Nordic','Senior'],
+   [45,'Liam O’Brien','Vitol Group','Trader','Gas-NWE','Head of Desk'],
+   [88,'Sofia Marchetti','Mercuria Energy','Trader','Carbon-EU','Associate'],
+   [121,'King Kong','Kong Corporation','Producer','LNG-Global','Head of Desk'],
+   [122,'B.Rock Van Guard','Manta Resources','Trader','Energy-LNG-APAC','Head of Desk']]},
+ dim_counterparty:{cols:['counterparty_key','counterparty_name','counterparty_type','country_code','credit_rating','is_exchange'],rows:[
+   [1,'Nord Pool Spot','Exchange','NO','AAA',true],
+   [6,'Vitol Group','Trader','NL','AA',false],
+   [9,'Gunvor Group','Trader','CH','BBB',false],
+   [12,'Kong Corporation','Producer','XX','BBB',false],
+   [13,'Manta Resources','Trader','SG','BBB',false]]},
+ dim_market:{cols:['market_key','market_code','market_name','typical_tenor_days','is_otc'],rows:[
+   [1,'SPOT','Spot / Day-Ahead',1,false],
+   [4,'FORWARD_MO','Forward (Monthly)',30,false],
+   [7,'FUTURES','Futures','—',false],
+   [9,'SWAP','Swap','—',true],
+   [10,'SPREAD','Spread','—',true]]},
+ dim_instrument:{cols:['instrument_key','instrument_code','commodity','unit','currency','is_physical'],rows:[
+   [5,'GAS-TTF-DA','Natural Gas','MWh','EUR',true],
+   [9,'GAS-NBP-DA','Natural Gas','Therm','GBP',true],
+   [11,'OIL-BRENT-FU','Crude Oil','Barrel','USD',true],
+   [13,'CARBON-EUA-SP','Carbon','tCO2','EUR',false],
+   [17,'LNG-JKM-SP','LNG','MT','USD',true]]},
+ dim_delivery_point:{cols:['delivery_point_key','zone_code','zone_name','geography_key','commodity_class'],rows:[
+   [1,'NO','Norway (Power)',1,'Power'],
+   [10,'TTF','Title Transfer Facility',7,'Gas'],
+   [15,'ICE-BRENT','ICE Brent Delivery',9,'Oil'],
+   [17,'ICE-EUA','ICE EUA Delivery',9,'Carbon'],
+   [19,'GATE-NL','Gate Terminal Rotterdam',7,'LNG']]},
+ dim_geography:{cols:['geography_key','country_code','country_name','continent','local_currency'],rows:[
+   [1,'NO','Norway','Europe','EUR'],
+   [6,'FR','France','Europe','EUR'],
+   [9,'UK','United Kingdom','Europe','GBP'],
+   [14,'US','United States','North America','USD'],
+   [16,'XX','Unknown','Unknown','USD']]},
+ dim_fx_rate:{cols:['currency_code','rate_to_eur'],rows:[
+   ['EUR',1.00],['GBP',1.17],['USD',0.92]]},
+ fact_trade:{cols:['trade_id','time_key','trader_key','counterparty_key','instrument_key','delivery_point_key','market_key','direction','volume','price','status'],rows:[
+   ['TRD-0000001','20240115_12',45,6,5,10,1,'SELL',500,31.85,'FILLED'],
+   ['TRD-0000002','20240115_12',12,1,5,10,1,'BUY',250,32.10,'FILLED'],
+   ['TRD-0000003','20240715_18',122,13,17,19,7,'SELL',1200,540.00,'FILLED'],
+   ['TRD-0000004','20240101_09',3,5,11,15,7,'SELL',100,65.40,'CANCELLED'],
+   ['TRD-0000005','20240715_18',88,9,13,17,9,'BUY',800,62.30,'FILLED']]},
+ fact_position:{cols:['time_key','trader_key','instrument_key','delivery_point_key','net_volume','gross_volume','trade_count','avg_price','position_type'],rows:[
+   ['20240115',45,5,10,-1500,3200,18,31.90,'Short'],
+   ['20240115',12,5,10,900,1400,9,32.05,'Long'],
+   ['20240715',122,17,19,-4200,4200,6,538.50,'Short'],
+   ['20240101',88,13,17,300,1100,12,62.10,'Long']]},
+ fact_market_price:{cols:['time_key','delivery_point_key','price','volume_traded'],rows:[
+   ['20240115_12',10,32.00,45000],
+   ['20240115_12',1,95.20,78000],
+   ['20240715_18',15,65.10,32000],
+   ['20240715_18',17,62.40,15000],
+   ['20240101_09',19,559.00,8000]]},
+};
+const recModal=document.getElementById('recModal');
+function openRecords(id){
+  const t=T[id], s=SAMPLES[id]; if(!s)return;
+  document.getElementById('recTitle').textContent=t.label;
+  const tag=document.getElementById('recTag'); tag.textContent=t.type==='fact'?'FACT':'DIMENSION'; tag.className='tag'+(t.type==='fact'?' fact':'');
+  document.getElementById('recMeta').textContent=t.meta;
+  document.getElementById('recHead').innerHTML='<tr>'+s.cols.map(c=>'<th>'+c+'</th>').join('')+'</tr>';
+  document.getElementById('recBody').innerHTML=s.rows.map(r=>'<tr>'+r.map(v=>'<td>'+v+'</td>').join('')+'</tr>').join('');
+  document.getElementById('recBody').scrollTop=0;
+  recModal.hidden=false;
+}
+function recClose(){recModal.hidden=true;}
+recModal.addEventListener('click',e=>{if(e.target.hasAttribute('data-rclose'))recClose();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!recModal.hidden)recClose();});
 </script>
 <script src="../assets/logos.js?v=3"></script>
 </body></html>
