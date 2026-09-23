@@ -78,6 +78,32 @@
  .usedby{display:flex;flex-wrap:wrap;gap:10px}
  .usedby a{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:11px 16px;text-decoration:none;color:var(--navy);font-weight:600;font-size:13.5px;transition:border-color .12s,transform .12s}
  .usedby a:hover{border-color:var(--navy);transform:translateY(-1px)}
+
+ /* try-it exercise */
+ .exercise{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+ @media(max-width:640px){.exercise{grid-template-columns:1fr}}
+ .ex-form{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 18px}
+ .ex-goal{background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:10px 13px;font-size:13px;color:var(--ink);margin-bottom:6px;line-height:1.5}
+ .ex-goal b{color:var(--navy)}
+ .ex-lbl{display:block;font-size:12px;font-weight:700;color:var(--navy);margin:14px 0 6px}
+ .ex-lbl span{font-weight:400;color:var(--grey);margin-left:6px;font-size:11.5px}
+ .ex-form select,.ex-form input[type=text]{font-family:inherit;font-size:13px;padding:8px 10px;border:1px solid var(--border);border-radius:7px;background:#fff;color:var(--ink)}
+ #ex-source{width:100%}
+ .ex-chips{display:flex;flex-wrap:wrap;gap:8px}
+ .ex-chips label{display:inline-flex;align-items:center;gap:6px;font-size:13px;background:var(--panel);border:1px solid var(--border);border-radius:999px;padding:6px 12px;cursor:pointer}
+ .ex-measure{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+ .ex-measure #ex-mname{flex:1;min-width:110px}
+ .ex-measure .paren{font-family:'SFMono-Regular',Consolas,monospace;font-size:17px;color:var(--grey)}
+ .ex-btn{margin-top:16px;background:var(--navy);color:#fff;border:0;border-radius:8px;padding:11px 18px;font-weight:600;font-size:14px;cursor:pointer;font-family:inherit}
+ .ex-btn:hover{background:#12232a}
+ .ex-msg{margin-top:12px;font-size:13px;border-radius:9px;padding:11px 14px;line-height:1.5}
+ .ex-msg ul{margin:6px 0 0;padding-left:18px} .ex-msg li{margin:2px 0}
+ .ex-msg.ok{background:rgba(29,158,117,.12);border:1px solid #1d9e75;color:#127a58}
+ .ex-msg.ok b,.ex-msg.ok code{color:#0f6a4c} .ex-msg.ok code{background:rgba(29,158,117,.14);border-radius:4px;padding:1px 5px}
+ .ex-msg.err{background:rgba(255,54,33,.10);border:1px solid var(--coral);color:#b32d1a}
+ .ex-msg.err b{color:#8f2415}
+ .ex-preview .ex-pv-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--grey);margin-bottom:6px}
+ @media(min-width:641px){.ex-preview{position:sticky;top:20px}}
 </style></head>
 <body>
 <header class="top"><a href="../home.html">← Workshop repository</a>
@@ -262,6 +288,47 @@
         <a href="create_dashboard.html">📊 The dashboard reads it →</a>
         <a href="create_genie.html">✨ The Genie agent reads it →</a>
       </div>
+
+      <div class="sh"><span class="ic">🛠️</span><div><h3>Try it — build one</h3>
+        <p>Assemble a small metric view below. The YAML builds as you go — then check it. Nothing is sent anywhere; it’s just practice.</p></div></div>
+      <div class="exercise">
+        <div class="ex-form">
+          <div class="ex-goal">🎯 <b>Goal:</b> define a measure for the <b>total traded volume</b>, and pick a couple of ways to slice it.</div>
+
+          <label class="ex-lbl">1 · Source <span>the table to read from</span></label>
+          <select id="ex-source">
+            <option value="">Choose a source…</option>
+            <option value="trade_enriched">trade_enriched</option>
+            <option value="fact_trade">fact_trade</option>
+            <option value="dim_trader">dim_trader</option>
+          </select>
+
+          <label class="ex-lbl">2 · Dimensions <span>tick the ways to slice</span></label>
+          <div class="ex-chips" id="ex-dims">
+            <label><input type="checkbox" value="Trade Date"> Trade Date</label>
+            <label><input type="checkbox" value="Commodity"> Commodity</label>
+            <label><input type="checkbox" value="Direction"> Direction</label>
+            <label><input type="checkbox" value="Trader Company"> Trader Company</label>
+          </div>
+
+          <label class="ex-lbl">3 · A measure <span>name it, then choose the formula</span></label>
+          <div class="ex-measure">
+            <input id="ex-mname" type="text" value="Total Volume" aria-label="Measure name">
+            <select id="ex-agg"><option value="">agg…</option><option>SUM</option><option>AVG</option><option>COUNT</option></select>
+            <span class="paren">(</span>
+            <select id="ex-col"><option value="">column…</option><option value="volume">volume</option><option value="price">price</option><option value="notional_value_eur">notional_value_eur</option></select>
+            <span class="paren">)</span>
+          </div>
+
+          <button id="ex-check" class="ex-btn" type="button">Check my metric view</button>
+          <div id="ex-msg" class="ex-msg" hidden></div>
+        </div>
+
+        <div class="ex-preview">
+          <div class="ex-pv-lbl">Live YAML</div>
+          <pre class="yaml" id="ex-yaml"></pre>
+        </div>
+      </div>
     </section>
 
   </main>
@@ -289,6 +356,41 @@
     });
   });
   var h=(location.hash||'').replace('#',''); if(h) show(h);
+})();
+
+// Try-it: live metric-view builder + forgiving check.
+(function(){
+  var DIMEXPR={'Trade Date':'dt.cal_date','Commodity':'di.commodity','Direction':'source.direction','Trader Company':'dtr.company'};
+  var COLEXPR={volume:'source.volume',price:'source.price',notional_value_eur:'source.notional_value_eur'};
+  function v(id){var e=document.getElementById(id);return e?e.value:'';}
+  function dims(){return [].slice.call(document.querySelectorAll('#ex-dims input:checked')).map(function(c){return c.value;});}
+  function render(){
+    var src=v('ex-source'), ds=dims(), name=v('ex-mname')||'My Measure', agg=v('ex-agg'), col=v('ex-col');
+    var y='source: energy.energy_trading.'+(src||'…')+'\n\ndimensions:\n';
+    if(ds.length) ds.forEach(function(d){y+='  - name: '+d+'\n    expr: '+DIMEXPR[d]+'\n';});
+    else y+='  # (tick at least one)\n';
+    y+='\nmeasures:\n';
+    var expr=(agg&&col)?agg+'('+COLEXPR[col]+')':'…';
+    y+='  - name: '+name+'\n    expr: '+expr+'\n';
+    var pre=document.getElementById('ex-yaml'); if(pre) pre.textContent=y;
+  }
+  function check(){
+    var src=v('ex-source'), ds=dims(), agg=v('ex-agg'), col=v('ex-col');
+    var msg=document.getElementById('ex-msg'); if(!msg) return; msg.hidden=false;
+    var p=[];
+    if(src!=='trade_enriched') p.push('Pick <b>trade_enriched</b> as the source — it already has the joined fields and the values you need.');
+    if(ds.length<1) p.push('Add at least one <b>dimension</b> so people can slice the number.');
+    if(!(agg==='SUM'&&col==='volume')) p.push('For total traded volume, the measure should be <b>SUM(volume)</b>.');
+    if(p.length){ msg.className='ex-msg err'; msg.innerHTML='Almost'+(p.length>1?' — a few things:':' —')+'<ul>'+p.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul>'; }
+    else { msg.className='ex-msg ok'; msg.innerHTML='✅ <b>Valid metric view!</b> You defined <code>'+((v('ex-mname')||'Total Volume'))+' = SUM(volume)</code> once — now a dashboard, Genie and SQL can all reuse it and get the same number.'; }
+  }
+  var form=document.querySelector('.ex-form');
+  if(form){
+    form.addEventListener('input',render);
+    form.addEventListener('change',render);
+    var btn=document.getElementById('ex-check'); if(btn) btn.addEventListener('click',check);
+    render();
+  }
 })();
 </script>
 </body></html>
