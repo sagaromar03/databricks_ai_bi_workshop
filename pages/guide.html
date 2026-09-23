@@ -1,0 +1,194 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Concept guide</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231B3139'/%3E%3Cg transform='translate(4 4)'%3E%3Cpath fill='%23FF3621' d='M.95 14.184L12 20.403l9.919-5.55v2.21L12 22.662l-10.484-5.96-.565.308v.77L12 24l11.05-6.218v-4.317l-.515-.309L12 19.118l-9.867-5.653v-2.21L12 16.805l11.05-6.218V6.32l-.515-.308L12 11.974 2.647 6.681 12 1.388l7.76 4.368.668-.411v-.566L12 0 .95 6.27v.72L12 13.207l9.919-5.55v2.26L12 15.52 1.516 9.56l-.565.308Z'/%3E%3C/g%3E%3C/svg%3E"><link rel="stylesheet" href="shared.css">
+<style>
+ .guidewrap{display:grid;grid-template-columns:220px 1fr;gap:28px;align-items:start}
+ @media(max-width:760px){.guidewrap{grid-template-columns:1fr;gap:16px}}
+
+ /* left topic list */
+ .toc{position:sticky;top:20px}
+ @media(max-width:760px){.toc{position:static}}
+ .toc .lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--grey);margin:0 0 10px;padding-left:12px}
+ .toc a{display:block;padding:10px 12px;border-radius:8px;font-size:14px;font-weight:600;color:var(--navy);
+   text-decoration:none;border-left:3px solid transparent;transition:background .12s,border-color .12s}
+ .toc a:hover{background:var(--panel)}
+ .toc a.active{background:var(--panel);border-left-color:var(--coral);color:var(--navy)}
+ .toc a.soon{color:var(--grey);font-weight:500;cursor:default;pointer-events:none}
+ .toc a.soon span{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#9aa4a8;margin-left:6px}
+ @media(max-width:760px){
+   .toc{display:flex;gap:8px;overflow-x:auto;border-bottom:1px solid var(--border);padding-bottom:10px}
+   .toc .lbl{display:none} .toc a{white-space:nowrap;border-left:0;border-bottom:3px solid transparent;border-radius:8px 8px 0 0}
+   .toc a.active{border-left:0;border-bottom-color:var(--coral)}
+ }
+
+ /* content */
+ .concept{display:none} .concept.on{display:block}
+ .concept h2.title{margin:0 0 4px;font-size:24px;color:var(--navy)}
+ .concept .tag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+   color:#b32d1a;background:rgba(255,54,33,.12);border-radius:999px;padding:3px 11px;margin-bottom:12px}
+
+ .sh{display:flex;align-items:flex-start;gap:12px;margin:28px 0 12px}
+ .sh .ic{width:38px;height:38px;border-radius:10px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:19px;flex:none}
+ .sh h3{margin:0;font-size:17px;color:var(--navy)}
+ .sh p{margin:2px 0 0;font-size:13px;color:var(--grey)}
+
+ .lead{background:var(--navy);color:#fff;border-radius:12px;padding:17px 19px;font-size:15px;line-height:1.55}
+ .lead b{color:#fff}
+ .analogy{display:flex;gap:13px;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-top:12px;font-size:14px;color:var(--ink);line-height:1.55}
+ .analogy .emo{font-size:26px;line-height:1} .analogy b{color:var(--navy)}
+
+ .why{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+ @media(max-width:520px){.why{grid-template-columns:1fr}}
+ .why .item{background:#fff;border:1px solid var(--border);border-radius:12px;border-left:4px solid var(--teal);padding:14px 16px}
+ .why .item .t{font-size:14px;font-weight:700;color:var(--navy);margin:0 0 3px}
+ .why .item p{margin:0;font-size:13px;color:var(--ink);line-height:1.5}
+
+ .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+ @media(max-width:520px){.two{grid-template-columns:1fr}}
+ .block{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 18px}
+ .block.dim{border-top:4px solid var(--navy)} .block.mea{border-top:4px solid var(--coral)}
+ .block h4{margin:0 0 2px;font-size:15px;color:var(--navy)} .block .sub{font-size:12.5px;color:var(--grey);margin:0 0 10px}
+ .block ul{margin:0;padding-left:18px;font-size:13px;color:var(--ink);line-height:1.75}
+ .block code{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-size:12px}
+
+ pre.yaml{background:#0f1e24;color:#e6edf0;border-radius:10px;padding:16px 18px;overflow:auto;font-size:12.5px;line-height:1.6;font-family:'SFMono-Regular',Consolas,monospace;margin:0}
+ pre.yaml .k{color:#7fd1c4} pre.yaml .c{color:#7c8a90} pre.yaml .s{color:#f0b892}
+
+ table.mv{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden}
+ table.mv th{background:var(--panel);text-align:left;padding:9px 12px;font-size:11.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--grey)}
+ table.mv td{padding:9px 12px;border-top:1px solid var(--border);vertical-align:top}
+ table.mv td code{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:12px;color:var(--navy);white-space:nowrap}
+ table.mv td.d{color:var(--grey)}
+
+ .usedby{display:flex;flex-wrap:wrap;gap:10px}
+ .usedby a{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:11px 16px;text-decoration:none;color:var(--navy);font-weight:600;font-size:13.5px;transition:border-color .12s,transform .12s}
+ .usedby a:hover{border-color:var(--navy);transform:translateY(-1px)}
+</style></head>
+<body>
+<header class="top"><a href="../home.html">← Workshop repository</a>
+<h1>Concept guide</h1>
+<p>Plain-language explainers for the ideas behind the workshop. Pick a concept from the list.</p></header>
+<div class="wrap">
+<div class="guidewrap">
+
+  <aside class="toc">
+    <div class="lbl">Concepts</div>
+    <a class="toc-link active" data-c="metric-view" href="#metric-view">Metric View</a>
+    <a class="soon">Unity Catalog <span>soon</span></a>
+    <a class="soon">Genie <span>soon</span></a>
+    <a class="soon">Domains &amp; Pages <span>soon</span></a>
+  </aside>
+
+  <main class="content">
+
+    <!-- ============ METRIC VIEW ============ -->
+    <section class="concept on" id="metric-view">
+      <div class="tag">Concept</div>
+      <h2 class="title">The Metric View</h2>
+
+      <div class="lead"><b>In one line:</b> a metric view lets you define a number like <b>Total Volume</b> or <b>VWAP</b> <b>once</b>, in one central place, and then everything — dashboards, Genie, SQL — uses that exact definition instead of each re-inventing the formula.</div>
+
+      <div class="analogy">
+        <div class="emo">📖</div>
+        <div>Think of it as the <b>official rulebook for your numbers</b>. Imagine ten people each work out “total revenue” their own way — you’d get ten slightly different answers and endless arguments. A metric view writes the rule down once: “revenue = <i>this</i> formula.” After that, everyone who asks for revenue gets the <b>same</b> number.</div>
+      </div>
+
+      <div class="sh"><span class="ic">🧩</span><div><h3>The problem it solves</h3>
+        <p>Without it, every dashboard and analyst writes their own SQL for the same idea, and small differences make two reports quietly disagree.</p></div></div>
+      <div class="why">
+        <div class="item"><div class="t">One source of truth</div><p>Each metric’s formula lives in one place, so everyone gets the same number.</p></div>
+        <div class="item"><div class="t">No repeated SQL</div><p>Define the joins and maths once; people just pick a metric and how to slice it.</p></div>
+        <div class="item"><div class="t">Genie answers correctly</div><p>Ask “VWAP by country” and Genie uses the governed formula — it doesn’t guess.</p></div>
+        <div class="item"><div class="t">Governed &amp; consistent</div><p>It’s a normal Unity Catalog object, so permissions and lineage just work.</p></div>
+      </div>
+
+      <div class="sh"><span class="ic">🔑</span><div><h3>It has just two kinds of things</h3>
+        <p>A metric view sits on top of your tables and exposes only these two.</p></div></div>
+      <div class="two">
+        <div class="block dim"><h4>Dimensions</h4><div class="sub">the ways you slice</div>
+          <ul>
+            <li><code>Trade Date</code>, <code>Trading Season</code></li>
+            <li><code>Trader Company</code>, <code>Counterparty</code></li>
+            <li><code>Commodity</code>, <code>Country</code></li>
+            <li><code>Direction</code> (buy / sell)</li>
+          </ul></div>
+        <div class="block mea"><h4>Measures</h4><div class="sub">the numbers, with their formula</div>
+          <ul>
+            <li><code>Trade Count</code> — <code>COUNT(1)</code></li>
+            <li><code>Total Volume</code> — <code>SUM(volume)</code></li>
+            <li><code>VWAP</code> — volume-weighted price</li>
+            <li><code>Total Notional EUR</code> — value in EUR</li>
+          </ul></div>
+      </div>
+
+      <div class="sh"><span class="ic">📄</span><div><h3>What it looks like</h3>
+        <p>It’s written in a short YAML file: a <b>source</b>, the <b>dimensions</b>, and the <b>measures</b>. A trimmed peek at this workshop’s <code>energy_trading_metrics</code>:</p></div></div>
+      <pre class="yaml"><span class="c"># energy_trading_metrics — written once, read everywhere</span>
+<span class="k">source</span>: energy.energy_trading.trade_enriched
+
+<span class="k">dimensions</span>:
+  - <span class="k">name</span>: Trade Date
+    <span class="k">expr</span>: dt.cal_date
+  - <span class="k">name</span>: Commodity
+    <span class="k">expr</span>: di.commodity
+  - <span class="k">name</span>: Direction
+    <span class="k">expr</span>: source.direction
+
+<span class="k">measures</span>:
+  - <span class="k">name</span>: Total Volume
+    <span class="k">expr</span>: SUM(source.volume)
+  - <span class="k">name</span>: VWAP
+    <span class="k">expr</span>: SUM(source.price * source.volume) / NULLIF(SUM(source.volume), 0)
+  - <span class="k">name</span>: Total Notional EUR
+    <span class="k">expr</span>: SUM(source.notional_value_eur)
+    <span class="k">format</span>: { <span class="k">type</span>: <span class="s">currency</span>, <span class="k">currency_code</span>: <span class="s">EUR</span> }
+</pre>
+
+      <div class="sh"><span class="ic">📊</span><div><h3>The measures in ours</h3></div></div>
+      <table class="mv">
+        <thead><tr><th>Measure</th><th>What it means</th></tr></thead>
+        <tbody>
+          <tr><td><code>Trade Count</code></td><td class="d">Total number of trades</td></tr>
+          <tr><td><code>Total Volume</code></td><td class="d">Total traded volume (mixed units across commodities)</td></tr>
+          <tr><td><code>VWAP</code></td><td class="d">Volume-weighted average price</td></tr>
+          <tr><td><code>Buy Volume</code> / <code>Sell Volume</code></td><td class="d">Volume split by trade direction</td></tr>
+          <tr><td><code>Total Notional EUR</code></td><td class="d">Total value of all trades, converted to EUR</td></tr>
+          <tr><td><code>Avg Pct vs Market</code></td><td class="d">Volume-weighted distance from the market price (negative = below) — the surveillance signal</td></tr>
+        </tbody>
+      </table>
+
+      <div class="sh"><span class="ic">🔗</span><div><h3>Where it’s used here</h3>
+        <p>You don’t point tools at raw tables — you point them at the metric view, and they inherit every measure above.</p></div></div>
+      <div class="usedby">
+        <a href="create_dashboard.html">📊 The dashboard reads it →</a>
+        <a href="create_genie.html">✨ The Genie agent reads it →</a>
+      </div>
+    </section>
+
+  </main>
+</div>
+</div>
+<footer>Energy Trading workshop pack · concept guide <a class="contact-link" href="../home.html#appCard">📱 Databricks app</a> <a class="contact-link" href="contact.html">✉ Contact us</a></footer>
+<script src="../assets/logos.js?v=6"></script>
+<script src="../assets/appmodal.js?v=1"></script>
+<script>
+// Left-list topic switcher (hash-aware, ready for more concepts).
+(function(){
+  var links=[].slice.call(document.querySelectorAll('.toc-link'));
+  var secs=[].slice.call(document.querySelectorAll('.concept'));
+  function show(id){
+    var found=false;
+    secs.forEach(function(s){var on=s.id===id; s.classList.toggle('on',on); if(on)found=true;});
+    links.forEach(function(a){a.classList.toggle('active',a.dataset.c===id);});
+    if(!found && secs[0]){ secs[0].classList.add('on'); if(links[0])links[0].classList.add('active'); }
+  }
+  links.forEach(function(a){
+    a.addEventListener('click',function(e){
+      e.preventDefault(); var id=a.dataset.c;
+      history.replaceState(null,'','#'+id); show(id);
+      window.scrollTo({top:0,behavior:'smooth'});
+    });
+  });
+  var h=(location.hash||'').replace('#',''); if(h) show(h);
+})();
+</script>
+</body></html>
