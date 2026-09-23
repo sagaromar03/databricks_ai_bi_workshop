@@ -46,7 +46,8 @@
  @media(max-width:520px){.two{grid-template-columns:1fr}}
  .block{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 18px}
  .block.dim{border-top:4px solid var(--navy)} .block.mea{border-top:4px solid var(--coral)}
- .block.src{border-top:4px solid var(--purple);margin-bottom:12px}
+ .block.src{border-top:4px solid var(--purple)} .block.join{border-top:4px solid var(--navy)}
+ .two + .two{margin-top:12px}
  .block h4{margin:0 0 2px;font-size:15px;color:var(--navy)} .block .sub{font-size:12.5px;color:var(--grey);margin:0 0 10px}
  .block ul{margin:0;padding-left:18px;font-size:13px;color:var(--ink);line-height:1.75}
  .block p{margin:0;font-size:13px;color:var(--ink);line-height:1.55}
@@ -190,7 +191,7 @@
       <div class="tag">Concept</div>
       <h2 class="title">The Metric View</h2>
 
-      <div class="lead"><b>In one line:</b> a metric view lets you define a number like <b>Total Volume</b> or <b>VWAP</b> <b>once</b>, in one central place, and then everything — dashboards, Genie, SQL — uses that exact definition instead of each re-inventing the formula.</div>
+      <div class="lead"><b>In one line:</b> the metric view is <b>Databricks’ semantic layer</b> — define a number like <b>Total Volume</b> or <b>VWAP</b> <b>once</b>, in one governed place, and dashboards, Genie and SQL all use that exact definition instead of re-inventing the formula.</div>
 
       <div class="analogy">
         <div class="emo">📖</div>
@@ -206,10 +207,13 @@
         <div class="item"><div class="t">Governed &amp; consistent</div><p>It’s a normal Unity Catalog object, so permissions and lineage just work.</p></div>
       </div>
 
-      <div class="sh"><span class="ic">🔑</span><div><h3>What’s inside: a source, dimensions &amp; measures</h3>
-        <p>A metric view points at a <b>source</b> to read from, then exposes two kinds of things on top of it — dimensions and measures.</p></div></div>
-      <div class="block src"><h4>Source</h4><div class="sub">where the data comes from</div>
-        <p>The table (or view) the metric view is built on, plus any joins it needs. Ours reads from <code>trade_enriched</code> — trades already joined to their market price and EUR values — and joins out to the dimension tables (time, trader, counterparty, instrument, delivery point, market) so those fields are available to slice by.</p>
+      <div class="sh"><span class="ic">🔑</span><div><h3>What’s inside: source, joins, dimensions &amp; measures</h3>
+        <p>A metric view points at a <b>source</b>, <b>joins</b> in the tables it needs, then exposes <b>dimensions</b> and <b>measures</b> on top.</p></div></div>
+      <div class="two">
+        <div class="block src"><h4>Source</h4><div class="sub">where the data comes from</div>
+          <p>The base table of trades the view is built on. Ours reads from <code>trade_enriched</code> — trades already joined to their market price and EUR values.</p></div>
+        <div class="block join"><h4>Joins</h4><div class="sub">bring in other tables</div>
+          <p>Pull in dimension tables and give each an alias, with how it links to the source — e.g. <code>dim_instrument</code> as <code>di</code> on <code>instrument_key</code>. Dimensions then reference those aliases (<code>di.commodity</code>).</p></div>
       </div>
       <div class="two">
         <div class="block dim"><h4>Dimensions</h4><div class="sub">the ways you slice</div>
