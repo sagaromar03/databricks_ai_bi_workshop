@@ -145,9 +145,18 @@
       <p class="cmpnote">The big shift: your measures live in the <b>catalog</b>, not inside a single <code>.pbix</code> — so a dashboard, a Genie agent, and a raw SQL query all return the identical number.</p>
 
       <div class="sh"><span class="ic">📄</span><div><h3>What it looks like</h3>
-        <p>It’s written in a short YAML file: a <b>source</b>, the <b>dimensions</b>, and the <b>measures</b>. A trimmed peek at this workshop’s <code>energy_trading_metrics</code>:</p></div></div>
+        <p>It’s written in a short YAML file: a <b>source</b> (with any <b>joins</b>), the <b>dimensions</b>, and the <b>measures</b>. A trimmed peek at this workshop’s <code>energy_trading_metrics</code>:</p></div></div>
       <pre class="yaml"><span class="c"># energy_trading_metrics — written once, read everywhere</span>
 <span class="k">source</span>: energy.energy_trading.trade_enriched
+
+<span class="k">joins</span>:                          <span class="c"># pull dimension tables in, give each an alias</span>
+  - <span class="k">name</span>: dt                     <span class="c"># dim_time</span>
+    <span class="k">source</span>: energy.energy_trading.dim_time
+    <span class="k">"on"</span>: source.time_key = dt.time_key
+  - <span class="k">name</span>: di                     <span class="c"># dim_instrument</span>
+    <span class="k">source</span>: energy.energy_trading.dim_instrument
+    <span class="k">"on"</span>: source.instrument_key = di.instrument_key
+  <span class="c"># …plus dtr (trader), dcp (counterparty), ddp (delivery point), dm (market)</span>
 
 <span class="k">dimensions</span>:
   - <span class="k">name</span>: Trade Date
