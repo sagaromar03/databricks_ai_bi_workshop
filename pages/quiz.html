@@ -1,46 +1,65 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Workshop quiz</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231B3139'/%3E%3Cg transform='translate(4 4)'%3E%3Cpath fill='%23FF3621' d='M.95 14.184L12 20.403l9.919-5.55v2.21L12 22.662l-10.484-5.96-.565.308v.77L12 24l11.05-6.218v-4.317l-.515-.309L12 19.118l-9.867-5.653v-2.21L12 16.805l11.05-6.218V6.32l-.515-.308L12 11.974 2.647 6.681 12 1.388l7.76 4.368.668-.411v-.566L12 0 .95 6.27v.72L12 13.207l9.919-5.55v2.26L12 15.52 1.516 9.56l-.565.308Z'/%3E%3C/g%3E%3C/svg%3E"><link rel="stylesheet" href="shared.css">
 <style>
- .qwrap{max-width:760px}
- .q{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:14px}
- .q .qn{font-size:11px;font-weight:700;color:var(--coral);text-transform:uppercase;letter-spacing:.05em}
- .q .qn .diff{color:var(--grey);margin-left:8px}
- .q .stem{font-size:15.5px;font-weight:600;color:var(--navy);margin:5px 0 13px;line-height:1.4}
- .opts{display:flex;flex-direction:column;gap:8px}
- .opt{display:flex;align-items:center;gap:11px;border:1px solid var(--border);border-radius:9px;padding:11px 13px;cursor:pointer;font-size:14px;color:var(--ink);transition:border-color .12s,background .12s}
+ .stage{max-width:720px}
+ .qtop{font-size:13px;color:var(--grey);margin-bottom:10px} .qtop b{color:var(--navy)}
+ .dots{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}
+ .dot{width:28px;height:28px;border-radius:7px;border:1px solid var(--border);background:#fff;font-size:12px;font-weight:700;
+   color:var(--grey);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;font-family:inherit;transition:border-color .12s}
+ .dot.answered{border-color:var(--navy);color:var(--navy)}
+ .dot.current{background:var(--navy);color:#fff;border-color:var(--navy)}
+ .card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:22px 20px;min-height:210px}
+ .card .stem{font-size:17px;font-weight:600;color:var(--navy);margin:0 0 16px;line-height:1.45}
+ .card .stem code{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-size:14px}
+ .opts{display:flex;flex-direction:column;gap:9px}
+ .opt{display:flex;align-items:center;gap:11px;border:1px solid var(--border);border-radius:9px;padding:12px 14px;cursor:pointer;font-size:14.5px;color:var(--ink);transition:border-color .12s,background .12s}
  .opt:hover{border-color:var(--navy)}
  .opt input{accent-color:var(--navy);width:16px;height:16px;flex:none}
  .opt.chosen{border-color:var(--navy);background:var(--panel)}
- .q.graded .opt{cursor:default} .q.graded .opt:hover{border-color:var(--border)}
- .q.graded .opt.correct{border-color:#1d9e75;background:rgba(29,158,117,.10)}
- .q.graded .opt.correct:hover{border-color:#1d9e75}
- .q.graded .opt.wrong{border-color:var(--coral);background:rgba(255,54,33,.08)}
- .opt .mark{margin-left:auto;font-weight:700;font-size:12px;white-space:nowrap}
- .opt.correct .mark{color:#127a58} .opt.wrong .mark{color:#b32d1a}
- .exp{margin-top:11px;font-size:13px;color:var(--ink);background:var(--panel);border:1px solid var(--border);border-left:4px solid #1d9e75;border-radius:9px;padding:11px 14px;line-height:1.55;display:none}
- .q.graded .exp{display:block} .exp b{color:var(--navy)}
- .qactions{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg) 34%);padding:16px 0 8px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
- .qbtn{background:var(--navy);color:#fff;border:0;border-radius:9px;padding:12px 24px;font-weight:600;font-size:15px;cursor:pointer;font-family:inherit;transition:background .12s,opacity .12s}
- .qbtn:hover{background:#12232a} .qbtn:disabled{opacity:.45;cursor:not-allowed}
- .progress{font-size:13px;color:var(--grey)}
+ .nav{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:16px;flex-wrap:wrap}
+ .qbtn{background:var(--navy);color:#fff;border:0;border-radius:9px;padding:12px 22px;font-weight:600;font-size:15px;cursor:pointer;font-family:inherit;transition:background .12s,opacity .12s}
+ .qbtn:hover{background:#12232a} .qbtn:disabled{opacity:.4;cursor:not-allowed}
+ .qbtn.ghost{background:#fff;color:var(--navy);border:1px solid var(--border)}
+ .qbtn.ghost:hover{border-color:var(--navy);background:var(--panel)} .qbtn.ghost:disabled{opacity:.35}
+ .navnote{font-size:12.5px;color:var(--grey)}
+
+ /* results + review */
  .result{border-radius:12px;padding:18px 20px;margin-bottom:18px}
  .result .big{font-size:24px;font-weight:700;display:block;margin-bottom:3px}
  .result .sub{font-size:14px;line-height:1.5}
  .result.pass{background:rgba(29,158,117,.12);border:1px solid #1d9e75} .result.pass .big{color:#127a58} .result.pass .sub{color:#0f6a4c}
  .result.fail{background:var(--panel);border:1px solid var(--border)} .result.fail .big{color:var(--navy)} .result.fail .sub{color:var(--ink)}
+ #review .q{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:14px}
+ #review .qn{font-size:11px;font-weight:700;color:var(--coral);text-transform:uppercase;letter-spacing:.05em}
+ #review .stem{font-size:15px;font-weight:600;color:var(--navy);margin:5px 0 12px;line-height:1.4}
+ #review .stem code{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-size:13px}
+ #review .opt{cursor:default} #review .opt:hover{border-color:var(--border)}
+ #review .opt.correct{border-color:#1d9e75;background:rgba(29,158,117,.10)}
+ #review .opt.wrong{border-color:var(--coral);background:rgba(255,54,33,.08)}
+ #review .opt .mark{margin-left:auto;font-weight:700;font-size:12px;white-space:nowrap}
+ #review .opt.correct .mark{color:#127a58} #review .opt.wrong .mark{color:#b32d1a}
+ #review .exp{margin-top:11px;font-size:13px;color:var(--ink);background:var(--panel);border:1px solid var(--border);border-left:4px solid #1d9e75;border-radius:9px;padding:11px 14px;line-height:1.55}
+ #review .exp b{color:var(--navy)}
  #confetti{position:fixed;inset:0;pointer-events:none;z-index:80;display:none}
 </style></head>
 <body>
 <header class="top"><a href="../home.html">← Workshop repository</a>
 <h1>Workshop quiz</h1>
-<p>Ten questions of mixed difficulty on the dataset, Unity Catalog, metric views and Genie. Score <b>7 or more</b> to pass. You’ll get the right answer and an explanation for every question after you submit.</p></header>
-<div class="wrap qwrap">
-  <div id="result" class="result" hidden></div>
-  <form id="quiz"></form>
-  <div class="qactions">
-    <button id="submit" class="qbtn" type="button" disabled>Submit answers</button>
-    <span class="progress" id="progress">0 / 10 answered</span>
+<p>Ten questions on what the workshop covered — Unity Catalog, metric views, Genie and building AI/BI. One at a time; jump back to change any answer. Score <b>7 or more</b> to pass, then see the right answer and an explanation for every question.</p></header>
+<div class="wrap">
+  <div class="stage" id="stage">
+    <div class="qtop">Question <b id="qnum">1</b> of <span id="qtot">10</span></div>
+    <div class="dots" id="dots"></div>
+    <div class="card" id="card"></div>
+    <div class="nav">
+      <button id="back" class="qbtn ghost" type="button">← Back</button>
+      <span class="navnote" id="navnote"></span>
+      <button id="next" class="qbtn" type="button">Next →</button>
+    </div>
   </div>
+  <div id="result" class="result" hidden></div>
+  <div id="review" hidden></div>
+  <div id="afteractions" hidden style="margin:4px 0 10px"><button id="retry" class="qbtn ghost" type="button">↺ Try again</button></div>
 </div>
 <canvas id="confetti"></canvas>
 <footer>Energy Trading workshop pack · quiz <a class="contact-link" href="../home.html#appCard">📱 Databricks app</a> <a class="contact-link" href="contact.html">✉ Contact us</a></footer>
@@ -48,90 +67,110 @@
 <script src="../assets/appmodal.js?v=1"></script>
 <script>
 const QUESTIONS=[
- {d:'Easy', q:'What does the <code>energy_trading</code> dataset actually represent?',
-  o:['One company’s internal trading records','A market-wide record of trades between many participants','Only Databricks’ own trades','Weather data for power plants'], a:1,
-  e:'Every row is a deal between two participants, and the same company shows up as trader on one row and counterparty on another — the signature of a market-wide tape (an exchange/regulator view), not one firm’s books.'},
- {d:'Easy', q:'On an energy market, what is an <b>exchange</b> such as Nord Pool or EEX?',
-  o:['A company that trades to make a profit','A government regulator','The marketplace where participants meet to trade','A type of power plant'], a:2,
-  e:'An exchange is the venue itself — like a stock exchange, but for power and gas. It doesn’t take a position of its own.'},
- {d:'Easy', q:'A <b>spot</b> (or day-ahead) trade is for delivery…',
-  o:['Now or the next day','In several years','Only at weekends','Never — it’s purely financial'], a:0,
-  e:'Spot / day-ahead means near-immediate delivery at today’s price. Forwards and futures lock in a price now for delivery weeks or months later.'},
- {d:'Medium', q:'In a single trade, the <b>counterparty</b> is…',
-  o:['The broker’s fee','The company on the other side of the deal','The exchange','The delivery location'], a:1,
-  e:'Every trade has two parties; from your side, the other one is the counterparty. That’s why each row in the data names both.'},
- {d:'Medium', q:'In Unity Catalog, the full name of a table looks like…',
+ {q:'In Unity Catalog, the full name of a table looks like…',
   o:['table.column.row','workspace.folder.file','catalog.schema.table','database.user.table'], a:2,
   e:'Unity Catalog uses a three-level namespace: catalog › schema › object — e.g. <code>energy.energy_trading.fact_trade</code>.'},
- {d:'Hard', q:'Which of these is <b>not</b> stored in Unity Catalog?',
-  o:['Tables','Metric views','A dashboard','Functions'], a:2,
-  e:'Dashboards and Genie agents are workspace tools that <b>read from</b> Unity Catalog — they aren’t UC objects. Tables, views, metric views, volumes, functions and ML models are.'},
- {d:'Medium', q:'What problem does a <b>metric view</b> solve?',
-  o:['It speeds up the SQL warehouse','It defines each KPI’s formula once so every tool returns the same number','It backs up your tables','It encrypts your data'], a:1,
-  e:'A metric view is Databricks’ semantic layer — define “Total Volume” or “VWAP” once, and dashboards, Genie and SQL all use that exact definition.'},
- {d:'Hard', q:'In a metric view, <b>dimensions</b> are…',
-  o:['The numbers you aggregate','The ways you slice the data (e.g. Trade Date, Commodity)','The tables it joins','The access permissions'], a:1,
-  e:'Dimensions are the ways to slice; <b>measures</b> are the numbers with their formula (e.g. <code>SUM(volume)</code>). The source + joins bring in the data those fields live on.'},
- {d:'Medium', q:'What is a <b>Genie Agent</b>?',
+ {q:'Which of these is <b>not</b> a Unity Catalog object?',
+  o:['A table','A metric view','A dashboard','A function'], a:2,
+  e:'Dashboards and Genie agents are workspace tools that <b>read from</b> Unity Catalog — they aren’t stored in it. Tables, views, metric views, volumes, functions and ML models are.'},
+ {q:'A <b>metric view</b> is best described as…',
+  o:['A backup copy of your tables','Databricks’ semantic layer — define a KPI’s formula once and every tool reuses it','A faster SQL warehouse','A chart type'], a:1,
+  e:'A metric view lets you define “Total Volume” or “VWAP” once, in one governed place, so dashboards, Genie and SQL all return the same number.'},
+ {q:'In a metric view, <b>dimensions</b> are…',
+  o:['The numbers you aggregate','The ways you slice the data (e.g. Trade Date, Commodity)','The user permissions','The chart colours'], a:1,
+  e:'Dimensions are the ways to slice; <b>measures</b> are the numbers with their formula (e.g. <code>SUM(volume)</code>).'},
+ {q:'Which of these is <b>not</b> part of a metric view’s definition?',
+  o:['A source','Joins','Measures','Indexes'], a:3,
+  e:'A metric view is a source (+ any joins), then dimensions and measures. It has no indexes — it’s a governed definition on top of your tables, not a physical store.'},
+ {q:'What is a <b>Genie Agent</b>?',
   o:['A chatbot with no access to your data','A configured, trusted space (datasets, metrics, instructions) that grounds Genie’s answers','A billing dashboard','A type of ML model'], a:1,
-  e:'A Genie Agent is where your team configures trusted data, metrics and business rules so answers match how the business defines things — the brains behind AI/BI Genie.'},
- {d:'Easy', q:'<b>Genie Code</b> is aimed at…',
-  o:['Business users who never write code','Developers &amp; technical users — writing and fixing code and building artifacts','Managing user passwords','Only mobile users'], a:1,
-  e:'Genie Code is the AI coding &amp; data assistant across notebooks, the SQL editor, pipelines and dashboards. Non-technical users get Genie One instead.'}
+  e:'A Genie Agent is where your team curates trusted data, metrics and business rules so answers match how the business defines things — the brains behind AI/BI Genie.'},
+ {q:'<b>Genie Code</b> is aimed at…',
+  o:['Business users who never write code','Developers &amp; technical users — writing/fixing code and building artifacts','Managing passwords','Only mobile users'], a:1,
+  e:'Genie Code is the AI coding &amp; data assistant across notebooks, the SQL editor, pipelines and dashboards. Non-technical users get Genie One instead.'},
+ {q:'<b>Genie One</b> is…',
+  o:['The full developer workspace','The simplified home where business users ask questions and open dashboards','A pricing tier','A data connector'], a:1,
+  e:'Genie One is the clean, consumer-grade front door — discover assets, chat with Genie, open AI/BI dashboards and run apps, on web and mobile.'},
+ {q:'When building the AI/BI dashboard in the workshop, you add a chart by…',
+  o:['Writing JavaScript','Dragging widgets and hand-picking every field','Describing it to AI/BI Genie in plain language','Editing a config file'], a:2,
+  e:'You just ask — “add a bar chart of trades by commodity, coloured by direction” — and Genie builds the widget for you. No manual field-picking.'},
+ {q:'Data in Unity Catalog is easy to share across workspaces. Who can actually see a given table is controlled by…',
+  o:['Nothing — if it’s shared, everyone sees it','Permissions granted on it (GRANT), centrally','The size of the table','Which dashboard uses it'], a:1,
+  e:'Sharing is easy, but access stays under strict control: you GRANT privileges centrally, so people see only what they’re allowed to — easy to share, still tightly governed.'}
 ];
 const PASS=7;
-const form=document.getElementById('quiz'), submitBtn=document.getElementById('submit'), prog=document.getElementById('progress'), resultEl=document.getElementById('result');
-const chosen={}; let graded=false;
+const stage=document.getElementById('stage'), card=document.getElementById('card'), dotsEl=document.getElementById('dots'),
+      qnum=document.getElementById('qnum'), qtot=document.getElementById('qtot'), backBtn=document.getElementById('back'),
+      nextBtn=document.getElementById('next'), navnote=document.getElementById('navnote'),
+      resultEl=document.getElementById('result'), reviewEl=document.getElementById('review'), afterEl=document.getElementById('afteractions');
+let idx=0; const answers={};
+qtot.textContent=QUESTIONS.length;
 
-QUESTIONS.forEach(function(Q,i){
-  const card=document.createElement('div'); card.className='q'; card.id='q'+i;
+function answeredCount(){ return Object.keys(answers).length; }
+function renderDots(){
+  dotsEl.innerHTML='';
+  QUESTIONS.forEach(function(_,i){
+    const b=document.createElement('button'); b.className='dot'+(i===idx?' current':'')+(answers[i]!==undefined?' answered':'');
+    b.textContent=i+1; b.type='button'; b.addEventListener('click',function(){ idx=i; render(); });
+    dotsEl.appendChild(b);
+  });
+}
+function render(){
+  const Q=QUESTIONS[idx];
+  qnum.textContent=idx+1;
+  renderDots();
   let opts='';
-  Q.o.forEach(function(txt,j){
-    opts+='<label class="opt" data-i="'+i+'" data-j="'+j+'"><input type="radio" name="q'+i+'" value="'+j+'"><span>'+txt+'</span></label>';
-  });
-  card.innerHTML='<div class="qn">Question '+(i+1)+' <span class="diff">'+Q.d+'</span></div>'+
-    '<div class="stem">'+Q.q+'</div><div class="opts">'+opts+'</div>'+
-    '<div class="exp"></div>';
-  form.appendChild(card);
+  Q.o.forEach(function(t,j){ opts+='<label class="opt'+(answers[idx]===j?' chosen':'')+'" data-j="'+j+'">'+
+    '<input type="radio" name="q" value="'+j+'"'+(answers[idx]===j?' checked':'')+'><span>'+t+'</span></label>'; });
+  card.innerHTML='<div class="stem">'+Q.q+'</div><div class="opts">'+opts+'</div>';
+  card.querySelectorAll('.opt').forEach(function(l){ l.addEventListener('click',function(){
+    answers[idx]=+l.dataset.j; render();
+  });});
+  backBtn.disabled = idx===0;
+  const last = idx===QUESTIONS.length-1;
+  if(last){ nextBtn.textContent='Submit answers'; nextBtn.disabled = answeredCount()<QUESTIONS.length;
+    navnote.textContent = answeredCount()<QUESTIONS.length ? (QUESTIONS.length-answeredCount())+' still unanswered' : 'All answered — ready to submit';
+  } else { nextBtn.textContent='Next →'; nextBtn.disabled=false; navnote.textContent=''; }
+}
+backBtn.addEventListener('click',function(){ if(idx>0){ idx--; render(); } });
+nextBtn.addEventListener('click',function(){
+  if(idx===QUESTIONS.length-1){ submit(); } else { idx++; render(); }
+});
+document.getElementById('retry').addEventListener('click',function(){
+  idx=0; for(const k in answers) delete answers[k];
+  resultEl.hidden=true; reviewEl.hidden=true; afterEl.hidden=true; stage.style.display=''; render();
+  window.scrollTo({top:0,behavior:'smooth'});
 });
 
-form.addEventListener('change',function(e){
-  if(graded) return;
-  const inp=e.target; if(inp.type!=='radio') return;
-  const i=+inp.name.slice(1); chosen[i]=+inp.value;
-  // visual chosen state
-  form.querySelectorAll('#q'+i+' .opt').forEach(function(l){ l.classList.toggle('chosen', +l.dataset.j===chosen[i]); });
-  const n=Object.keys(chosen).length;
-  prog.textContent=n+' / '+QUESTIONS.length+' answered';
-  submitBtn.disabled = n<QUESTIONS.length;
-});
-
-submitBtn.addEventListener('click',function(){
-  if(graded){ location.reload(); return; }
-  graded=true; let score=0;
-  QUESTIONS.forEach(function(Q,i){
-    const card=document.getElementById('q'+i); card.classList.add('graded');
-    const sel=chosen[i];
-    if(sel===Q.a) score++;
-    card.querySelectorAll('.opt').forEach(function(l){
-      const j=+l.dataset.j; l.querySelector('input').disabled=true;
-      if(j===Q.a){ l.classList.add('correct'); l.insertAdjacentHTML('beforeend','<span class="mark">✓ Correct answer</span>'); }
-      else if(j===sel){ l.classList.add('wrong'); l.insertAdjacentHTML('beforeend','<span class="mark">✗ Your answer</span>'); }
-    });
-    card.querySelector('.exp').innerHTML='<b>Why:</b> '+Q.e;
-  });
+function submit(){
+  let score=0;
+  QUESTIONS.forEach(function(Q,i){ if(answers[i]===Q.a) score++; });
   const pass=score>=PASS;
-  resultEl.hidden=false;
+  // build review
+  reviewEl.innerHTML='';
+  QUESTIONS.forEach(function(Q,i){
+    const sel=answers[i]; let opts='';
+    Q.o.forEach(function(t,j){
+      let cls='opt', mark='';
+      if(j===Q.a){ cls+=' correct'; mark='<span class="mark">✓ Correct answer</span>'; }
+      else if(j===sel){ cls+=' wrong'; mark='<span class="mark">✗ Your answer</span>'; }
+      opts+='<div class="'+cls+'"><span>'+t+'</span>'+mark+'</div>';
+    });
+    const d=document.createElement('div'); d.className='q';
+    d.innerHTML='<div class="qn">Question '+(i+1)+'</div><div class="stem">'+Q.q+'</div><div class="opts">'+opts+'</div>'+
+      '<div class="exp"><b>Why:</b> '+Q.e+'</div>';
+    reviewEl.appendChild(d);
+  });
+  stage.style.display='none';
+  resultEl.hidden=false; reviewEl.hidden=false; afterEl.hidden=false;
   resultEl.className='result '+(pass?'pass':'fail');
   resultEl.innerHTML='<span class="big">'+(pass?'🎉 Passed — '+score+' / '+QUESTIONS.length:'You scored '+score+' / '+QUESTIONS.length)+'</span>'+
     '<span class="sub">'+(pass
-      ? 'Nice work — you’ve got the core concepts down. Scroll through for the explanations, then go build it for real.'
-      : 'You need '+PASS+' to pass. Read the explanations below for each question, then give it another go.')+'</span>';
-  submitBtn.textContent='Try again';
-  prog.textContent='';
+      ? 'Nice work — you’ve got the concepts down. Review the explanations below, then go build it for real.'
+      : 'You need '+PASS+' to pass. Read the explanations below, then hit Try again.')+'</span>';
   resultEl.scrollIntoView({behavior:'smooth',block:'start'});
   if(pass) celebrate();
-});
+}
 
 // Lightweight original confetti burst (no libraries).
 function celebrate(){
@@ -151,5 +190,7 @@ function celebrate(){
   })();
 }
 window.addEventListener('resize',function(){var cv=document.getElementById('confetti'); if(cv.style.display==='block'){cv.width=innerWidth;cv.height=innerHeight;}});
+
+render();
 </script>
 </body></html>
