@@ -62,6 +62,26 @@
  .gbtns button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
  .gpane{display:none} .gpane.on{display:block}
  .gpane .block p{margin:0 0 10px} .gpane .block .usedby{margin-top:4px}
+ /* genie product pages */
+ .toc a.ghead{font-weight:700}
+ .toc a.sub{padding-left:26px;font-size:13px;font-weight:500}
+ .famgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+ @media(max-width:560px){.famgrid{grid-template-columns:1fr}}
+ .famcard{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px 16px;text-decoration:none;color:var(--ink);transition:transform .12s,box-shadow .12s}
+ .famcard:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(11,79,108,.10)}
+ .famcard b{color:var(--navy);font-size:14.5px;display:block}
+ .famcard span{font-size:12.5px;color:var(--grey)}
+ .plogo{width:46px;height:46px;flex:none;position:relative}
+ .plogo img{width:100%;height:100%;object-fit:contain;border-radius:10px;position:relative;z-index:1}
+ .plogo-fb{position:absolute;inset:0;border-radius:12px;background:var(--panel);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:23px}
+ .plogo.sm{width:38px;height:38px} .plogo.sm .plogo-fb{font-size:19px;border-radius:10px}
+ .ptitle{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+ .ptitle .title{margin:0}
+ .backlink{display:inline-block;font-size:12.5px;color:var(--grey);text-decoration:none;margin-bottom:14px}
+ .backlink:hover{color:var(--navy)}
+ .prose{font-size:14px;color:var(--ink);line-height:1.6;margin:0 0 6px;max-width:660px}
+ .prose code{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-size:12.5px}
+ .prose a{color:#b32d1a;font-weight:600;text-decoration:none} .prose a:hover{text-decoration:underline}
  .block h4{margin:0 0 2px;font-size:15px;color:var(--navy)} .block .sub{font-size:12.5px;color:var(--grey);margin:0 0 10px}
  .block ul{margin:0;padding-left:18px;font-size:13px;color:var(--ink);line-height:1.75}
  .block p{margin:0;font-size:13px;color:var(--ink);line-height:1.55}
@@ -137,7 +157,11 @@
     <div class="lbl">Concepts</div>
     <a class="toc-link active" data-c="unity-catalog" href="#unity-catalog">Unity Catalog</a>
     <a class="toc-link" data-c="metric-view" href="#metric-view">Metric View</a>
-    <a class="toc-link" data-c="genie" href="#genie">Genie</a>
+    <a class="toc-link ghead" data-c="genie" href="#genie">Genie</a>
+    <a class="toc-link sub" data-c="genie-aibi" href="#genie-aibi">AI/BI Genie</a>
+    <a class="toc-link sub" data-c="genie-agents" href="#genie-agents">Genie Agents</a>
+    <a class="toc-link sub" data-c="genie-code" href="#genie-code">Genie Code</a>
+    <a class="toc-link sub" data-c="genie-one" href="#genie-one">Genie One</a>
     <a class="soon">Domains &amp; Pages <span>soon</span></a>
   </aside>
 
@@ -393,79 +417,123 @@
       </div>
     </section>
 
-    <!-- ============ GENIE ============ -->
+    <!-- ============ GENIE (overview) ============ -->
     <section class="concept" id="genie">
       <div class="tag">Concept</div>
       <h2 class="title">Databricks Genie</h2>
 
-      <div class="lead"><b>In one line:</b> Genie is Databricks’ <b>AI experience for everyone</b> — a single place to ask data questions in plain English, explore dashboards and run apps, with every answer grounded in your data and governed by Unity Catalog.</div>
+      <div class="lead"><b>In one line:</b> Genie is Databricks’ <b>AI experience for everyone</b> — ask data questions in plain English, explore dashboards and build with AI, with every answer grounded in your data and governed by Unity Catalog.</div>
 
       <div class="analogy">
         <div class="emo">🧞</div>
-        <div>Think of Genie as a <b>data-savvy teammate</b> who already knows your tables and metrics. You ask in words — “VWAP by country last quarter” — and it does the querying, charting or coding, so you don’t have to.</div>
+        <div>Think of Genie as a <b>data-savvy teammate</b> who already knows your tables and metrics. You ask in words — “VWAP by country last quarter” — and it does the querying, charting or coding for you.</div>
       </div>
 
-      <div class="sh"><span class="ic">✨</span><div><h3>What Genie is, in general</h3>
-        <p>Genie isn’t one screen — it’s a <b>family</b> of AI experiences on the same governed foundation, tuned to who’s using it and what they’re doing. Pick one:</p></div></div>
-
-      <div class="gbtns">
-        <button class="on" data-g="g-aibi" type="button">📊 AI/BI Genie</button>
-        <button data-g="g-agents" type="button">🧩 Genie Agents</button>
-        <button data-g="g-code" type="button">⌨️ Genie Code</button>
-        <button data-g="g-one" type="button">🙋 Genie One</button>
-      </div>
-
-      <div class="gpane on" id="g-aibi">
-        <div class="block">
-          <div class="badge">📊 AI/BI Genie</div>
-          <p><b>Natural-language analytics.</b> Ask a question of your data — “total volume by commodity”, “which traders sold below market?” — and Genie writes the SQL and hands back an answer, table or chart. No SQL needed, and it only ever sees data you’re allowed to.</p>
-          <p>It’s the experience you build and demo in this workshop, powered by a <b>Genie Agent</b> pointed at the <code>energy_trading</code> tables and metric view.</p>
-          <div class="usedby">
-            <a href="create_genie.html">Build one — Step 5 →</a>
-            <a href="https://docs.databricks.com/aws/en/genie/" target="_blank" rel="noopener">Genie docs ↗</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="gpane" id="g-agents">
-        <div class="block">
-          <div class="badge">🧩 Genie Agents</div>
-          <p><b>Where the trust comes from.</b> A Genie Agent is a domain-specific space your data team configures — the datasets it can use, sample queries, metrics and <b>business rules</b> — so answers line up with how the business actually defines things. It’s the semantic backbone behind Genie’s replies.</p>
-          <p>This is exactly what the workshop’s <b>Create a Genie agent</b> step sets up: point it at the tables, add instructions, and it grounds every question that follows.</p>
-          <div class="usedby">
-            <a href="create_genie.html">Create a Genie agent — Step 5 →</a>
-            <a href="https://docs.databricks.com/aws/en/genie-agents/" target="_blank" rel="noopener">Genie Agents docs ↗</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="gpane" id="g-code">
-        <div class="block">
-          <div class="badge">⌨️ Genie Code</div>
-          <p><b>The AI assistant for builders.</b> For developers and technical users inside the workspace — inline suggestions and agentic tasks across notebooks, pipelines, the SQL editor and dashboards. You describe the outcome; it writes and fixes the code.</p>
-          <p>In this workshop it’s the <b>“Genie Code”</b> panel that turns “add a bar chart of trades by commodity” into a real dashboard widget.</p>
-          <div class="usedby">
-            <a href="create_dashboard.html">See it build a dashboard — Step 3 →</a>
-            <a href="https://docs.databricks.com/aws/en/genie-code/" target="_blank" rel="noopener">Genie Code docs ↗</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="gpane" id="g-one">
-        <div class="block">
-          <div class="badge">🙋 Genie One</div>
-          <p><b>The home for business users.</b> A simplified interface — separate from the full workspace — where non-technical people discover data assets, ask Genie questions, open AI/BI dashboards and run apps, on web and mobile. One clean front door to everything above.</p>
-          <div class="usedby">
-            <a href="https://docs.databricks.com/aws/en/genie-one/" target="_blank" rel="noopener">Genie One docs ↗</a>
-            <a href="https://docs.databricks.com/aws/en/genie-one/mobile" target="_blank" rel="noopener">Genie on mobile ↗</a>
-          </div>
-        </div>
+      <div class="sh"><span class="ic">✨</span><div><h3>The Genie family</h3>
+        <p>Genie isn’t one screen — it’s a family of AI experiences on the same governed foundation. Open any one to dig in:</p></div></div>
+      <div class="famgrid">
+        <a class="famcard toc-link" data-c="genie-aibi" href="#genie-aibi">
+          <span class="plogo sm"><img src="../assets/genie/aibi.svg" alt="" onerror="this.style.display='none'" onload="this.nextElementSibling.style.display='none'"><span class="plogo-fb">📊</span></span>
+          <div><b>AI/BI Genie</b><span>Natural-language analytics</span></div></a>
+        <a class="famcard toc-link" data-c="genie-agents" href="#genie-agents">
+          <span class="plogo sm"><img src="../assets/genie/agents.svg" alt="" onerror="this.style.display='none'" onload="this.nextElementSibling.style.display='none'"><span class="plogo-fb">🧩</span></span>
+          <div><b>Genie Agents</b><span>Trusted, configured data</span></div></a>
+        <a class="famcard toc-link" data-c="genie-code" href="#genie-code">
+          <span class="plogo sm"><img src="../assets/genie/code.svg" alt="" onerror="this.style.display='none'" onload="this.nextElementSibling.style.display='none'"><span class="plogo-fb">⌨️</span></span>
+          <div><b>Genie Code</b><span>AI assistant for builders</span></div></a>
+        <a class="famcard toc-link" data-c="genie-one" href="#genie-one">
+          <span class="plogo sm"><img src="../assets/genie/one.svg" alt="" onerror="this.style.display='none'" onload="this.nextElementSibling.style.display='none'"><span class="plogo-fb">🙋</span></span>
+          <div><b>Genie One</b><span>Home for business users</span></div></a>
       </div>
 
       <div class="sh"><span class="ic">📚</span><div><h3>Databricks docs</h3></div></div>
       <div class="usedby">
         <a href="https://docs.databricks.com/aws/en/genie/" target="_blank" rel="noopener">Genie overview ↗</a>
-        <a href="https://docs.databricks.com/aws/en/genie-agents/set-up" target="_blank" rel="noopener">Create &amp; manage a Genie Agent ↗</a>
+      </div>
+    </section>
+
+    <!-- ============ AI/BI GENIE ============ -->
+    <section class="concept" id="genie-aibi">
+      <a class="backlink toc-link" data-c="genie" href="#genie">← All Genie products</a>
+      <div class="ptitle"><span class="plogo"><img src="../assets/genie/aibi.svg" alt="AI/BI Genie logo" onerror="this.style.display='none'" onload="this.nextElementSibling.style.display='none'"><span class="plogo-fb">📊</span></span>
+        <div><div class="tag">Genie product</div><h2 class="title">AI/BI Genie</h2></div></div>
+
+      <div class="lead"><b>Natural-language analytics.</b> Ask a question of your data — “total volume by commodity”, “which traders sold below market?” — and Genie writes the SQL, runs it, and hands back an answer, table or chart. No SQL required.</div>
+
+      <div class="sh"><span class="ic">🔎</span><div><h3>How it works</h3></div></div>
+      <p class="prose">Point it at your tables or a <a href="#metric-view" class="toc-link" data-c="metric-view">metric view</a>, then type a question. Genie generates the query, shows you the SQL it wrote (so you can check or tweak it), and returns the result. It only ever reads data you’re permitted to see — governance comes straight from Unity Catalog.</p>
+
+      <div class="sh"><span class="ic">🧩</span><div><h3>Powered by a Genie Agent</h3></div></div>
+      <p class="prose">The answer quality comes from the <a href="#genie-agents" class="toc-link" data-c="genie-agents">Genie Agent</a> behind it — the trusted datasets, metrics and instructions your team configures. Point-and-ask is the front; the Agent is the brains.</p>
+
+      <div class="sh"><span class="ic">🛠️</span><div><h3>In this workshop</h3></div></div>
+      <p class="prose">This is the experience you stand up in <b>Step 5</b> and demo with the ready-made question bank.</p>
+      <div class="usedby">
+        <a href="create_genie.html">Build one — Step 5 →</a>
+        <a href="genie.html">Question bank →</a>
+        <a href="https://docs.databricks.com/aws/en/genie/" target="_blank" rel="noopener">Genie docs ↗</a>
+      </div>
+    </section>
+
+    <!-- ============ GENIE AGENTS ============ -->
+    <section class="concept" id="genie-agents">
+      <a class="backlink toc-link" data-c="genie" href="#genie">← All Genie products</a>
+      <div class="ptitle"><span class="plogo"><img src="../assets/genie/agents.svg" alt="Genie Agents logo" onerror="this.style.display='none'" onload="this.nextElementSibling.style.display='none'"><span class="plogo-fb">🧩</span></span>
+        <div><div class="tag">Genie product</div><h2 class="title">Genie Agents</h2></div></div>
+
+      <div class="lead"><b>Where the trust comes from.</b> A Genie Agent is a domain-specific space your data team configures so Genie’s answers line up with how the business actually defines things.</div>
+
+      <div class="sh"><span class="ic">🔎</span><div><h3>What you configure</h3></div></div>
+      <p class="prose">The <b>datasets</b> it may use, <b>sample queries</b>, <b>metrics</b>, <b>business rules</b> and plain-language <b>instructions</b> — plus <b>verified answers</b> to lock in the right response to common questions. It’s the semantic backbone behind every reply.</p>
+
+      <div class="sh"><span class="ic">🎯</span><div><h3>Why it matters</h3></div></div>
+      <p class="prose">Without configuration, Genie has to guess. With an Agent, it answers in your organisation’s terms — and you keep tuning quality by adding metrics, rules and verified answers over time.</p>
+
+      <div class="sh"><span class="ic">🛠️</span><div><h3>In this workshop</h3></div></div>
+      <p class="prose">The <b>Create a Genie agent</b> step is exactly this: point it at the <code>energy_trading</code> tables, add instructions, and it grounds every question that follows.</p>
+      <div class="usedby">
+        <a href="create_genie.html">Create a Genie agent — Step 5 →</a>
+        <a href="https://docs.databricks.com/aws/en/genie-agents/" target="_blank" rel="noopener">Genie Agents docs ↗</a>
+        <a href="https://docs.databricks.com/aws/en/genie-agents/tune-quality" target="_blank" rel="noopener">Tune quality ↗</a>
+      </div>
+    </section>
+
+    <!-- ============ GENIE CODE ============ -->
+    <section class="concept" id="genie-code">
+      <a class="backlink toc-link" data-c="genie" href="#genie">← All Genie products</a>
+      <div class="ptitle"><span class="plogo"><img src="../assets/genie/code.svg" alt="Genie Code logo" onerror="this.style.display='none'" onload="this.nextElementSibling.style.display='none'"><span class="plogo-fb">⌨️</span></span>
+        <div><div class="tag">Genie product</div><h2 class="title">Genie Code</h2></div></div>
+
+      <div class="lead"><b>The AI assistant for builders.</b> For developers and technical users inside the workspace — describe the outcome and it writes and fixes the code.</div>
+
+      <div class="sh"><span class="ic">🔎</span><div><h3>What it does</h3></div></div>
+      <p class="prose">Inline suggestions and agentic tasks across <b>notebooks, pipelines, the SQL editor and dashboards</b>. It can draft queries, explain code, fix errors and build whole artifacts from a plain-language prompt.</p>
+
+      <div class="sh"><span class="ic">🛠️</span><div><h3>In this workshop</h3></div></div>
+      <p class="prose">It’s the <b>“Genie Code”</b> panel that turns “add a bar chart of trades by commodity” into a real dashboard widget (Step 3), and the engine behind sketch-to-dashboard (Step 4).</p>
+      <div class="usedby">
+        <a href="create_dashboard.html">See it build a dashboard — Step 3 →</a>
+        <a href="sketch_to_dashboard.html">Sketch to dashboard — Step 4 →</a>
+        <a href="https://docs.databricks.com/aws/en/genie-code/" target="_blank" rel="noopener">Genie Code docs ↗</a>
+      </div>
+    </section>
+
+    <!-- ============ GENIE ONE ============ -->
+    <section class="concept" id="genie-one">
+      <a class="backlink toc-link" data-c="genie" href="#genie">← All Genie products</a>
+      <div class="ptitle"><span class="plogo"><img src="../assets/genie/one.svg" alt="Genie One logo" onerror="this.style.display='none'" onload="this.nextElementSibling.style.display='none'"><span class="plogo-fb">🙋</span></span>
+        <div><div class="tag">Genie product</div><h2 class="title">Genie One</h2></div></div>
+
+      <div class="lead"><b>The home for business users.</b> A simplified interface — separate from the full workspace — where non-technical people get answers without touching code.</div>
+
+      <div class="sh"><span class="ic">🔎</span><div><h3>What it is</h3></div></div>
+      <p class="prose">One clean place to <b>discover data assets</b>, <b>chat with Genie</b>, open <b>AI/BI dashboards</b> and run <b>apps</b> — on web and mobile. An account-level view can reach shared assets across every workspace from a single entry point.</p>
+
+      <div class="sh"><span class="ic">🎯</span><div><h3>Who it’s for</h3></div></div>
+      <p class="prose">Everyone who just wants answers — analysts, managers, execs — without learning the full Databricks workspace.</p>
+      <div class="usedby">
+        <a href="https://docs.databricks.com/aws/en/genie-one/" target="_blank" rel="noopener">Genie One docs ↗</a>
+        <a href="https://docs.databricks.com/aws/en/genie-one/mobile" target="_blank" rel="noopener">Genie on mobile ↗</a>
       </div>
     </section>
 
