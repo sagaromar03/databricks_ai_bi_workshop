@@ -48,6 +48,14 @@
  .block.dim{border-top:4px solid var(--navy)} .block.mea{border-top:4px solid var(--coral)}
  .block.src{border-top:4px solid var(--purple)} .block.join{border-top:4px solid var(--navy)}
  .two + .two{margin-top:12px}
+ .block.ui{border-top:4px solid var(--navy)} .block.code{border-top:4px solid var(--purple)}
+ .block ol{margin:0;padding-left:20px;font-size:13px;color:var(--ink);line-height:1.75} .block ol code{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-size:12px}
+ .block.code p{margin:0 0 10px}
+ .badge{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--navy);background:var(--panel);border:1px solid var(--border);border-radius:999px;padding:5px 12px;margin-bottom:10px}
+ .buildtabs{display:flex;gap:6px;border-bottom:1px solid var(--border);margin-bottom:14px}
+ .buildtabs button{font-family:inherit;font-size:13.5px;font-weight:600;color:var(--grey);background:none;border:0;border-bottom:3px solid transparent;padding:9px 14px;cursor:pointer;margin-bottom:-1px}
+ .buildtabs button.on{color:var(--navy);border-bottom-color:var(--coral)}
+ .btpane{display:none} .btpane.on{display:block}
  .block h4{margin:0 0 2px;font-size:15px;color:var(--navy)} .block .sub{font-size:12.5px;color:var(--grey);margin:0 0 10px}
  .block ul{margin:0;padding-left:18px;font-size:13px;color:var(--ink);line-height:1.75}
  .block p{margin:0;font-size:13px;color:var(--ink);line-height:1.55}
@@ -247,9 +255,29 @@
       </table>
       <p class="cmpnote">The big shift: your measures live in the <b>catalog</b>, not inside a single <code>.pbix</code> — so a dashboard, a Genie agent, and a raw SQL query all return the identical number.</p>
 
-      <div class="sh"><span class="ic">📄</span><div><h3>What it looks like</h3>
-        <p>It’s written in a short YAML file: a <b>source</b> (with any <b>joins</b>), the <b>dimensions</b>, and the <b>measures</b>. A trimmed peek at this workshop’s <code>energy_trading_metrics</code>:</p></div></div>
-      <pre class="yaml"><span class="c"># energy_trading_metrics — written once, read everywhere</span>
+      <div class="sh"><span class="ic">🏗️</span><div><h3>Two ways to build one</h3>
+        <p>Click it together in the UI, or write it as code — the visual editor just generates the YAML.</p></div></div>
+      <div class="buildtabs">
+        <button class="on" data-bt="bt-ui" type="button">Visual editor</button>
+        <button data-bt="bt-yaml" type="button">YAML</button>
+      </div>
+      <div class="btpane on" id="bt-ui">
+        <div class="block ui">
+          <div class="badge">🖱️ Point-and-click</div>
+          <ol>
+            <li>Open <b>Catalog Explorer</b> and browse to <code>energy.energy_trading</code>.</li>
+            <li>Click <b>Create → Metric view</b>.</li>
+            <li>Choose the <b>source</b> table (e.g. <code>fact_trade</code>) and add the <b>joins</b> you need.</li>
+            <li>Add <b>dimensions</b> and <b>measures</b> through the form — no syntax.</li>
+            <li><b>Save</b> — it’s now a governed Unity Catalog object.</li>
+          </ol>
+        </div>
+      </div>
+      <div class="btpane" id="bt-yaml">
+        <div class="block code">
+          <div class="badge">📄 As code</div>
+          <p>Write or paste the YAML — or run it as SQL with <code>CREATE VIEW … WITH METRICS</code>, which is what our notebook does. A trimmed peek at this workshop’s <code>energy_trading_metrics</code>:</p>
+          <pre class="yaml"><span class="c"># energy_trading_metrics — written once, read everywhere</span>
 <span class="k">source</span>: energy.energy_trading.trade_enriched
 
 <span class="k">joins</span>:                          <span class="c"># pull dimension tables in, give each an alias</span>
@@ -278,6 +306,8 @@
     <span class="k">expr</span>: SUM(source.notional_value_eur)
     <span class="k">format</span>: { <span class="k">type</span>: <span class="s">currency</span>, <span class="k">currency_code</span>: <span class="s">EUR</span> }
 </pre>
+        </div>
+      </div>
 
       <div class="sh"><span class="ic">📊</span><div><h3>The measures in ours</h3></div></div>
       <table class="mv">
@@ -370,6 +400,16 @@
     });
   });
   var h=(location.hash||'').replace('#',''); if(h) show(h);
+})();
+
+// 'Two ways to build one' tabs.
+(function(){
+  var tabs=[].slice.call(document.querySelectorAll('.buildtabs button'));
+  if(!tabs.length) return;
+  tabs.forEach(function(b){ b.addEventListener('click',function(){
+    tabs.forEach(function(x){x.classList.toggle('on',x===b);});
+    document.querySelectorAll('.btpane').forEach(function(p){p.classList.toggle('on',p.id===b.dataset.bt);});
+  });});
 })();
 
 // Try-it: live metric-view builder + forgiving check.
