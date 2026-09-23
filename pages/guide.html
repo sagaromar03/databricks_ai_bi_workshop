@@ -46,8 +46,10 @@
  @media(max-width:520px){.two{grid-template-columns:1fr}}
  .block{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 18px}
  .block.dim{border-top:4px solid var(--navy)} .block.mea{border-top:4px solid var(--coral)}
+ .block.src{border-top:4px solid var(--purple);margin-bottom:12px}
  .block h4{margin:0 0 2px;font-size:15px;color:var(--navy)} .block .sub{font-size:12.5px;color:var(--grey);margin:0 0 10px}
  .block ul{margin:0;padding-left:18px;font-size:13px;color:var(--ink);line-height:1.75}
+ .block p{margin:0;font-size:13px;color:var(--ink);line-height:1.55}
  .block code{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-size:12px}
 
  pre.yaml{background:#0f1e24;color:#e6edf0;border-radius:10px;padding:16px 18px;overflow:auto;font-size:12.5px;line-height:1.6;font-family:'SFMono-Regular',Consolas,monospace;margin:0}
@@ -101,8 +103,11 @@
         <div class="item"><div class="t">Governed &amp; consistent</div><p>It’s a normal Unity Catalog object, so permissions and lineage just work.</p></div>
       </div>
 
-      <div class="sh"><span class="ic">🔑</span><div><h3>It has just two kinds of things</h3>
-        <p>A metric view sits on top of your tables and exposes only these two.</p></div></div>
+      <div class="sh"><span class="ic">🔑</span><div><h3>What’s inside: a source, dimensions &amp; measures</h3>
+        <p>A metric view points at a <b>source</b> to read from, then exposes two kinds of things on top of it — dimensions and measures.</p></div></div>
+      <div class="block src"><h4>Source</h4><div class="sub">where the data comes from</div>
+        <p>The table (or view) the metric view is built on, plus any joins it needs. Ours reads from <code>trade_enriched</code> — trades already joined to their market price and EUR values — and joins out to the dimension tables (time, trader, counterparty, instrument, delivery point, market) so those fields are available to slice by.</p>
+      </div>
       <div class="two">
         <div class="block dim"><h4>Dimensions</h4><div class="sub">the ways you slice</div>
           <ul>
