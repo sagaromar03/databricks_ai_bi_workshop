@@ -91,9 +91,15 @@
  #ex-source{width:100%}
  .ex-chips{display:flex;flex-wrap:wrap;gap:8px}
  .ex-chips label{display:inline-flex;align-items:center;gap:6px;font-size:13px;background:var(--panel);border:1px solid var(--border);border-radius:999px;padding:6px 12px;cursor:pointer}
- .ex-measure{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
- .ex-measure #ex-mname{flex:1;min-width:110px}
- .ex-measure .paren{font-family:'SFMono-Regular',Consolas,monospace;font-size:17px;color:var(--grey)}
+ .ex-mrow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+ .ex-mrow .paren{font-family:'SFMono-Regular',Consolas,monospace;font-size:17px;color:var(--grey)}
+ .ex-mrow .m-name{font-size:12.5px;color:var(--navy);font-weight:600;margin-left:4px}
+ .ex-mrow .m-name:not(:empty)::before{content:'→ ';color:var(--grey);font-weight:400}
+ .ex-mrow .m-del{margin-left:auto;border:1px solid var(--border);background:#fff;color:var(--grey);border-radius:6px;width:26px;height:26px;cursor:pointer;font-size:15px;line-height:1;flex:none}
+ .ex-mrow .m-del:hover{border-color:var(--coral);color:var(--coral)}
+ .ex-mrow select:disabled{opacity:.4}
+ .ex-add{background:#fff;border:1px dashed var(--border);color:var(--navy);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+ .ex-add:hover{border-color:var(--navy)}
  .ex-btn{margin-top:16px;background:var(--navy);color:#fff;border:0;border-radius:8px;padding:11px 18px;font-weight:600;font-size:14px;cursor:pointer;font-family:inherit}
  .ex-btn:hover{background:#12232a}
  .ex-msg{margin-top:12px;font-size:13px;border-radius:9px;padding:11px 14px;line-height:1.5}
@@ -321,16 +327,11 @@
             <label><input type="checkbox" value="Notional (EUR)"> Notional (EUR)</label>
           </div>
 
-          <label class="ex-lbl">4 · A measure <span>name it, then choose the formula</span></label>
-          <div class="ex-measure">
-            <input id="ex-mname" type="text" value="Total Volume" aria-label="Measure name">
-            <select id="ex-agg"><option value="">agg…</option><option>SUM</option><option>AVG</option><option>COUNT</option></select>
-            <span class="paren">(</span>
-            <select id="ex-col"><option value="">column…</option><option value="volume">volume</option><option value="price">price</option><option value="notional_value_eur">notional_value_eur</option></select>
-            <span class="paren">)</span>
-          </div>
+          <label class="ex-lbl">4 · Measures <span>pick a formula — the name writes itself; add as many as you like</span></label>
+          <div id="ex-measures"></div>
+          <button id="ex-add-m" class="ex-add" type="button">+ Add measure</button>
 
-          <button id="ex-check" class="ex-btn" type="button">Check my metric view</button>
+          <div style="margin-top:16px"><button id="ex-check" class="ex-btn" type="button">Check my metric view</button></div>
           <div id="ex-msg" class="ex-msg" hidden></div>
         </div>
 
@@ -380,48 +381,85 @@
             dim_trader:{a:'dtr',on:'source.trader_key = dtr.trader_key'},
             dim_counterparty:{a:'dcp',on:'source.counterparty_key = dcp.counterparty_key'}};
   var COLEXPR={volume:'source.volume',price:'source.price',notional_value_eur:'source.notional_value_eur'};
+  var COLWORD={volume:'Volume',price:'Price',notional_value_eur:'Notional EUR'};
   var VALID_SRC=['fact_trade'];
   function v(id){var e=document.getElementById(id);return e?e.value:'';}
   function checked(sel){return [].slice.call(document.querySelectorAll(sel)).map(function(c){return c.value;});}
   function dims(){return checked('#ex-dims input:checked');}
   function joins(){return checked('#ex-joins input:checked');}
   function needed(ds){var s={};ds.forEach(function(d){if(DIM[d]&&DIM[d].join)s[DIM[d].join]=1;});return Object.keys(s);}
+  // ---- measures (auto-named, add/remove) ----
+  function mExpr(m){ return m.agg==='COUNT' ? 'COUNT(1)' : m.agg+'('+COLEXPR[m.col]+')'; }
+  function mName(m){ if(m.agg==='COUNT') return 'Trade Count';
+    return ({SUM:'Total ',AVG:'Average '}[m.agg]||'')+(COLWORD[m.col]||m.col); }
+  function measures(){
+    return [].slice.call(document.querySelectorAll('.ex-mrow')).map(function(r){
+      return {agg:r.querySelector('.m-agg').value, col:r.querySelector('.m-col').value};
+    }).filter(function(m){ return m.agg && (m.agg==='COUNT'||m.col); });
+  }
+  function measureRow(){
+    var d=document.createElement('div'); d.className='ex-mrow';
+    d.innerHTML='<select class="m-agg"><option value="">agg…</option><option>SUM</option><option>AVG</option><option>COUNT</option></select>'
+      +'<span class="paren">(</span>'
+      +'<select class="m-col"><option value="">column…</option><option value="volume">volume</option><option value="price">price</option><option value="notional_value_eur">notional_value_eur</option></select>'
+      +'<span class="paren">)</span><span class="m-name"></span>'
+      +'<button type="button" class="m-del" aria-label="Remove measure">×</button>';
+    return d;
+  }
+  function refreshRows(){
+    [].slice.call(document.querySelectorAll('.ex-mrow')).forEach(function(r){
+      var agg=r.querySelector('.m-agg').value, col=r.querySelector('.m-col');
+      col.disabled = (agg==='COUNT'); if(agg==='COUNT') col.value='';
+      var nm=r.querySelector('.m-name');
+      nm.textContent = (agg && (agg==='COUNT'||col.value)) ? mName({agg:agg,col:col.value}) : '';
+    });
+  }
   function render(){
-    var src=v('ex-source'), ds=dims(), js=joins(), name=v('ex-mname')||'My Measure', agg=v('ex-agg'), col=v('ex-col');
+    var src=v('ex-source'), ds=dims(), js=joins(), ms=measures();
     var y='source: energy.energy_trading.'+(src||'…')+'\n\n';
     if(js.length){ y+='joins:\n'; js.forEach(function(t){ y+='  - name: '+JOIN[t].a+'\n    source: energy.energy_trading.'+t+'\n    "on": '+JOIN[t].on+'\n'; }); y+='\n'; }
     y+='dimensions:\n';
     if(ds.length) ds.forEach(function(d){y+='  - name: '+d+'\n    expr: '+(DIM[d]?DIM[d].expr:'⚠ this is a measure, not a dimension')+'\n';});
     else y+='  # (tick at least one)\n';
     y+='\nmeasures:\n';
-    var expr=(agg&&col)?agg+'('+COLEXPR[col]+')':'…';
-    y+='  - name: '+name+'\n    expr: '+expr+'\n';
+    if(ms.length) ms.forEach(function(m){ y+='  - name: '+mName(m)+'\n    expr: '+mExpr(m)+'\n'; });
+    else y+='  # (add one — SUM(volume) for total volume)\n';
     var pre=document.getElementById('ex-yaml'); if(pre) pre.textContent=y;
   }
   function check(){
-    var src=v('ex-source'), ds=dims(), js=joins(), agg=v('ex-agg'), col=v('ex-col');
+    var src=v('ex-source'), ds=dims(), js=joins(), ms=measures();
     var msg=document.getElementById('ex-msg'); if(!msg) return; msg.hidden=false;
     var p=[];
     var goodDims=ds.filter(function(d){return DIM[d];}), badDims=ds.filter(function(d){return !DIM[d];});
     if(VALID_SRC.indexOf(src)<0) p.push('A metric view is built on a table of <b>trades</b>. <code>dim_trader</code> is a dimension (one row per trader) and <code>fact_market_price</code> holds prices, not trades — use <b>fact_trade</b>.');
     if(badDims.length) p.push('<code>'+badDims.join('</code>, <code>')+'</code> '+(badDims.length>1?'are numbers you’d <b>measure</b>':'is a number you’d <b>measure</b>')+', not a way to slice — take '+(badDims.length>1?'them':'it')+' out of dimensions.');
     if(goodDims.length<1) p.push('Add at least one real <b>dimension</b> so people can slice the number.');
-    // joins must match exactly what the picked dimensions need
     var need=needed(goodDims), miss=need.filter(function(t){return js.indexOf(t)<0;}), extra=js.filter(function(t){return need.indexOf(t)<0;});
     if(miss.length) p.push('You’re slicing by a field from <code>'+miss.join('</code>, <code>')+'</code> but haven’t <b>joined</b> it — every dimension from another table needs its join.');
     if(extra.length) p.push('You joined <code>'+extra.join('</code>, <code>')+'</code> but no dimension uses it — drop joins you don’t need. (Tip: <b>Direction</b> comes straight from the source, so it needs no join.)');
-    if(!(agg==='SUM'&&col==='volume')) p.push('For total traded volume, the measure should be <b>SUM(volume)</b>.');
+    if(!ms.some(function(m){return m.agg==='SUM'&&m.col==='volume';})) p.push('The goal needs a <b>total traded volume</b> measure — add <b>SUM(volume)</b>.');
     if(p.length){ msg.className='ex-msg err'; msg.innerHTML='Almost'+(p.length>1?' — a few things:':' —')+'<ul>'+p.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul>'; }
     else {
-      msg.className='ex-msg ok'; msg.innerHTML='✅ <b>Valid metric view!</b> You defined <code>'+((v('ex-mname')||'Total Volume'))+' = SUM(volume)</code> once — now a dashboard, Genie and SQL can all reuse it and get the same number.';
+      var names=ms.map(function(m){return '<code>'+mName(m)+'</code>';});
+      msg.className='ex-msg ok'; msg.innerHTML='✅ <b>Valid metric view!</b> You defined '+names.join(', ')+' once — now a dashboard, Genie and SQL can all reuse '+(names.length>1?'them':'it')+' and get the same numbers.';
     }
   }
   var form=document.querySelector('.ex-form');
   if(form){
-    form.addEventListener('input',render);
-    form.addEventListener('change',render);
+    var mwrap=document.getElementById('ex-measures');
+    mwrap.appendChild(measureRow());   // start with one row
+    form.addEventListener('input',function(){refreshRows();render();});
+    form.addEventListener('change',function(){refreshRows();render();});
+    mwrap.addEventListener('click',function(e){
+      if(e.target.classList.contains('m-del')){
+        if(document.querySelectorAll('.ex-mrow').length>1) e.target.closest('.ex-mrow').remove();
+        else { var r=e.target.closest('.ex-mrow'); r.querySelector('.m-agg').value=''; r.querySelector('.m-col').value=''; }
+        refreshRows(); render();
+      }
+    });
+    var add=document.getElementById('ex-add-m'); if(add) add.addEventListener('click',function(){ mwrap.appendChild(measureRow()); refreshRows(); render(); });
     var btn=document.getElementById('ex-check'); if(btn) btn.addEventListener('click',check);
-    render();
+    refreshRows(); render();
   }
 })();
 </script>
