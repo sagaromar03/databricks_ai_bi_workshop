@@ -293,13 +293,14 @@
         <p>Assemble a small metric view below. The YAML builds as you go — then check it. Nothing is sent anywhere; it’s just practice.</p></div></div>
       <div class="exercise">
         <div class="ex-form">
-          <div class="ex-goal">🎯 <b>Goal:</b> define a measure for the <b>total traded volume</b>, and pick a couple of ways to slice it.</div>
+          <div class="ex-goal">🎯 <b>Goal:</b> define a measure for the <b>total traded volume</b>, pick a couple of ways to slice it, and join in the tables those slices need.</div>
 
-          <label class="ex-lbl">1 · Source <span>the table to read from</span></label>
+          <label class="ex-lbl">1 · Source <span>the table of trades to build on</span></label>
           <select id="ex-source">
             <option value="">Choose a source…</option>
             <option value="trade_enriched">trade_enriched</option>
             <option value="fact_trade">fact_trade</option>
+            <option value="fact_market_price">fact_market_price</option>
             <option value="dim_trader">dim_trader</option>
           </select>
 
@@ -311,7 +312,15 @@
             <label><input type="checkbox" value="Trader Company"> Trader Company</label>
           </div>
 
-          <label class="ex-lbl">3 · A measure <span>name it, then choose the formula</span></label>
+          <label class="ex-lbl">3 · Joins <span>which tables do those slices need?</span></label>
+          <div class="ex-chips" id="ex-joins">
+            <label><input type="checkbox" value="dim_time"> dim_time</label>
+            <label><input type="checkbox" value="dim_instrument"> dim_instrument</label>
+            <label><input type="checkbox" value="dim_trader"> dim_trader</label>
+            <label><input type="checkbox" value="dim_counterparty"> dim_counterparty</label>
+          </div>
+
+          <label class="ex-lbl">4 · A measure <span>name it, then choose the formula</span></label>
           <div class="ex-measure">
             <input id="ex-mname" type="text" value="Total Volume" aria-label="Measure name">
             <select id="ex-agg"><option value="">agg…</option><option>SUM</option><option>AVG</option><option>COUNT</option></select>
@@ -360,14 +369,28 @@
 
 // Try-it: live metric-view builder + forgiving check.
 (function(){
-  var DIMEXPR={'Trade Date':'dt.cal_date','Commodity':'di.commodity','Direction':'source.direction','Trader Company':'dtr.company'};
+  // each dimension: its expr + which table it needs joined (null = comes from the source)
+  var DIM={'Trade Date':{expr:'dt.cal_date',join:'dim_time'},
+           'Commodity':{expr:'di.commodity',join:'dim_instrument'},
+           'Direction':{expr:'source.direction',join:null},
+           'Trader Company':{expr:'dtr.company',join:'dim_trader'}};
+  var JOIN={dim_time:{a:'dt',on:'source.time_key = dt.time_key'},
+            dim_instrument:{a:'di',on:'source.instrument_key = di.instrument_key'},
+            dim_trader:{a:'dtr',on:'source.trader_key = dtr.trader_key'},
+            dim_counterparty:{a:'dcp',on:'source.counterparty_key = dcp.counterparty_key'}};
   var COLEXPR={volume:'source.volume',price:'source.price',notional_value_eur:'source.notional_value_eur'};
+  var VALID_SRC=['trade_enriched','fact_trade'];
   function v(id){var e=document.getElementById(id);return e?e.value:'';}
-  function dims(){return [].slice.call(document.querySelectorAll('#ex-dims input:checked')).map(function(c){return c.value;});}
+  function checked(sel){return [].slice.call(document.querySelectorAll(sel)).map(function(c){return c.value;});}
+  function dims(){return checked('#ex-dims input:checked');}
+  function joins(){return checked('#ex-joins input:checked');}
+  function needed(ds){var s={};ds.forEach(function(d){if(DIM[d]&&DIM[d].join)s[DIM[d].join]=1;});return Object.keys(s);}
   function render(){
-    var src=v('ex-source'), ds=dims(), name=v('ex-mname')||'My Measure', agg=v('ex-agg'), col=v('ex-col');
-    var y='source: energy.energy_trading.'+(src||'…')+'\n\ndimensions:\n';
-    if(ds.length) ds.forEach(function(d){y+='  - name: '+d+'\n    expr: '+DIMEXPR[d]+'\n';});
+    var src=v('ex-source'), ds=dims(), js=joins(), name=v('ex-mname')||'My Measure', agg=v('ex-agg'), col=v('ex-col');
+    var y='source: energy.energy_trading.'+(src||'…')+'\n\n';
+    if(js.length){ y+='joins:\n'; js.forEach(function(t){ y+='  - name: '+JOIN[t].a+'\n    source: energy.energy_trading.'+t+'\n    "on": '+JOIN[t].on+'\n'; }); y+='\n'; }
+    y+='dimensions:\n';
+    if(ds.length) ds.forEach(function(d){y+='  - name: '+d+'\n    expr: '+DIM[d].expr+'\n';});
     else y+='  # (tick at least one)\n';
     y+='\nmeasures:\n';
     var expr=(agg&&col)?agg+'('+COLEXPR[col]+')':'…';
@@ -375,14 +398,21 @@
     var pre=document.getElementById('ex-yaml'); if(pre) pre.textContent=y;
   }
   function check(){
-    var src=v('ex-source'), ds=dims(), agg=v('ex-agg'), col=v('ex-col');
+    var src=v('ex-source'), ds=dims(), js=joins(), agg=v('ex-agg'), col=v('ex-col');
     var msg=document.getElementById('ex-msg'); if(!msg) return; msg.hidden=false;
     var p=[];
-    if(src!=='trade_enriched') p.push('Pick <b>trade_enriched</b> as the source — it already has the joined fields and the values you need.');
+    if(VALID_SRC.indexOf(src)<0) p.push('A metric view is built on a table of <b>trades</b>. <code>dim_trader</code> is a dimension (one row per trader) and <code>fact_market_price</code> holds prices, not trades — use <b>fact_trade</b> or <b>trade_enriched</b>.');
     if(ds.length<1) p.push('Add at least one <b>dimension</b> so people can slice the number.');
+    // joins must match exactly what the picked dimensions need
+    var need=needed(ds), miss=need.filter(function(t){return js.indexOf(t)<0;}), extra=js.filter(function(t){return need.indexOf(t)<0;});
+    if(miss.length) p.push('You’re slicing by a field from <code>'+miss.join('</code>, <code>')+'</code> but haven’t <b>joined</b> it — every dimension from another table needs its join.');
+    if(extra.length) p.push('You joined <code>'+extra.join('</code>, <code>')+'</code> but no dimension uses it — drop joins you don’t need. (Tip: <b>Direction</b> comes straight from the source, so it needs no join.)');
     if(!(agg==='SUM'&&col==='volume')) p.push('For total traded volume, the measure should be <b>SUM(volume)</b>.');
     if(p.length){ msg.className='ex-msg err'; msg.innerHTML='Almost'+(p.length>1?' — a few things:':' —')+'<ul>'+p.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul>'; }
-    else { msg.className='ex-msg ok'; msg.innerHTML='✅ <b>Valid metric view!</b> You defined <code>'+((v('ex-mname')||'Total Volume'))+' = SUM(volume)</code> once — now a dashboard, Genie and SQL can all reuse it and get the same number.'; }
+    else {
+      var extra2 = src==='fact_trade' ? ' (<code>trade_enriched</code> would also hand you EUR values for free, but <code>fact_trade</code> is perfectly valid.)' : '';
+      msg.className='ex-msg ok'; msg.innerHTML='✅ <b>Valid metric view!</b> You defined <code>'+((v('ex-mname')||'Total Volume'))+' = SUM(volume)</code> once — now a dashboard, Genie and SQL can all reuse it and get the same number.'+extra2;
+    }
   }
   var form=document.querySelector('.ex-form');
   if(form){
