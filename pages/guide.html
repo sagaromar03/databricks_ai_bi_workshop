@@ -26,10 +26,13 @@
  .concept .tag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
    color:#b32d1a;background:rgba(255,54,33,.12);border-radius:999px;padding:3px 11px;margin-bottom:12px}
 
- .sh{display:flex;align-items:flex-start;gap:12px;margin:28px 0 12px}
- .sh .ic{width:38px;height:38px;border-radius:10px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:19px;flex:none}
- .sh h3{margin:0;font-size:17px;color:var(--navy)}
- .sh p{margin:2px 0 0;font-size:13px;color:var(--grey)}
+ .sh{display:flex;align-items:flex-start;gap:10px;margin:26px 0 10px}
+ .sh .ic{width:16px;height:3px;border-radius:2px;background:var(--coral);flex:none;margin-top:9px;font-size:0;line-height:0;color:transparent;overflow:hidden}
+ .sh h3{margin:0;font-size:15px;font-weight:700;color:var(--navy)}
+ .sh p{margin:3px 0 0;font-size:13px;color:var(--grey);max-width:660px}
+ /* Databricks docs section (always at the bottom of a concept) */
+ .dochead{display:flex;align-items:center;gap:9px;font-size:15px;font-weight:700;color:var(--navy);margin:30px 0 10px;padding-top:18px;border-top:1px solid var(--border)}
+ .dochead .dbmark{width:20px;height:20px;flex:none} .dochead .dbmark svg{width:100%;height:100%;display:block}
 
  .lead{background:var(--navy);color:#fff;border-radius:12px;padding:17px 19px;font-size:15px;line-height:1.55}
  .lead b{color:#fff}
@@ -248,7 +251,7 @@
         <span class="uctail">→ the 11 tables, 2 views &amp; the metric view</span>
       </div>
 
-      <div class="sh"><span class="ic">📚</span><div><h3>Databricks docs</h3></div></div>
+      <div class="dochead"><span class="dbmark"></span>Databricks docs</div>
       <div class="usedby">
         <a href="https://docs.databricks.com/aws/en/data-governance/unity-catalog/" target="_blank" rel="noopener">What is Unity Catalog? ↗</a>
         <a href="https://docs.databricks.com/aws/en/data-governance/unity-catalog/manage-privileges/" target="_blank" rel="noopener">Manage privileges (GRANT) ↗</a>
@@ -435,7 +438,7 @@
         </div>
       </div>
 
-      <div class="sh"><span class="ic">📚</span><div><h3>Databricks docs</h3></div></div>
+      <div class="dochead"><span class="dbmark"></span>Databricks docs</div>
       <div class="usedby">
         <a href="https://docs.databricks.com/aws/en/metric-views/" target="_blank" rel="noopener">Unity Catalog metric views ↗</a>
         <a href="https://docs.databricks.com/aws/en/metric-views/create" target="_blank" rel="noopener">Tutorial: build a metric view ↗</a>
@@ -471,7 +474,7 @@
           <div><b>Genie One</b><span>Home for business users</span></div></a>
       </div>
 
-      <div class="sh"><span class="ic">📚</span><div><h3>Databricks docs</h3></div></div>
+      <div class="dochead"><span class="dbmark"></span>Databricks docs</div>
       <div class="usedby">
         <a href="https://docs.databricks.com/aws/en/genie/" target="_blank" rel="noopener">Genie overview ↗</a>
       </div>
@@ -511,7 +514,11 @@
       <div class="usedby">
         <a href="create_genie.html">Build one — Step 5 →</a>
         <a href="genie.html">Question bank →</a>
-        <a href="https://docs.databricks.com/aws/en/genie/" target="_blank" rel="noopener">Genie docs ↗</a>
+      </div>
+
+      <div class="dochead"><span class="dbmark"></span>Databricks docs</div>
+      <div class="usedby">
+        <a href="https://docs.databricks.com/aws/en/genie/" target="_blank" rel="noopener">AI/BI Genie ↗</a>
       </div>
     </section>
 
@@ -551,8 +558,12 @@
       <p class="prose">The <b>Create a Genie agent</b> step is exactly this: point it at the <code>energy_trading</code> tables, add instructions, and it grounds every question that follows.</p>
       <div class="usedby">
         <a href="create_genie.html">Create a Genie agent — Step 5 →</a>
-        <a href="https://docs.databricks.com/aws/en/genie-agents/" target="_blank" rel="noopener">Genie Agents docs ↗</a>
-        <a href="https://docs.databricks.com/aws/en/genie-agents/tune-quality" target="_blank" rel="noopener">Tune quality ↗</a>
+      </div>
+
+      <div class="dochead"><span class="dbmark"></span>Databricks docs</div>
+      <div class="usedby">
+        <a href="https://docs.databricks.com/aws/en/genie-agents/" target="_blank" rel="noopener">Genie Agents ↗</a>
+        <a href="https://docs.databricks.com/aws/en/genie-agents/tune-quality" target="_blank" rel="noopener">Tune agent quality ↗</a>
       </div>
     </section>
 
@@ -583,7 +594,11 @@
       <div class="usedby">
         <a href="create_dashboard.html">See it build a dashboard — Step 3 →</a>
         <a href="sketch_to_dashboard.html">Sketch to dashboard — Step 4 →</a>
-        <a href="https://docs.databricks.com/aws/en/genie-code/" target="_blank" rel="noopener">Genie Code docs ↗</a>
+      </div>
+
+      <div class="dochead"><span class="dbmark"></span>Databricks docs</div>
+      <div class="usedby">
+        <a href="https://docs.databricks.com/aws/en/genie-code/" target="_blank" rel="noopener">Genie Code ↗</a>
       </div>
     </section>
 
@@ -612,8 +627,9 @@
 
       <h3 class="phead">How it fits</h3>
       <p class="prose">Genie One is the surface people <b>use</b>; the <a href="#genie-agents" class="toc-link" data-c="genie-agents">Genie Agents</a> your data team configures are what make its answers trustworthy. Same governed foundation underneath.</p>
+      <div class="dochead"><span class="dbmark"></span>Databricks docs</div>
       <div class="usedby">
-        <a href="https://docs.databricks.com/aws/en/genie-one/" target="_blank" rel="noopener">Genie One docs ↗</a>
+        <a href="https://docs.databricks.com/aws/en/genie-one/" target="_blank" rel="noopener">Genie One ↗</a>
         <a href="https://docs.databricks.com/aws/en/genie-one/mobile" target="_blank" rel="noopener">Genie on mobile ↗</a>
       </div>
     </section>
@@ -676,6 +692,12 @@
   document.querySelectorAll('.plogo-fb[data-icon]').forEach(function(el){
     var k=el.getAttribute('data-icon'); if(ICONS[k]) el.innerHTML=ICONS[k];
   });
+})();
+
+// Databricks mark for the "Databricks docs" section headers.
+(function(){
+  var DB='<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="#FF3621" d="M.95 14.184L12 20.403l9.919-5.55v2.21L12 22.662l-10.484-5.96-.565.308v.77L12 24l11.05-6.218v-4.317l-.515-.309L12 19.118l-9.867-5.653v-2.21L12 16.805l11.05-6.218V6.32l-.515-.308L12 11.974 2.647 6.681 12 1.388l7.76 4.368.668-.411v-.566L12 0 .95 6.27v.72L12 13.207l9.919-5.55v2.26L12 15.52 1.516 9.56l-.565.308Z"/></svg>';
+  document.querySelectorAll('.dbmark').forEach(function(el){ el.innerHTML=DB; });
 })();
 
 // Try-it: live metric-view builder + forgiving check.
