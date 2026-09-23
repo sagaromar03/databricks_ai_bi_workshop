@@ -327,9 +327,8 @@
             <label><input type="checkbox" value="Notional (EUR)"> Notional (EUR)</label>
           </div>
 
-          <label class="ex-lbl">4 · Measures <span>pick a formula — the name writes itself; add as many as you like</span></label>
+          <label class="ex-lbl">4 · Measures <span>one or two — the name writes itself</span></label>
           <div id="ex-measures"></div>
-          <button id="ex-add-m" class="ex-add" type="button">+ Add measure</button>
 
           <div style="margin-top:16px"><button id="ex-check" class="ex-btn" type="button">Check my metric view</button></div>
           <div id="ex-msg" class="ex-msg" hidden></div>
@@ -402,8 +401,7 @@
     d.innerHTML='<select class="m-agg"><option value="">agg…</option><option>SUM</option><option>AVG</option><option>COUNT</option></select>'
       +'<span class="paren">(</span>'
       +'<select class="m-col"><option value="">column…</option><option value="volume">volume</option><option value="price">price</option><option value="notional_value_eur">notional_value_eur</option></select>'
-      +'<span class="paren">)</span><span class="m-name"></span>'
-      +'<button type="button" class="m-del" aria-label="Remove measure">×</button>';
+      +'<span class="paren">)</span><span class="m-name"></span>';
     return d;
   }
   function refreshRows(){
@@ -447,17 +445,9 @@
   var form=document.querySelector('.ex-form');
   if(form){
     var mwrap=document.getElementById('ex-measures');
-    mwrap.appendChild(measureRow());   // start with one row
+    mwrap.appendChild(measureRow()); mwrap.appendChild(measureRow());   // two fixed slots
     form.addEventListener('input',function(){refreshRows();render();});
     form.addEventListener('change',function(){refreshRows();render();});
-    mwrap.addEventListener('click',function(e){
-      if(e.target.classList.contains('m-del')){
-        if(document.querySelectorAll('.ex-mrow').length>1) e.target.closest('.ex-mrow').remove();
-        else { var r=e.target.closest('.ex-mrow'); r.querySelector('.m-agg').value=''; r.querySelector('.m-col').value=''; }
-        refreshRows(); render();
-      }
-    });
-    var add=document.getElementById('ex-add-m'); if(add) add.addEventListener('click',function(){ mwrap.appendChild(measureRow()); refreshRows(); render(); });
     var btn=document.getElementById('ex-check'); if(btn) btn.addEventListener('click',check);
     refreshRows(); render();
   }
