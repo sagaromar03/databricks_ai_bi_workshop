@@ -60,6 +60,10 @@
  table.mv td{padding:9px 12px;border-top:1px solid var(--border);vertical-align:top}
  table.mv td code{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:12px;color:var(--navy);white-space:nowrap}
  table.mv td.d{color:var(--grey)}
+ table.mv.cmp td:first-child{color:var(--grey);width:44%}
+ table.mv.cmp td:nth-child(2){color:var(--ink)}
+ .cmpnote{font-size:13px;color:var(--ink);background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 15px;margin:12px 0 0;line-height:1.55}
+ .cmpnote b{color:var(--navy)} .cmpnote code{background:#fff;border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-size:12px}
 
  .usedby{display:flex;flex-wrap:wrap;gap:10px}
  .usedby a{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:11px 16px;text-decoration:none;color:var(--navy);font-weight:600;font-size:13.5px;transition:border-color .12s,transform .12s}
@@ -124,6 +128,21 @@
             <li><code>Total Notional EUR</code> — value in EUR</li>
           </ul></div>
       </div>
+
+      <div class="sh"><span class="ic">🔀</span><div><h3>Coming from Power BI?</h3>
+        <p>If you’ve built Power BI models, a metric view will feel familiar — here’s the mapping.</p></div></div>
+      <table class="mv cmp">
+        <thead><tr><th>In Power BI</th><th>Metric view equivalent</th></tr></thead>
+        <tbody>
+          <tr><td>Semantic model / dataset</td><td>The metric view itself — but a governed Unity Catalog object, not locked to one report</td></tr>
+          <tr><td>DAX measure — <code>Total Sales = SUM(...)</code></td><td>A <b>measure</b> — <code>Total Volume: SUM(volume)</code>, written in SQL rather than DAX</td></tr>
+          <tr><td>Fields on axes &amp; slicers</td><td><b>Dimensions</b></td></tr>
+          <tr><td>Model relationships + Power Query source</td><td><b>Source</b> + joins</td></tr>
+          <tr><td>Certified / shared dataset</td><td>Every tool — dashboards, Genie, SQL — reads the one definition</td></tr>
+          <tr><td>Q&amp;A (natural language)</td><td>Genie</td></tr>
+        </tbody>
+      </table>
+      <p class="cmpnote">The big shift: your measures live in the <b>catalog</b>, not inside a single <code>.pbix</code> — so a dashboard, a Genie agent, and a raw SQL query all return the identical number.</p>
 
       <div class="sh"><span class="ic">📄</span><div><h3>What it looks like</h3>
         <p>It’s written in a short YAML file: a <b>source</b>, the <b>dimensions</b>, and the <b>measures</b>. A trimmed peek at this workshop’s <code>energy_trading_metrics</code>:</p></div></div>
