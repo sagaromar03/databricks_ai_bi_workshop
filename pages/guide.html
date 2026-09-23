@@ -65,6 +65,16 @@
  .cmpnote{font-size:13px;color:var(--ink);background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 15px;margin:12px 0 0;line-height:1.55}
  .cmpnote b{color:var(--navy)} .cmpnote code{background:#fff;border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-size:12px}
 
+ /* unity catalog address */
+ .ucaddr{display:flex;flex-wrap:wrap;align-items:stretch;gap:8px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 18px}
+ .ucaddr .lvl{display:flex;flex-direction:column;gap:3px;background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:9px 14px}
+ .ucaddr .lvl em{font-style:normal;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--grey)}
+ .ucaddr .lvl b{font-size:16px;color:var(--navy);font-family:'SFMono-Regular',Consolas,monospace}
+ .ucaddr .dot{align-self:center;font-size:22px;font-weight:700;color:var(--coral);padding:0 2px}
+ .ucaddr .uctail{align-self:center;font-size:13px;color:var(--grey);margin-left:6px}
+ .uchips{display:flex;flex-wrap:wrap;gap:8px}
+ .uchips span{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--border);border-radius:999px;padding:8px 14px;font-size:13px;color:var(--ink)}
+
  .usedby{display:flex;flex-wrap:wrap;gap:10px}
  .usedby a{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:11px 16px;text-decoration:none;color:var(--navy);font-weight:600;font-size:13.5px;transition:border-color .12s,transform .12s}
  .usedby a:hover{border-color:var(--navy);transform:translateY(-1px)}
@@ -78,16 +88,73 @@
 
   <aside class="toc">
     <div class="lbl">Concepts</div>
-    <a class="toc-link active" data-c="metric-view" href="#metric-view">Metric View</a>
-    <a class="soon">Unity Catalog <span>soon</span></a>
+    <a class="toc-link active" data-c="unity-catalog" href="#unity-catalog">Unity Catalog</a>
+    <a class="toc-link" data-c="metric-view" href="#metric-view">Metric View</a>
     <a class="soon">Genie <span>soon</span></a>
     <a class="soon">Domains &amp; Pages <span>soon</span></a>
   </aside>
 
   <main class="content">
 
+    <!-- ============ UNITY CATALOG ============ -->
+    <section class="concept on" id="unity-catalog">
+      <div class="tag">Concept</div>
+      <h2 class="title">Unity Catalog</h2>
+
+      <div class="lead"><b>In one line:</b> Unity Catalog is the single place where <b>all</b> your data and AI assets live, get organised, and get secured — one governance layer that every workspace and tool shares.</div>
+
+      <div class="analogy">
+        <div class="emo">🏢</div>
+        <div>Think of it as a well-run <b>office building</b> with a directory at the door. A <b>catalog</b> is a floor, a <b>schema</b> is a room on that floor, and a <b>table</b> is a filing cabinet in that room. Everything has one clear address, and the front desk (governance) decides who can open which door — instead of files scattered across everyone’s desks.</div>
+      </div>
+
+      <div class="sh"><span class="ic">📍</span><div><h3>The three-level name</h3>
+        <p>Every object has a three-part address: <b>catalog › schema › object</b>. That’s why you’ll see names like this throughout the workshop.</p></div></div>
+      <div class="ucaddr">
+        <span class="lvl"><em>catalog</em><b>energy</b></span><span class="dot">.</span>
+        <span class="lvl"><em>schema</em><b>energy_trading</b></span><span class="dot">.</span>
+        <span class="lvl"><em>table / view</em><b>fact_trade</b></span>
+      </div>
+
+      <div class="sh"><span class="ic">📦</span><div><h3>What it holds</h3>
+        <p>Not just tables — one catalog governs every kind of data &amp; AI asset:</p></div></div>
+      <div class="uchips">
+        <span>🗄️ Tables</span><span>🔎 Views</span><span>📐 Metric views</span>
+        <span>📁 Volumes (files)</span><span>🧮 Functions</span><span>🤖 ML models</span>
+        <span>📊 Dashboards</span><span>✨ Genie spaces</span>
+      </div>
+
+      <div class="sh"><span class="ic">🛡️</span><div><h3>Why it matters</h3></div></div>
+      <div class="why">
+        <div class="item"><div class="t">One permission model</div><p>Grant access once with <code>GRANT</code>; it applies everywhere, for every tool.</p></div>
+        <div class="item"><div class="t">Lineage &amp; audit</div><p>See where data came from and what reads it — end to end, automatically.</p></div>
+        <div class="item"><div class="t">Search &amp; discovery</div><p>Find the right table across the whole estate instead of guessing names.</p></div>
+        <div class="item"><div class="t">Shared across workspaces</div><p>The same governed data is available to every workspace and every user who’s allowed.</p></div>
+      </div>
+
+      <div class="sh"><span class="ic">🔀</span><div><h3>Coming from Power BI / SQL Server?</h3>
+        <p>The address will feel familiar — here’s the mapping.</p></div></div>
+      <table class="mv cmp">
+        <thead><tr><th>Elsewhere</th><th>Unity Catalog</th></tr></thead>
+        <tbody>
+          <tr><td>SQL Server <code>database.schema.table</code></td><td><code>catalog.schema.table</code> — but a catalog spans <b>all</b> workspaces, not one server</td></tr>
+          <tr><td>Database roles / <code>GRANT</code></td><td>Same idea — <code>GRANT</code> on catalog / schema / object, centrally</td></tr>
+          <tr><td>Power BI workspace holding datasets</td><td>Not the same: a workspace is where you <i>work</i>; the data itself is governed in Unity Catalog underneath</td></tr>
+          <tr><td>A separate data catalog (e.g. Purview)</td><td>Built in — discovery, lineage and governance are part of the platform</td></tr>
+        </tbody>
+      </table>
+
+      <div class="sh"><span class="ic">🔗</span><div><h3>In this workshop</h3>
+        <p>Everything the notebook builds lives under one catalog and schema.</p></div></div>
+      <div class="ucaddr one">
+        <span class="lvl"><em>catalog</em><b>energy</b></span><span class="dot">.</span>
+        <span class="lvl"><em>schema</em><b>energy_trading</b></span>
+        <span class="uctail">→ the 11 tables, 2 views &amp; the metric view</span>
+      </div>
+    </section>
+
     <!-- ============ METRIC VIEW ============ -->
-    <section class="concept on" id="metric-view">
+    <section class="concept" id="metric-view">
       <div class="tag">Concept</div>
       <h2 class="title">The Metric View</h2>
 
