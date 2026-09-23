@@ -100,6 +100,13 @@
  .prose{font-size:14px;color:var(--ink);line-height:1.6;margin:0 0 6px;max-width:660px}
  .prose code{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-size:12.5px}
  .prose a{color:#b32d1a;font-weight:600;text-decoration:none} .prose a:hover{text-decoration:underline}
+ .phead{font-size:15px;font-weight:700;color:var(--navy);margin:24px 0 8px;display:flex;align-items:center;gap:9px}
+ .phead::before{content:"";width:16px;height:3px;border-radius:2px;background:var(--coral);flex:none}
+ .plist{margin:0 0 10px;padding-left:18px;font-size:14px;color:var(--ink);line-height:1.7;max-width:670px}
+ .plist li{margin:4px 0} .plist b{color:var(--navy)} .plist a{color:#b32d1a;font-weight:600;text-decoration:none} .plist a:hover{text-decoration:underline}
+ .plist code{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-size:12.5px}
+ .exq{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 10px;max-width:670px}
+ .exq span{background:var(--panel);border:1px solid var(--border);border-radius:999px;padding:7px 13px;font-size:13px;color:var(--ink)}
  .block h4{margin:0 0 2px;font-size:15px;color:var(--navy)} .block .sub{font-size:12.5px;color:var(--grey);margin:0 0 10px}
  .block ul{margin:0;padding-left:18px;font-size:13px;color:var(--ink);line-height:1.75}
  .block p{margin:0;font-size:13px;color:var(--ink);line-height:1.55}
@@ -478,14 +485,29 @@
 
       <div class="lead"><b>Natural-language analytics.</b> Ask a question of your data — “total volume by commodity”, “which traders sold below market?” — and Genie writes the SQL, runs it, and hands back an answer, table or chart. No SQL required.</div>
 
-      <div class="sh"><span class="ic">🔎</span><div><h3>How it works</h3></div></div>
-      <p class="prose">Point it at your tables or a <a href="#metric-view" class="toc-link" data-c="metric-view">metric view</a>, then type a question. Genie generates the query, shows you the SQL it wrote (so you can check or tweak it), and returns the result. It only ever reads data you’re permitted to see — governance comes straight from Unity Catalog.</p>
+      <h3 class="phead">How it works</h3>
+      <p class="prose">Point it at your tables or a <a href="#metric-view" class="toc-link" data-c="metric-view">metric view</a>, then just type a question. Behind the scenes Genie reads the schema and any instructions, writes SQL, runs it on a SQL warehouse, and returns the result — a number, a table or a chart. It <b>shows the SQL it generated</b>, so you can check it, tweak it, or save it as a query.</p>
+      <p class="prose">Every query runs as <b>you</b>, through Unity Catalog — Genie can only touch data you already have access to, so there’s no back door around governance.</p>
 
-      <div class="sh"><span class="ic">🧩</span><div><h3>Powered by a Genie Agent</h3></div></div>
-      <p class="prose">The answer quality comes from the <a href="#genie-agents" class="toc-link" data-c="genie-agents">Genie Agent</a> behind it — the trusted datasets, metrics and instructions your team configures. Point-and-ask is the front; the Agent is the brains.</p>
+      <h3 class="phead">Ask it things like</h3>
+      <div class="exq">
+        <span>“Total trading volume by commodity”</span>
+        <span>“VWAP by country last quarter”</span>
+        <span>“Which traders sold more than 35% below market?”</span>
+        <span>“Top 10 counterparties by notional in EUR”</span>
+        <span>“Buy vs sell volume by month”</span>
+      </div>
+      <p class="prose">Each answer comes with a chart you can pin straight to a dashboard, and Genie suggests follow-up questions to keep you exploring.</p>
 
-      <div class="sh"><span class="ic">🛠️</span><div><h3>In this workshop</h3></div></div>
-      <p class="prose">This is the experience you stand up in <b>Step 5</b> and demo with the ready-made question bank.</p>
+      <h3 class="phead">What makes answers good</h3>
+      <ul class="plist">
+        <li><b>A tidy, well-named schema</b> — clear table and column names Genie can reason about.</li>
+        <li><b>A <a href="#metric-view" class="toc-link" data-c="metric-view">metric view</a></b> — so “VWAP” or “Total Notional” always resolves to the one agreed formula.</li>
+        <li><b>The <a href="#genie-agents" class="toc-link" data-c="genie-agents">Genie Agent</a> behind it</b> — sample questions, instructions and verified answers your team curates. Point-and-ask is the front; the Agent is the brains.</li>
+      </ul>
+
+      <h3 class="phead">In this workshop</h3>
+      <p class="prose">This is the experience you stand up in <b>Step 5</b> and demo with the ready-made question bank — from warm-up questions to the surveillance finish.</p>
       <div class="usedby">
         <a href="create_genie.html">Build one — Step 5 →</a>
         <a href="genie.html">Question bank →</a>
@@ -501,13 +523,31 @@
 
       <div class="lead"><b>Where the trust comes from.</b> A Genie Agent is a domain-specific space your data team configures so Genie’s answers line up with how the business actually defines things.</div>
 
-      <div class="sh"><span class="ic">🔎</span><div><h3>What you configure</h3></div></div>
-      <p class="prose">The <b>datasets</b> it may use, <b>sample queries</b>, <b>metrics</b>, <b>business rules</b> and plain-language <b>instructions</b> — plus <b>verified answers</b> to lock in the right response to common questions. It’s the semantic backbone behind every reply.</p>
+      <h3 class="phead">What it is</h3>
+      <p class="prose">A Genie Agent (you may have heard the older name, “Genie space”) is a curated, domain-specific place for questions about <b>one</b> area of the business — energy trading, say. Your data team sets it up once; everyone else just asks.</p>
 
-      <div class="sh"><span class="ic">🎯</span><div><h3>Why it matters</h3></div></div>
-      <p class="prose">Without configuration, Genie has to guess. With an Agent, it answers in your organisation’s terms — and you keep tuning quality by adding metrics, rules and verified answers over time.</p>
+      <h3 class="phead">What you configure</h3>
+      <ul class="plist">
+        <li><b>Datasets</b> — the exact tables, views and metric views it’s allowed to use.</li>
+        <li><b>Instructions</b> — plain-language rules and context (“cancelled trades are excluded”, “money is in EUR”).</li>
+        <li><b>Sample queries</b> — worked examples that teach Genie your patterns and joins.</li>
+        <li><b>Metrics</b> — point at a <a href="#metric-view" class="toc-link" data-c="metric-view">metric view</a> so KPIs stay consistent.</li>
+        <li><b>Verified answers</b> — pin the correct response to common questions.</li>
+        <li><b>SQL functions &amp; join hints</b> — reusable logic and how the tables connect.</li>
+      </ul>
 
-      <div class="sh"><span class="ic">🛠️</span><div><h3>In this workshop</h3></div></div>
+      <h3 class="phead">Why it matters</h3>
+      <p class="prose">Without configuration, Genie has to guess from column names. With an Agent it answers in your organisation’s terms — and the more you curate (instructions, metrics, verified answers), the sharper and more trustworthy it gets.</p>
+
+      <h3 class="phead">A simple lifecycle</h3>
+      <ul class="plist">
+        <li><b>Create</b> — pick the tables and write a few instructions.</li>
+        <li><b>Test</b> — ask real questions, watch the SQL, spot the gaps.</li>
+        <li><b>Tune</b> — add metrics, rules and verified answers where it slipped.</li>
+        <li><b>Share</b> — give business users access; they get grounded answers (often through <a href="#genie-one" class="toc-link" data-c="genie-one">Genie One</a>).</li>
+      </ul>
+
+      <h3 class="phead">In this workshop</h3>
       <p class="prose">The <b>Create a Genie agent</b> step is exactly this: point it at the <code>energy_trading</code> tables, add instructions, and it grounds every question that follows.</p>
       <div class="usedby">
         <a href="create_genie.html">Create a Genie agent — Step 5 →</a>
@@ -524,10 +564,21 @@
 
       <div class="lead"><b>The AI assistant for builders.</b> For developers and technical users inside the workspace — describe the outcome and it writes and fixes the code.</div>
 
-      <div class="sh"><span class="ic">🔎</span><div><h3>What it does</h3></div></div>
-      <p class="prose">Inline suggestions and agentic tasks across <b>notebooks, pipelines, the SQL editor and dashboards</b>. It can draft queries, explain code, fix errors and build whole artifacts from a plain-language prompt.</p>
+      <h3 class="phead">What it does</h3>
+      <ul class="plist">
+        <li><b>Chat &amp; inline suggestions</b> — ask a question, or get autocompletions as you type.</li>
+        <li><b>Writes &amp; fixes code</b> — SQL and Python: generate a query, explain a cell, debug an error.</li>
+        <li><b>Agentic tasks</b> — hand it a goal and it carries out the multi-step work for you.</li>
+        <li><b>Builds artifacts</b> — turn a plain-language brief into a dashboard widget or a whole page.</li>
+      </ul>
 
-      <div class="sh"><span class="ic">🛠️</span><div><h3>In this workshop</h3></div></div>
+      <h3 class="phead">Where it lives</h3>
+      <p class="prose">Across the workspace — <b>notebooks, the SQL editor, pipelines, the file editor and dashboards</b>. You can steer it with custom instructions at the workspace and personal level, so it follows your team’s conventions.</p>
+
+      <h3 class="phead">Who it’s for</h3>
+      <p class="prose">Developers and technical practitioners — anyone writing queries, notebooks or pipelines. (For non-technical users who just want answers, that’s <a href="#genie-one" class="toc-link" data-c="genie-one">Genie One</a>.)</p>
+
+      <h3 class="phead">In this workshop</h3>
       <p class="prose">It’s the <b>“Genie Code”</b> panel that turns “add a bar chart of trades by commodity” into a real dashboard widget (Step 3), and the engine behind sketch-to-dashboard (Step 4).</p>
       <div class="usedby">
         <a href="create_dashboard.html">See it build a dashboard — Step 3 →</a>
@@ -544,11 +595,23 @@
 
       <div class="lead"><b>The home for business users.</b> A simplified interface — separate from the full workspace — where non-technical people get answers without touching code.</div>
 
-      <div class="sh"><span class="ic">🔎</span><div><h3>What it is</h3></div></div>
-      <p class="prose">One clean place to <b>discover data assets</b>, <b>chat with Genie</b>, open <b>AI/BI dashboards</b> and run <b>apps</b> — on web and mobile. An account-level view can reach shared assets across every workspace from a single entry point.</p>
+      <h3 class="phead">What it is</h3>
+      <p class="prose">One clean, consumer-grade app — separate from the full Databricks workspace — where people get answers without learning the platform. Think of it as the <b>front door</b> to everything Genie.</p>
 
-      <div class="sh"><span class="ic">🎯</span><div><h3>Who it’s for</h3></div></div>
-      <p class="prose">Everyone who just wants answers — analysts, managers, execs — without learning the full Databricks workspace.</p>
+      <h3 class="phead">What you can do</h3>
+      <ul class="plist">
+        <li><b>Ask Genie</b> — natural-language questions, grounded in your data and governed by Unity Catalog.</li>
+        <li><b>Open AI/BI dashboards</b> — browse and interact with published dashboards.</li>
+        <li><b>Run Databricks Apps</b> — use the data apps your team has shipped.</li>
+        <li><b>Discover assets</b> — find the right table, dashboard or agent from one place.</li>
+        <li><b>On the go</b> — a mobile app for iOS and Android; an account-level view spans every workspace.</li>
+      </ul>
+
+      <h3 class="phead">Who it’s for</h3>
+      <p class="prose">Everyone who just wants answers — analysts, managers, execs — without touching notebooks or SQL.</p>
+
+      <h3 class="phead">How it fits</h3>
+      <p class="prose">Genie One is the surface people <b>use</b>; the <a href="#genie-agents" class="toc-link" data-c="genie-agents">Genie Agents</a> your data team configures are what make its answers trustworthy. Same governed foundation underneath.</p>
       <div class="usedby">
         <a href="https://docs.databricks.com/aws/en/genie-one/" target="_blank" rel="noopener">Genie One docs ↗</a>
         <a href="https://docs.databricks.com/aws/en/genie-one/mobile" target="_blank" rel="noopener">Genie on mobile ↗</a>
